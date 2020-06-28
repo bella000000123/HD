@@ -206,6 +206,8 @@
 // @ is an alias to /src
 // import HelloWorld from "@/components/HelloWorld.vue";
 // import jifen from "@/components/jifen.vue";
+import WebSocketUtil from '@/utils/WebSocketUtil.js'
+
 export default {
   name: 'Home',
   components: {
@@ -259,6 +261,9 @@ export default {
     this.rankingList()
     // 高手全部
     this.gaoshouAllList(15)
+
+    // 初始化websoket
+    this.initSocket({ url: 'ws://ws.211aoa.com:8282' })
   },
   methods: {
     // 分页
@@ -341,6 +346,15 @@ export default {
       this.$router.push({
         path: `/tuijianDetail`
       })
+    },
+    initSocket() {
+      this.socket = new WebSocketUtil({ url: 'ws://ws.211aoa.com:8282' })
+      // websocket 初始化成功
+      this.socket.onCreate = () => {
+        this.connected = true
+        console.log('初始化成功')
+      }
+      this.socket.init()
     }
   }
 }
