@@ -346,15 +346,6 @@ export default {
       this.$router.push({
         path: `/tuijianDetail`
       })
-    },
-    initSocket() {
-      this.socket = new WebSocketUtil({ url: 'ws://ws.211aoa.com:8282' })
-      // websocket 初始化成功
-      this.socket.onCreate = () => {
-        this.connected = true
-        console.log('初始化成功')
-      }
-      this.socket.init()
     }
   }
 }

@@ -4,20 +4,20 @@
       <h2>比赛信息</h2>
       <div class="box">
         <div>
-          <p>开赛时间：{{match.match_time}}</p>
-          <p>主裁判：{{match.referee_cn_name?match.referee_cn_name:'-'}}</p>
-          <p>主裁国籍：{{qingbao.referee.country_cn_name?qingbao.referee.country_cn_name:'-'}}</p>
-          <p>场均黄牌：{{qingbao.referee.yellowCardsPerGame?qingbao.referee.yellowCardsPerGame:'-'}}</p>
-          <p>场均红牌：{{qingbao.referee.redCardsPerGame?qingbao.referee.redCardsPerGame:'-'}}</p>
+          <p>开赛时间：{{ match.match_time }}</p>
+          <p>主裁判：{{ match.referee_cn_name ? match.referee_cn_name : '-' }}</p>
+          <p>主裁国籍：{{ qingbao.referee.country_cn_name ? qingbao.referee.country_cn_name : '-' }}</p>
+          <p>场均黄牌：{{ qingbao.referee.yellowCardsPerGame ? qingbao.referee.yellowCardsPerGame : '-' }}</p>
+          <p>场均红牌：{{ qingbao.referee.redCardsPerGame ? qingbao.referee.redCardsPerGame : '-' }}</p>
         </div>
         <div>
-          <p>场馆：{{qingbao.stadium?qingbao.stadium.cn_name:'-'}}{{qingbao.attendanc?qingbao.attendance:'-'}}</p>
-          <p>地点：{{qingbao.stadiu?qingbao.stadium.city_cn_name:'-'}}{{qingbao.stadiucity_cn_name?qingbao.stadiucity_cn_name:''}}</p>
-          <p>地图坐标：{{qingbao.stadiu?qingbao.stadium.google_maps_coordinates:'-'}}</p>
+          <p>场馆：{{ qingbao.stadium ? qingbao.stadium.cn_name : '-' }}{{ qingbao.attendanc ? qingbao.attendance : '-' }}</p>
+          <p>地点：{{ qingbao.stadiu ? qingbao.stadium.city_cn_name : '-' }}{{ qingbao.stadiucity_cn_name ? qingbao.stadiucity_cn_name : '' }}</p>
+          <p>地图坐标：{{ qingbao.stadiu ? qingbao.stadium.google_maps_coordinates : '-' }}</p>
         </div>
         <div v-if="match.weathe">
-          <p>天气：{{match.weather}}</p>
-          <p>温度：{{match.weather_desc[0].V}}</p>
+          <p>天气：{{ match.weather }}</p>
+          <p>温度：{{ match.weather_desc[0].V }}</p>
         </div>
       </div>
     </div>
@@ -35,36 +35,34 @@
           <p>带队出赛</p>
         </div>
         <div>
-          <p class="red">{{match.home_team_name}}</p>
-          <p>{{qingbao.home_coach.en_name?qingbao.home_coach.en_name:'-'}}</p>
+          <p class="red">{{ match.home_team_name }}</p>
+          <p>{{ qingbao.home_coach.en_name ? qingbao.home_coach.en_name : '-' }}</p>
           <p>
-            <img
-              v-if="qingbao.home_coach.logo"
-              :src="'https://imgs.oss.cn-south-1.jcloudcs.com/'+qingbao.home_coach.logo.slice(6)"
-              class="avatar"
-              alt
-            />
+            <img v-if="qingbao.home_coach.logo" :src="'https://imgs.oss.cn-south-1.jcloudcs.com/' + qingbao.home_coach.logo.slice(6)" class="avatar" alt />
           </p>
-          <p>{{qingbao.home_coach.birthdate?qingbao.home_coach.birthdate.slice(0,10):'-'}}</p>
-          <p>{{qingbao.home_coach.style?qingbao.home_coach.style:'-'}}</p>
-          <p>{{qingbao.home_coach.score?qingbao.home_coach.score:'-'}}</p>
-          <p>{{qingbao.home_coach.game_count?qingbao.home_coach.game_count:'-'}}（胜：{{qingbao.home_coach.win?qingbao.home_coach.win:'-'}}，平{{qingbao.home_coach.draw?qingbao.home_coach.draw:'-'}}，负{{qingbao.home_coach.lose?qingbao.home_coach.lose:'-'}}）</p>
+          <p>{{ qingbao.home_coach.birthdate ? qingbao.home_coach.birthdate.slice(0, 10) : '-' }}</p>
+          <p>{{ qingbao.home_coach.style ? qingbao.home_coach.style : '-' }}</p>
+          <p>{{ qingbao.home_coach.score ? qingbao.home_coach.score : '-' }}</p>
+          <p>
+            {{ qingbao.home_coach.game_count ? qingbao.home_coach.game_count : '-' }}（胜：{{ qingbao.home_coach.win ? qingbao.home_coach.win : '-' }}，平{{
+              qingbao.home_coach.draw ? qingbao.home_coach.draw : '-'
+            }}，负{{ qingbao.home_coach.lose ? qingbao.home_coach.lose : '-' }}）
+          </p>
         </div>
         <div>
-          <p class="blue">{{match.away_team_name}}</p>
-          <p>{{qingbao.away_coach.en_name?qingbao.away_coach.en_name:'-'}}</p>
+          <p class="blue">{{ match.away_team_name }}</p>
+          <p>{{ qingbao.away_coach.en_name ? qingbao.away_coach.en_name : '-' }}</p>
           <p>
-            <img
-              v-if="qingbao.away_coach.logo"
-              :src="'https://imgs.oss.cn-south-1.jcloudcs.com/'+qingbao.away_coach.logo.slice(6)"
-              class="avatar"
-              alt
-            />
+            <img v-if="qingbao.away_coach.logo" :src="'https://imgs.oss.cn-south-1.jcloudcs.com/' + qingbao.away_coach.logo.slice(6)" class="avatar" alt />
           </p>
-          <p>{{qingbao.away_coach.birthdate?qingbao.away_coach.birthdate.slice(0,10):'-'}}</p>
-          <p>{{qingbao.away_coach.style?qingbao.away_coach.style:'-'}}</p>
-          <p>{{qingbao.away_coach.score?qingbao.away_coach.score:'-'}}</p>
-          <p>{{qingbao.away_coach.game_count?qingbao.away_coach.game_count:'-'}}（胜：{{qingbao.away_coach.win?qingbao.away_coach.win:'-'}}，平{{qingbao.away_coach.draw?qingbao.away_coach.draw:'-'}}，负{{qingbao.away_coach.lose?qingbao.away_coach.lose:'-'}}）</p>
+          <p>{{ qingbao.away_coach.birthdate ? qingbao.away_coach.birthdate.slice(0, 10) : '-' }}</p>
+          <p>{{ qingbao.away_coach.style ? qingbao.away_coach.style : '-' }}</p>
+          <p>{{ qingbao.away_coach.score ? qingbao.away_coach.score : '-' }}</p>
+          <p>
+            {{ qingbao.away_coach.game_count ? qingbao.away_coach.game_count : '-' }}（胜：{{ qingbao.away_coach.win ? qingbao.away_coach.win : '-' }}，平{{
+              qingbao.away_coach.draw ? qingbao.away_coach.draw : '-'
+            }}，负{{ qingbao.away_coach.lose ? qingbao.away_coach.lose : '-' }}）
+          </p>
         </div>
       </div>
     </div>
@@ -73,54 +71,54 @@
       <table class="qingbao-item">
         <tr>
           <td class="td1">队伍</td>
-          <td class="td1 red">{{match.home_team_name}}</td>
-          <td class="td1 blue">{{match.away_team_name}}</td>
+          <td class="td1 red">{{ match.home_team_name }}</td>
+          <td class="td1 blue">{{ match.away_team_name }}</td>
         </tr>
         <tr>
           <td>有利</td>
-          <td>{{news.zhuli?news.zhuli.replace(/undefined/g, ''):'-'}}</td>
-          <td>{{news.keli?news.keli.replace(/undefined/g, ''):'-'}}</td>
+          <td>{{ news.zhuli ? news.zhuli.replace(/undefined/g, '') : '-' }}</td>
+          <td>{{ news.keli ? news.keli.replace(/undefined/g, '') : '-' }}</td>
         </tr>
         <tr>
           <td>不利</td>
-          <td>{{news.zhuhai?news.zhuhai.replace(/undefined/g, ''):'-'}}</td>
-          <td>{{news.kehai?news.kehai.replace(/undefined/g, ''):'-'}}</td>
+          <td>{{ news.zhuhai ? news.zhuhai.replace(/undefined/g, '') : '-' }}</td>
+          <td>{{ news.kehai ? news.kehai.replace(/undefined/g, '') : '-' }}</td>
         </tr>
         <tr>
           <td>中立</td>
-          <td>{{news.zhuzhong?news.zhuzhong.replace(/undefined/g, ''):'-'}}</td>
-          <td>{{news.kezhong?news.kezhong.replace(/undefined/g, ''):'-'}}</td>
+          <td>{{ news.zhuzhong ? news.zhuzhong.replace(/undefined/g, '') : '-' }}</td>
+          <td>{{ news.kezhong ? news.kezhong.replace(/undefined/g, '') : '-' }}</td>
         </tr>
       </table>
     </div>
     <div class="zhishu">
       <h2>指数情报</h2>
-      <p class="red">{{match.home_team_name}}</p>
-      <p>{{qingbao.winningOdds.home_desc?qingbao.winningOdds.home_desc:'-'}}</p>
-      <p class="blue">{{match.away_team_name}}</p>
-      <p>{{qingbao.winningOdds.away_desc?qingbao.winningOdds.away_desc:'-'}}</p>
+      <p class="red">{{ match.home_team_name }}</p>
+      <p>{{ qingbao.winningOdds.home_desc ? qingbao.winningOdds.home_desc : '-' }}</p>
+      <p class="blue">{{ match.away_team_name }}</p>
+      <p>{{ qingbao.winningOdds.away_desc ? qingbao.winningOdds.away_desc : '-' }}</p>
     </div>
     <div>
       <h2>比赛预测</h2>
-      <p>{{news.yuce?news.zhuzhi.replace(/undefined/g, ''):'-'}}</p>
+      <p>{{ news.yuce ? news.zhuzhi.replace(/undefined/g, '') : '-' }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
       qingbao: [],
       news: {}
-    };
+    }
   },
   methods: {
     async getOneMatchInformation() {
       let res = await this.$api.getOneMatchInformation({
         id: this.match.id
-      });
+      })
       if (res.informatins) {
         let news = {
           // zhuqing: '',
@@ -129,49 +127,48 @@ export default {
           // keshang: [],
           // zhishu: [],
           // yuce: []
-        };
+        }
         res.informatins.map(i => {
-          debugger;
           if (i.type_id == 3) {
             if (i.benefit == 0) {
-              news["zhuzhong"] += i.content;
+              news['zhuzhong'] += i.content
             } else if (i.benefit == 2) {
-              news["zhuli"] += i.content;
+              news['zhuli'] += i.content
             } else if (i.benefit == 4) {
-              news["zhuhai"] += i.content;
+              news['zhuhai'] += i.content
             }
             // news["zhuqing"].push(i);
           } else if (i.type_id == 4) {
             if (i.benefit == 1) {
-              news["kezhong"] += i.content;
+              news['kezhong'] += i.content
             } else if (i.benefit == 3) {
-              news["keli"] += i.content;
+              news['keli'] += i.content
             } else if (i.benefit == 5) {
-              news["kehai"] += i.content;
+              news['kehai'] += i.content
             }
             // news["keqing"].push(i);
           } else if (i.type_id == 1) {
-            news["zhushang"] = i.content;
+            news['zhushang'] = i.content
           } else if (i.type_id == 2) {
-            news["keshang"] = i.content;
+            news['keshang'] = i.content
           } else if (i.type_id == 6) {
-            news["yuce"] += i.content;
+            news['yuce'] += i.content
           }
-        });
+        })
 
-        this.news = news;
+        this.news = news
       }
-      this.qingbao = res;
-      console.log(this.news);
+      this.qingbao = res
+      console.log(this.news)
     }
   },
   mounted() {
-    this.getOneMatchInformation();
+    this.getOneMatchInformation()
   },
   computed: {
-    ...mapState(["match"])
+    ...mapState(['match'])
   }
-};
+}
 </script>
 
 <style scoped lang="stylus">

@@ -1,6 +1,6 @@
 <template>
   <div class="bifen center">
-    <img :src="icons.banner" alt="盈利" class="banner" />
+    <!-- <img :src="icons.banner" alt="盈利" class="banner" /> -->
     <div class="wrapper">
       <el-tabs v-model="tabType" @tab-click="chooseTab">
         <el-tab-pane label="比分" name="now"></el-tab-pane>
@@ -9,12 +9,8 @@
       </el-tabs>
       <div class="con box">
         <div class="div1" v-if="tabType == 'now'">
-          <span :class="['btn', { btn1: !chooseAll }]" @click="getPartMatches"
-            >精简</span
-          >
-          <span :class="['btn', { btn1: chooseAll }]" @click="getAllMatches"
-            >完整</span
-          >
+          <span :class="['btn', { btn1: !chooseAll }]" @click="getPartMatches">精简</span>
+          <span :class="['btn', { btn1: chooseAll }]" @click="getAllMatches">完整</span>
           <span>
             共
             <span class="red">{{ total }}</span> 场
@@ -37,12 +33,7 @@
           </div>
         </div>
         <div class="div2">
-          <span
-            v-for="(item, i) in ups"
-            :key="i"
-            @click="up(i)"
-            :class="{ red: nowUp === i }"
-          >
+          <span v-for="(item, i) in ups" :key="i" @click="up(i)" :class="{ red: nowUp === i }">
             {{ item }}
             <i :class="['icon', nowUp === i ? 'up' : 'down']"></i>
           </span>
@@ -57,22 +48,11 @@
         <li v-for="(li, i) in 100" :key="i">{{ li }}</li>
       </ul>
       <div class="table">
-        <el-table
-          height="1200"
-          ref="multipleTable"
-          :data="showMatches"
-          tooltip-effect="dark"
-          style="width: 100%"
-          v-loading="loading"
-        >
+        <el-table ref="multipleTable" :data="showMatches" tooltip-effect="dark" style="width: 100%" v-loading="loading">
           <el-table-column type="selection" width="50"></el-table-column>
           <el-table-column label="赛事" width="120">
             <template slot-scope="scope">
-              <img
-                :src="scope.row.tournament_logo_url"
-                alt="图标"
-                class="logo"
-              />
+              <img :src="scope.row.tournament_logo_url" alt="图标" class="logo" />
               <span>{{ scope.row.tournament_alias }}</span>
             </template>
           </el-table-column>
@@ -81,44 +61,24 @@
           </el-table-column>
           <el-table-column label="状态" width="80">
             <template slot-scope="scope">
-              <span :class="[scope.row.status == 3 ? 'red' : '']">{{
-                scope.row.status_name
-              }}</span>
+              <span :class="[scope.row.status == 3 ? 'red' : '']">{{ scope.row.status_name }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="home_team_name"
-            label="主队"
-            width
-          ></el-table-column>
+          <el-table-column prop="home_team_name" label="主队" width></el-table-column>
           <el-table-column abel="比分" width="120">
             <template slot-scope="scope">
               <span v-if="scope.row.status != 1" class="red">
-                <span class="red-card" v-show="scope.row.red1">{{
-                  scope.row.red1
-                }}</span>
-                <span class="yellow-card" v-show="scope.row.yellow1">{{
-                  scope.row.yellow1
-                }}</span>
-                {{
-                  scope.row.home_team_score + "-" + scope.row.away_team_score
-                }}
-                <span class="yellow-card" v-show="scope.row.yellow2">{{
-                  scope.row.yellow2
-                }}</span>
+                <span class="red-card" v-show="scope.row.red1">{{ scope.row.red1 }}</span>
+                <span class="yellow-card" v-show="scope.row.yellow1">{{ scope.row.yellow1 }}</span>
+                {{ scope.row.home_team_score + '-' + scope.row.away_team_score }}
+                <span class="yellow-card" v-show="scope.row.yellow2">{{ scope.row.yellow2 }}</span>
 
-                <span class="red-card" v-show="scope.row.red2">{{
-                  scope.row.red2
-                }}</span>
+                <span class="red-card" v-show="scope.row.red2">{{ scope.row.red2 }}</span>
               </span>
               <img :src="icons.vs" v-else class="vs-icon" />
             </template>
           </el-table-column>
-          <el-table-column
-            prop="away_team_name"
-            label="客队"
-            width
-          ></el-table-column>
+          <el-table-column prop="away_team_name" label="客队" width></el-table-column>
           <el-table-column label="半场" width>
             <template slot-scope="scope">
               <span>{{ scope.row.score1 }}-{{ scope.row.score2 }}</span>
@@ -126,43 +86,28 @@
           </el-table-column>
           <el-table-column prop="name" label="角球" width>
             <template slot-scope="scope">
-              <img
-                :src="icons.corner"
-                v-show="scope.row.corner1 || scope.row.corner2"
-                alt
-              />
+              <img :src="icons.corner" v-show="scope.row.corner1 || scope.row.corner2" alt />
               <span>{{ scope.row.corner1 }}-{{ scope.row.corner2 }}</span>
             </template>
           </el-table-column>
           <el-table-column label="指数" width="250">
             <template slot-scope="scope">
               <p class="zhishu">
-                <span v-for="(li, i) in scope.row.yapan" :key="i">{{
-                  li
-                }}</span>
+                <span v-for="(li, i) in scope.row.yapan" :key="i">{{ li }}</span>
               </p>
               <p class="zhishu">
-                <span v-for="(li, i) in scope.row.daxiao" :key="i">{{
-                  li
-                }}</span>
+                <span v-for="(li, i) in scope.row.daxiao" :key="i">{{ li }}</span>
               </p>
             </template>
           </el-table-column>
           <el-table-column label="数据" width="60">
             <template slot-scope="scope">
-              <span @click="chooseMatch(scope.row)" class="fenxi red"
-                >分析</span
-              >
+              <span @click="chooseMatch(scope.row)" class="fenxi red">分析</span>
             </template>
           </el-table-column>
           <el-table-column prop="name" label="置顶" width="60">
             <template slot-scope="scope">
-              <img
-                :src="icons.top"
-                alt
-                @click="setTop(scope)"
-                class="set-top"
-              />
+              <img :src="icons.top" alt @click="setTop(scope)" class="set-top" />
             </template>
           </el-table-column>
         </el-table>
@@ -178,64 +123,29 @@
 </template>
 
 <script>
-import odds from "../common/odds";
+import WebSocketUtil from '@/utils/WebSocketUtil.js'
+import odds from '../common/odds'
 export default {
   components: {},
   data() {
     return {
       icons: {
-        banner: require("../assets/bifen/banner.png"),
-        hidden: require("../assets/bifen/hidden.png"),
-        show: require("../assets/bifen/show.png"),
-        save: require("../assets/bifen/save.png"),
-        top: require("../assets/bifen/top.png"),
-        vs: require("../assets/vs.png"),
-        corner: require("../assets/bifen/corner.png"),
-        date: require("../assets/bifen/date.png"),
-        down: require("../assets/bifen/down.png"),
+        banner: require('../assets/bifen/banner.png'),
+        hidden: require('../assets/bifen/hidden.png'),
+        show: require('../assets/bifen/show.png'),
+        save: require('../assets/bifen/save.png'),
+        top: require('../assets/bifen/top.png'),
+        vs: require('../assets/vs.png'),
+        corner: require('../assets/bifen/corner.png'),
+        date: require('../assets/bifen/date.png'),
+        down: require('../assets/bifen/down.png')
       },
-      tabType: "now",
-      ups: ["选择公司", "选择赛事", "选择盘路"],
-      nowUp: "",
-      tableData: [
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-08",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-06",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-07",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-      ],
+      tabType: 'now',
+      ups: ['选择公司', '选择赛事', '选择盘路'],
+      nowUp: '',
+
       multipleSelection: [],
-      search: "",
+      search: '',
       matchList: [],
       unBegin: [],
       begin: [],
@@ -246,374 +156,264 @@ export default {
       before7d: [],
       after7d: [],
       dateList: [],
-      checkedDate: "",
-      showDate: false,
-    };
+      checkedDate: '',
+      showDate: false
+    }
   },
   methods: {
     //选择日期
     chooseTab(type) {
-      this.tabType = type.name;
-      this.before7d = [];
-      this.after7d = [];
-      this.checkedDate = "";
-      if (type.name === "finish") {
-        this.get7day(true, this.before7d);
-        this.dateList = this.before7d;
-        let date = this.checkedDate.split(" ")[0]
-          ? this.checkedDate.split(" ")[0]
-          : this.dateList[0].split(" ")[0];
-        this.getNowMatchList(200, date);
-      } else if (type.name === "future") {
-        this.get7day(false, this.after7d);
-        this.dateList = this.after7d;
-        let date = this.checkedDate.split(" ")[0]
-          ? this.checkedDate.split(" ")[0]
-          : this.dateList[0].split(" ")[0];
-        this.getNowMatchList(100, date);
+      this.tabType = type.name
+      this.before7d = []
+      this.after7d = []
+      this.checkedDate = ''
+      if (type.name === 'finish') {
+        this.get7day(true, this.before7d)
+        this.dateList = this.before7d
+        let date = this.checkedDate.split(' ')[0] ? this.checkedDate.split(' ')[0] : this.dateList[0].split(' ')[0]
+        this.getNowMatchList(200, date)
+      } else if (type.name === 'future') {
+        this.get7day(false, this.after7d)
+        this.dateList = this.after7d
+        let date = this.checkedDate.split(' ')[0] ? this.checkedDate.split(' ')[0] : this.dateList[0].split(' ')[0]
+        this.getNowMatchList(100, date)
       }
     },
     get7day(before, dateArray) {
       //设置日期，当前日期的前七天
-      let myDate = new Date(); //获取今天日期
-      let today = myDate.getMonth() + 1 + "-" + myDate.getDate();
-      let year = myDate.getFullYear();
+      let myDate = new Date() //获取今天日期
+      let today = myDate.getMonth() + 1 + '-' + myDate.getDate()
+      let year = myDate.getFullYear()
       let week = {
-        0: "星期天",
-        1: "星期一",
-        2: "星期二",
-        3: "星期三",
-        4: "星期四",
-        5: "星期五",
-        6: "星期六",
-      };
+        0: '星期天',
+        1: '星期一',
+        2: '星期二',
+        3: '星期三',
+        4: '星期四',
+        5: '星期五',
+        6: '星期六'
+      }
 
       if (before) {
-        myDate.setDate(myDate.getDate() - 6);
+        myDate.setDate(myDate.getDate() - 6)
       } else {
-        myDate.setDate(myDate.getDate() + 1);
+        myDate.setDate(myDate.getDate() + 1)
       }
-      let dateTemp;
-      let flag = 1;
-      let len = before ? 6 : 7;
+      let dateTemp
+      let flag = 1
+      let len = before ? 6 : 7
 
       for (var i = 0; i < len; i++) {
-        var weekday = myDate.getDay();
+        var weekday = myDate.getDay()
 
-        dateTemp =
-          year +
-          "-" +
-          (myDate.getMonth() + 1) +
-          "-" +
-          myDate.getDate() +
-          " " +
-          week[weekday];
+        dateTemp = year + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate() + ' ' + week[weekday]
 
-        dateArray.push(dateTemp);
-        myDate.setDate(myDate.getDate() + flag);
+        dateArray.push(dateTemp)
+        myDate.setDate(myDate.getDate() + flag)
       }
       if (before) {
-        dateArray.push(year + "-" + today + " " + week[myDate.getDay()]);
-        dateArray.reverse();
+        dateArray.push(year + '-' + today + ' ' + week[myDate.getDay()])
+        dateArray.reverse()
       }
     },
     toggleDate() {
-      this.showDate = !this.showDate;
+      this.showDate = !this.showDate
     },
     checkDate(day) {
-      this.checkedDate = day;
-      this.showDate = false;
-      let date = this.checkedDate.split(" ")[0]
-        ? this.checkedDate.split(" ")[0]
-        : this.dateList[0].split(" ")[0];
-      this.getNowMatchList(200, date);
+      this.checkedDate = day
+      this.showDate = false
+      let date = this.checkedDate.split(' ')[0] ? this.checkedDate.split(' ')[0] : this.dateList[0].split(' ')[0]
+      this.getNowMatchList(200, date)
     },
     up(i) {
       if (this.nowUp === i) {
-        this.nowUp = "";
-        return;
+        this.nowUp = ''
+        return
       }
-      this.nowUp = i;
+      this.nowUp = i
     },
-    setTop(scope) {
-      console.log(scope + "--------------------------------");
-    },
-    //比赛列表
+    // setTop(scope) {
+    //   console.log(scope + '--------------------------------')
+    // },
+
+    //比赛列表(已完结和未开始)
     async getNowMatchList(per_page, date) {
       let res = await this.$api.getNowMatchList({
         per_page: per_page,
-        date: date,
-      });
+        date: date
+      })
       //ststus:1 未开始 2 进行中 3 已结束
-      let finish = [];
-      let future = [];
-      let ing = [];
-      res.data.map((item) => {
+      let finish = []
+      let future = []
+      let ing = []
+      res.data.map(item => {
         if (item.status == 1) {
-          future.push(item);
+          future.push(item)
         } else if (item.status == 2) {
-          ing.push(item);
+          ing.push(item)
         } else if (item.status === 3) {
-          finish.push(item);
+          finish.push(item)
         }
-      });
+      })
 
-      if (this.tabType === "finish") {
-        this.matchList = finish;
-      } else if (this.tabType === "future") {
-        this.matchList = future;
+      if (this.tabType === 'finish') {
+        this.matchList = finish
+      } else if (this.tabType === 'future') {
+        this.matchList = future
       }
     },
+    //当日未开始
     async getUnBeginMatch(per_page) {
       // const loading = this.$loading();
       let res = await this.$api.getUnBeginMatch({
-        per_page: per_page,
-      });
+        per_page: per_page
+      })
       // loading.close();
-      this.loading = false;
-      this.unBegin = res.data;
+      this.loading = false
+      this.unBegin = res.data
     },
+    //正在开始
     async getBeginMatch(per_page) {
       let res = await this.$api.getBeginMatch({
-        per_page: per_page,
-      });
-      this.begin = res.data;
+        per_page: per_page
+      })
+      this.begin = res.data
     },
+    //当日已完结
     async getEndMatch(per_page) {
       let res = await this.$api.getEndMatch({
-        per_page: per_page,
-      });
-      this.end = res.data;
+        per_page: per_page
+      })
+      this.end = res.data
     },
+    //获取所有当日的比赛（未开始，开始，完结）
     getAllMatches() {
-      this.chooseAll = true;
-      this.getUnBeginMatch(100);
-      this.getBeginMatch(20);
-      this.getEndMatch(100);
+      this.chooseAll = true
+      this.getUnBeginMatch(100)
+      this.getBeginMatch(20)
+      this.getEndMatch(100)
     },
+    //获取一部分当日的比赛（未开始，开始，完结）
     getPartMatches() {
-      this.chooseAll = false;
-      this.getUnBeginMatch(40);
-      this.getBeginMatch(20);
-      this.getEndMatch(10);
+      this.chooseAll = false
+      this.getUnBeginMatch(40)
+      this.getBeginMatch(20)
+      this.getEndMatch(10)
     },
+    // 选择哪条比赛，进入详情页
     chooseMatch(match) {
-      debugger;
-      this.$store.commit("chooseMatch", match);
+      debugger
+      this.$store.commit('chooseMatch', match)
       this.$router.push({
-        path: `/bifenDetail`,
-      });
+        path: `/bifenDetail`
+      })
     },
+    //websocket
+    initSocket() {
+      this.socket = new WebSocketUtil({ url: 'ws://ws.211aoa.com:8282' })
+      // websocket 初始化成功
+      this.socket.onCreate = () => {
+        this.connected = true
+        console.log('初始化成功')
+      }
+      this.socket.init()
+    },
+    //处理每个比赛数据，红牌，黄牌，比分，角球，百家赔率
+    dealdata(data) {
+      data.map(i => {
+        i['yapan'] = ['-', '-', '-']
+        i['daxiao'] = ['-', '-', '-']
+        if (i.statics) {
+          i.statics.map(j => {
+            if (j.type_en_name === 'yellow') {
+              i['yellow1'] = parseInt(j.team1)
+              i['yellow2'] = parseInt(j.team2)
+            }
+            if (j.type_en_name === 'red') {
+              i['red1'] = parseInt(j.team1)
+              i['red2'] = parseInt(j.team2)
+            }
+            if (j.type_en_name === 'cornerKicks') {
+              i['corner1'] = parseInt(j.team1)
+              i['corner2'] = parseInt(j.team2)
+            }
+          })
+        }
+        if (i.scores) {
+          i.scores.map(j => {
+            if (j.type === 'Period1') {
+              i['score1'] = parseInt(j.team1)
+              i['score2'] = parseInt(j.team2)
+            }
+          })
+        }
+
+        //亚盘
+        if (i.match_yapan) {
+          let yapan = i.match_yapan['Bet365'] ? i.match_yapan['Bet365'] : i.match_yapan['Vcbet']
+          if (yapan.length == 0) {
+            yapan = i.match_yapan['suibian']
+          }
+          if (yapan.length != 0) {
+            i['yapan'] = [
+              (yapan.fields[0].value - 1).toFixed(2),
+              yapan.ovalue > 0 ? '受' + odds[Math.abs(yapan.ovalue)] : odds[Math.abs(yapan.ovalue)],
+              (yapan.fields[1].value - 1).toFixed(2)
+            ]
+          }
+        }
+
+        //大小球
+        if (i.match_daxiaoqiu) {
+          let daxiaoqiu = i.match_daxiaoqiu['Bet365'] ? i.match_daxiaoqiu['Bet365'] : i.match_daxiaoqiu['Vcbet']
+          if (!daxiaoqiu.length == 0) {
+            daxiaoqiu = i.match_daxiaoqiu['suibian']
+          }
+          if (daxiaoqiu.length != 0) {
+            i['daxiao'] = [(daxiaoqiu.fields[0].value - 1).toFixed(2), odds[Math.abs(daxiaoqiu.ovalue)], (daxiaoqiu.fields[1].value - 1).toFixed(2)]
+          }
+        }
+      })
+      return data
+    }
   },
   mounted() {
-    this.getPartMatches();
+    this.getPartMatches()
+    // 初始化websoket
+    // this.initSocket({ url: 'ws://ws.211aoa.com:8282' })
   },
   computed: {
+    //当日比赛
     now_matches() {
-      let sumData = [];
-      let begin = this.begin;
-      let unbegin = this.unBegin;
+      let sumData = []
+      let begin = this.begin
+      let unbegin = this.unBegin
 
-      let end = this.end;
-      begin.map((item) => {
-        if (item.statics) {
-          item.statics.map((i) => {
-            if (i.type_en_name === "yellow") {
-              item["yellow1"] = parseInt(i.team1);
-              item["yellow2"] = parseInt(i.team2);
-            }
-            if (i.type_en_name === "red") {
-              item["red1"] = parseInt(i.team1);
-              item["red2"] = parseInt(i.team2);
-            }
-            if (i.type_en_name === "cornerKicks") {
-              item["corner1"] = parseInt(i.team1);
-              item["corner2"] = parseInt(i.team2);
-            }
-          });
-        }
-        if (item.scores) {
-          item.scores.map((i) => {
-            if (i.type === "Period1") {
-              item["score1"] = parseInt(i.team1);
-              item["score2"] = parseInt(i.team2);
-            }
-          });
-        }
-
-        if (item.match_detail != null && item.match_detail.length != 0) {
-          item["yapan"] = ["-", "-", "-"];
-          item["daxiao"] = ["-", "-", "-"];
-
-          let arr = item.match_detail;
-          let arr1 = arr.reduce((ary, i) => {
-            if (i.type_id == 121 && i.book_en_name == "Bet365") {
-              ary.push(i);
-            }
-            return ary;
-          }, []);
-          if (arr1.length > 0) {
-            let ovalue = "";
-            for (let key in odds) {
-              if (key == Math.abs(arr1[0].ovalue)) {
-                ovalue =
-                  parseFloat(arr1[0].ovalue) > 0 ? "受" + odds[key] : odds[key];
-              }
-            }
-            item["yapan"] = [
-              arr1[0].fields[0].value,
-              ovalue,
-              arr1[0].fields[0].value,
-            ];
-          }
-          let arr2 = arr.reduce((ary, i) => {
-            if (i.type_id == 122 && i.book_en_name == "Bet365") {
-              ary.push(i);
-            }
-            return ary;
-          }, []);
-          if (arr2.length > 0) {
-            item["daxiao"] = [
-              arr2[0].fields[0].value,
-              arr2[0].ovalue,
-              arr2[0].fields[0].value,
-            ];
-          }
-        }
-      });
-      end.map((item) => {
-        if (item.statics) {
-          item.statics.map((i) => {
-            if (i.type_en_name === "yellow") {
-              item["yellow1"] = parseInt(i.team1);
-              item["yellow2"] = parseInt(i.team2);
-            }
-            if (i.type_en_name === "red") {
-              item["red1"] = parseInt(i.team1);
-              item["red2"] = parseInt(i.team2);
-            }
-            if (i.type_en_name === "cornerKicks") {
-              item["corner1"] = parseInt(i.team1);
-              item["corner2"] = parseInt(i.team2);
-            }
-          });
-        }
-        if (item.scores) {
-          item.scores.map((i) => {
-            if (i.type === "Period1") {
-              item["score1"] = parseInt(i.team1);
-              item["score2"] = parseInt(i.team2);
-            }
-          });
-        }
-        if (item.match_detail != null && item.match_detail.length != 0) {
-          item["yapan"] = ["-", "-", "-"];
-          item["daxiao"] = ["-", "-", "-"];
-
-          let arr = item.match_detail;
-          let arr1 = arr.reduce((ary, i) => {
-            if (i.type_id == 121 && i.book_en_name == "Bet365") {
-              ary.push(i);
-            }
-            return ary;
-          }, []);
-          if (arr1.length > 0) {
-            let ovalue = "";
-            for (let key in odds) {
-              if (key == Math.abs(arr1[0].ovalue)) {
-                // if (parseFloat(arr1[0].ovalue) > 0) {
-                //   ovalue = "受" + odds[key];
-                // } else {
-                // }
-                ovalue =
-                  parseFloat(arr1[0].ovalue) > 0 ? "受" + odds[key] : odds[key];
-              }
-            }
-            item["yapan"] = [
-              arr1[0].fields[0].value,
-              ovalue,
-              arr1[0].fields[0].value,
-            ];
-          }
-          let arr2 = arr.reduce((ary, i) => {
-            if (i.type_id == 122 && i.book_en_name == "Bet365") {
-              ary.push(i);
-            }
-            return ary;
-          }, []);
-          if (arr2.length > 0) {
-            item["daxiao"] = [
-              arr2[0].fields[0].value,
-              arr2[0].ovalue,
-              arr2[0].fields[0].value,
-            ];
-          }
-        }
-      });
-      unbegin.map((item) => {
-        item["yapan"] = ["-", "-", "-"];
-        item["daxiao"] = ["-", "-", "-"];
-        if (item.match_detail != null && item.match_detail.length != 0) {
-          let arr = item.match_detail;
-          let arr1 = arr.reduce((ary, i) => {
-            if (i.type_id == 1 && i.book_en_name == "Bet365") {
-              ary.push(i);
-            }
-            return ary;
-          }, []);
-          if (arr1.length > 0) {
-            let ovalue = "";
-            for (let key in odds) {
-              if (key == Math.abs(arr1[0].ovalue)) {
-                // if (parseFloat(arr1[0].ovalue) > 0) {
-                //   ovalue = "受" + odds[key];
-                // } else {
-                // }
-                ovalue =
-                  parseFloat(arr1[0].ovalue) > 0 ? "受" + odds[key] : odds[key];
-              }
-            }
-            item["yapan"] = [
-              arr1[0].fields[0].value,
-              ovalue,
-              arr1[0].fields[0].value,
-            ];
-          }
-          let arr2 = arr.reduce((ary, i) => {
-            if (i.type_id == 3 && i.book_en_name == "Bet365") {
-              ary.push(i);
-            }
-            return ary;
-          }, []);
-          if (arr2.length > 0) {
-            item["daxiao"] = [
-              arr2[0].fields[0].value,
-              arr2[0].ovalue,
-              arr2[0].fields[0].value,
-            ];
-          }
-        }
-      });
+      let end = this.end
+      this.dealdata(end)
+      this.dealdata(unbegin)
+      this.dealdata(begin)
 
       sumData = sumData
         .concat(this.begin)
         .concat(this.unBegin)
-        .concat(end);
-      // console.log(sumData);
-      return sumData;
+        .concat(end)
+      return sumData
     },
+    //比赛列表的length
     total() {
-      return this.showMatches.length;
+      return this.showMatches.length
     },
+    //根据用户需求，点击完结和赛程展示getNowMatchList ，点击 比分 展示 getPartMatches
     showMatches() {
-      if (this.tabType === "now") {
-        return this.now_matches;
+      if (this.tabType === 'now') {
+        return this.now_matches
       } else {
-        return this.matchList;
+        return this.matchList
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 <style scoped lang="stylus">
 .center {
