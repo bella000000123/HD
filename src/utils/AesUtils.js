@@ -1,8 +1,8 @@
 // 获取Aes加密
-import * as CryptoJS from 'crypto-js'
+import CryptoJS from 'crypto-js'
 
-const key = 'qiyue666'
-const iv = 'FsCPpA5t48bRs3v1'
+const key = CryptoJS.enc.Utf8.parse('JtZ9RzYpN2tEVayl') // 十六位十六进制数作为密钥
+const iv = CryptoJS.enc.Utf8.parse('JtZ9RzYpN2tEVayl') // 十六位十六进制数作为密钥偏移量
 
 /**
  * @FileName: AesUtil
@@ -18,28 +18,18 @@ export default class AesUtils {
    * @param text 加密文本
    */
   static encrypt(data) {
-    var _key = CryptoJS.enc.Utf8.parse(key)
-    var _iv = CryptoJS.enc.Utf8.parse(iv)
-    return CryptoJS.AES.encrypt(JSON.stringify(data), _key, { iv: _iv, mode: CryptoJS.mode.CBC }).toString()
+    let srcs = CryptoJS.enc.Utf8.parse(data)
+    let encrypted = CryptoJS.AES.encrypt(srcs, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 })
+    return CryptoJS.enc.Base64.stringify(encrypted.ciphertext)
   }
 
   /**
    * 解密
    * @param text 待解密文本
    */
-  // static decrypt(data) {
-  //   var _key = CryptoJS.enc.Utf8.parse(key)
-  //   var _iv = CryptoJS.enc.Utf8.parse(iv)
-
-  //   let decrypted = CryptoJS.AES.decrypt(data, _key, { iv: _iv, mode: CryptoJS.mode.CBC })
-
-  //   return JSON.parse(decrypted.toString(CryptoJS.enc.Utf8))
-  // }
-
-  //解密
   static decrypt(data) {
-    var _key = CryptoJS.enc.Utf8.parse(key)
-    var decrypt = CryptoJS.AES.decrypt(data, _key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 })
-    return CryptoJS.enc.Utf8.stringify(decrypt).toString()
+    let decrypt = CryptoJS.AES.decrypt(data, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 })
+    let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8)
+    return decryptedStr.toString()
   }
 }

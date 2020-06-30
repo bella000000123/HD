@@ -130,6 +130,7 @@
 <script>
 import WebSocketUtil from '@/utils/WebSocketUtil.js'
 import odds from '../common/odds'
+
 export default {
   components: {},
   data() {
