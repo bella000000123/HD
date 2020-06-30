@@ -1,65 +1,65 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 const routes = [
   {
-    path: "/",
-    redirect: "/home",
+    path: '/',
+    redirect: '/home'
   },
   {
-    path: "/home",
-    name: "Home",
-    component: () => import("../views/Home.vue"),
+    path: '/home',
+    name: 'Home',
+    component: () => import('../views/Home.vue')
   },
   {
-    path: "/bifen",
-    name: "bifen",
-    component: () => import("../views/Bifen.vue"),
+    path: '/bifen',
+    name: 'bifen',
+    component: () => import('../views/Bifen.vue')
   },
   {
-    path: "/soccer",
-    name: "soccer",
-    component: () => import("../views/Soccer.vue"),
+    path: '/soccer',
+    name: 'soccer',
+    component: () => import('../views/Soccer.vue')
   },
   {
-    path: "/basketball",
-    name: "basketball",
-    component: () => import("../views/Basketball.vue"),
+    path: '/basketball',
+    name: 'basketball',
+    component: () => import('../views/Basketball.vue')
   },
   {
-    path: "/gaoshou",
-    name: "gaoshou",
-    component: () => import("../views/Gaoshou.vue"),
+    path: '/gaoshou',
+    name: 'gaoshou',
+    component: () => import('../views/Gaoshou.vue')
   },
   {
-    path: "/qingbao",
-    name: "qingbao",
-    component: () => import("../views/Qingbao.vue"),
+    path: '/qingbao',
+    name: 'qingbao',
+    component: () => import('../views/Qingbao.vue')
   },
   {
-    path: "/tuijianDetail",
-    name: "tuijianDetail",
-    component: () => import("../views/TuijianDetail.vue"),
+    path: '/tuijianDetail',
+    name: 'tuijianDetail',
+    component: () => import('../views/TuijianDetail.vue')
   },
   {
-    path: "/article",
-    name: "article",
-    component: () => import("../views/article.vue"),
+    path: '/article',
+    name: 'article',
+    component: () => import('../views/article.vue')
   },
   {
-    path: "/bifenDetail",
-    name: "bifenDetail",
-    component: () => import("../views/bifenDetail.vue"),
-  },
-];
+    path: '/bifenDetail',
+    name: 'bifenDetail',
+    component: () => import('../views/bifenDetail.vue')
+  }
+]
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   // base: process.env.BASE_URL,
   // linkActiveClass: "linkActive",
-  routes,
-});
+  routes
+})
 
-export default router;
+export default router

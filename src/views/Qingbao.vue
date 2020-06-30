@@ -9,12 +9,12 @@
       </div>
 
       <div class="fl zixun">
-        <div v-for="(li,i) in zixun.data" :key="i">
+        <div v-for="(li, i) in zixun.data" :key="i">
           <img :src="li.image" alt class="icon-img" />
           <div class="pankou-list" @click="chooseArticle(li)">
-            <h2>{{li.title}}</h2>
-            <p>{{li.introduction}}</p>
-            <p>·{{li.time}}</p>
+            <h2>{{ li.title }}</h2>
+            <p>{{ li.introduction }}</p>
+            <p>·{{ li.time }}</p>
           </div>
         </div>
 
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import jifen from "@/components/jifen.vue";
+import jifen from '@/components/jifen.vue'
 export default {
   components: {
     jifen
@@ -45,7 +45,7 @@ export default {
       zixun: [],
       page: 1, // 初始页码
       per_page: 20
-    };
+    }
   },
   methods: {
     async articleList() {
@@ -53,33 +53,33 @@ export default {
         cate_id: 3,
         per_page: this.per_page,
         page: this.page
-      };
-      let res = await this.$api.articleList(params);
-      this.zixun = res;
+      }
+      let res = await this.$api.articleList(params)
+      this.zixun = res
     },
     // 分页
     pagenatiOnchange(page) {
-      this.page = page;
-      this.pusherList();
+      this.page = page
+      this.pusherList()
     },
     handleSizeChange(size) {
-      this.per_page = size;
-      this.pusherList();
+      this.per_page = size
+      this.pusherList()
     },
     chooseArticle(article) {
-      this.$store.commit("chooseArticle", article);
+      this.$store.commit('chooseArticle', article)
       this.$router.push({
         path: `/article`
-      });
+      })
     }
   },
   mounted() {
-    this.articleList();
+    this.articleList()
   },
   computed: {}
-};
+}
 </script>
-<style scoped lang='stylus'>
+<style scoped lang="stylus">
 .soccer {
   // height: 1200px;
   .bread {

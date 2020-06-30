@@ -14,17 +14,10 @@
           <div class="title">
             <img :src="icons.qingbao" alt="icon" class="in-block" />
             <h1 class="in-block">情报中心</h1>
-            <router-link to="/qingbao" class="fr unl" tag="span"
-              >查看更多</router-link
-            >
+            <router-link to="/qingbao" class="fr unl" tag="span">查看更多</router-link>
           </div>
           <ul class="list">
-            <li
-              v-for="(li, i) in articleType['qingbao']['data']"
-              :key="i"
-              :class="{ red: li.is_red == 1 }"
-              @click="chooseArticle(li)"
-            >
+            <li v-for="(li, i) in articleType['qingbao']['data']" :key="i" :class="{ red: li.is_red == 1 }" @click="chooseArticle(li)">
               <span></span>
               {{ li.title }}
             </li>
@@ -37,16 +30,10 @@
           <div class="title">
             <img :src="icons.jiaodian" alt="icon" class="in-block" />
             <h1 class="in-block pankou">焦点赛事</h1>
-            <router-link to="/bifen" class="fr unl" tag="span"
-              >查看更多</router-link
-            >
+            <router-link to="/bifen" class="fr unl" tag="span">查看更多</router-link>
           </div>
           <div class="overflow">
-            <div
-              v-for="(li, i) in articleType['jiaodian']"
-              :key="i"
-              class="list"
-            >
+            <div v-for="(li, i) in articleType['jiaodian']" :key="i" class="list">
               <img :src="li.zhudui_image" alt class="icon-img" />
               <div class="in-block">
                 <p>{{ li.match_name }}</p>
@@ -61,19 +48,13 @@
           <div class="title pankou">
             <img :src="icons.pankou" alt="icon" class="in-block" />
             <h1 class="in-block">盘口分析</h1>
-            <router-link to="/soccer" class="fr unl" tag="span"
-              >查看更多</router-link
-            >
+            <router-link to="/soccer" class="fr unl" tag="span">查看更多</router-link>
           </div>
           <div class="overflow">
             <div class="zixun">
               <div v-for="(li, i) in articleType['pankou']" :key="i">
                 <img :src="li.image" alt class="icon-img" />
-                <div
-                  class="pankou-list"
-                  :class="{ red: li.is_red == 1 }"
-                  @click="chooseArticle(li)"
-                >
+                <div class="pankou-list" :class="{ red: li.is_red == 1 }" @click="chooseArticle(li)">
                   <h2>{{ li.title }}</h2>
                   <p>{{ li.introduction }}</p>
                   <p>
@@ -128,9 +109,7 @@
             <div class="title">
               <img :src="icons.renqi" alt="icon" class="in-block" />
               <h1 class="in-block">人气推手</h1>
-              <router-link to="/gaoshou" class="fr unl" tag="span"
-                >查看更多</router-link
-              >
+              <router-link to="/gaoshou" class="fr unl" tag="span">查看更多</router-link>
             </div>
             <div class="list">
               <div v-for="(li, i) in pusherList" :key="i">
@@ -148,9 +127,7 @@
                   <img :src="li.code_image" alt class="code" />
                 </div>
                 <div class="box">
-                  <p class="red" @click="goPush(li)">
-                    {{ li.tuijian_num }}篇推荐 [点击查看]
-                  </p>
+                  <p class="red" @click="goPush(li)">{{ li.tuijian_num }}篇推荐 [点击查看]</p>
                   <p>微信扫码了解</p>
                 </div>
               </div>
@@ -162,11 +139,7 @@
               <h1 class="in-block">积分榜</h1>
             </div>
             <div class="list">
-              <el-tabs
-                type="border-card"
-                v-model="jifenType"
-                @tab-click="jifenTab"
-              >
+              <el-tabs type="border-card" v-model="jifenType" @tab-click="jifenTab">
                 <el-tab-pane name="yingchao" label="英超"></el-tab-pane>
                 <el-tab-pane name="aochao" label="澳超"></el-tab-pane>
                 <el-tab-pane name="xijia" label="西甲"></el-tab-pane>
@@ -182,11 +155,7 @@
                   <span>负</span>
                   <span>积分</span>
                 </li>
-                <li
-                  v-for="(li, i) in jifen[jifenType]"
-                  :key="i"
-                  class="jifen-num"
-                >
+                <li v-for="(li, i) in jifen[jifenType]" :key="i" class="jifen-num">
                   <span class="id">{{ li.paiming }} {{ li.team_name }}</span>
                   <span>{{ li.win }}</span>
                   <span>{{ li.draw }}</span>
@@ -206,7 +175,6 @@
 // @ is an alias to /src
 // import HelloWorld from "@/components/HelloWorld.vue";
 // import jifen from "@/components/jifen.vue";
-import WebSocketUtil from '@/utils/WebSocketUtil.js'
 
 export default {
   name: 'Home',
@@ -261,9 +229,6 @@ export default {
     this.rankingList()
     // 高手全部
     this.gaoshouAllList(15)
-
-    // 初始化websoket
-    this.initSocket({ url: 'ws://ws.211aoa.com:8282' })
   },
   methods: {
     // 分页

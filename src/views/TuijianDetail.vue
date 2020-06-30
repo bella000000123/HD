@@ -6,27 +6,27 @@
       <div class="div1 clearfix">
         <div class="fl left">
           <img :src="pusher.avatar" alt class="avatar" />
-          <h2>{{pusher.name}}</h2>
+          <h2>{{ pusher.name }}</h2>
         </div>
         <div class="fl right">
-          <p>{{pusher.introduction}}</p>
+          <p>{{ pusher.introduction }}</p>
           <div class="title">
             <img :src="icons.article" alt="icon" class="in-block" />
-            <span>文章： {{pusher.tuijian_num}}</span>
+            <span>文章： {{ pusher.tuijian_num }}</span>
 
             <img :src="icons.hot" alt="icon" class="in-block hot" />
-            <span>热度： {{pusher.hot}}</span>
+            <span>热度： {{ pusher.hot }}</span>
           </div>
         </div>
       </div>
 
       <div class="zixun">
-        <div v-for="(li,i) in zixun.data" :key="i">
+        <div v-for="(li, i) in zixun.data" :key="i">
           <img :src="li.image" alt class="icon-img" />
           <div class="pankou-list" @click="chooseArticle(li)">
-            <h2>{{li.title}}</h2>
-            <p>{{li.introduction}}</p>
-            <p>·{{li.time}}</p>
+            <h2>{{ li.title }}</h2>
+            <p>{{ li.introduction }}</p>
+            <p>·{{ li.time }}</p>
           </div>
         </div>
 
@@ -46,20 +46,20 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   components: {},
   data() {
     return {
       icons: {
-        back: require("../assets/tuijian-back.png"),
-        hot: require("../assets/hot.png"),
-        article: require("../assets/article.png")
+        back: require('../assets/tuijian-back.png'),
+        hot: require('../assets/hot.png'),
+        article: require('../assets/article.png')
       },
       zixun: [],
       page: 1, // 初始页码
       per_page: 20
-    };
+    }
   },
   methods: {
     async articleList() {
@@ -67,35 +67,35 @@ export default {
         per_page: this.per_page,
         page: this.page,
         pusher_id: this.pusher.id
-      };
-      let res = await this.$api.articleList(params);
-      this.zixun = res;
+      }
+      let res = await this.$api.articleList(params)
+      this.zixun = res
     },
     // 分页
     pagenatiOnchange(page) {
-      this.page = page;
-      this.pusherList();
+      this.page = page
+      this.pusherList()
     },
     handleSizeChange(size) {
-      this.per_page = size;
-      this.pusherList();
+      this.per_page = size
+      this.pusherList()
     },
     chooseArticle(article) {
-      this.$store.commit("chooseArticle", article);
+      this.$store.commit('chooseArticle', article)
       this.$router.push({
         path: `/article`
-      });
+      })
     }
   },
   mounted() {
-    this.articleList();
+    this.articleList()
   },
   computed: {
-    ...mapState(["pusher"])
+    ...mapState(['pusher'])
   }
-};
+}
 </script>
-<style scoped lang='stylus'>
+<style scoped lang="stylus">
 .soccer {
   width: 100%;
   box-sizing: border-box;

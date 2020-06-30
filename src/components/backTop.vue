@@ -11,7 +11,9 @@
         line-height: 40px;
         color: #1989fa;
       }"
-      >回到顶部</div>
+      >
+        回到顶部
+      </div>
     </el-backtop>
   </div>
 </template>
@@ -20,12 +22,11 @@
 export default {
   components: {},
   data() {
-    return {};
+    return {}
   },
   methods: {},
   created() {},
   computed: {}
-};
+}
 </script>
-<style scoped>
-</style>
+<style scoped></style>

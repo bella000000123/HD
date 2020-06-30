@@ -8,12 +8,12 @@
 export default {
   components: {},
   data() {
-    return {};
+    return {}
   },
   methods: {},
   created() {},
   computed: {}
-};
+}
 </script>
 <style scoped lang="stylus">
 .footer {

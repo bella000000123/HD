@@ -1,17 +1,17 @@
-const path = require("path");
+const path = require('path')
 module.exports = {
   configureWebpack: () => ({
     resolve: {
       alias: {
-        "@": path.resolve("./src")
+        '@': path.resolve('./src')
       }
     }
   }),
   chainWebpack: config => {
-    config.plugin("define").tap(args => {
-      args[0]["process.env"].BASE_URL = JSON.stringify(process.env.BASE_URL);
-      return args;
-    });
+    config.plugin('define').tap(args => {
+      args[0]['process.env'].BASE_URL = JSON.stringify(process.env.BASE_URL)
+      return args
+    })
   },
   devServer: {
     overlay: {
@@ -19,10 +19,10 @@ module.exports = {
       errors: true
     },
     proxy: {
-      "/api": {
-        target: "http://api.211aoa.com"
+      '/api': {
+        target: 'http://api.211aoa.com'
       }
     }
     // before: require("./mock/mock-server.js")
-  },
-};
+  }
+}

@@ -3,26 +3,20 @@
     <div class="center">
       <img src alt="LOGO" />
       <ul>
-        <router-link v-for="(li,i) in nav" :key="i" tag="li" :to="li.link" exact>{{li.title}}</router-link>
+        <router-link v-for="(li, i) in nav" :key="i" tag="li" :to="li.link" exact>{{ li.title }}</router-link>
         <li class="login" @click="show('show_user')">登录</li>
         <li class="reg" @click="show('show_reg')">注册</li>
       </ul>
       <ul></ul>
     </div>
-    <login
-      :show_reg="show_reg"
-      :show_user="show_user"
-      :dialogVisible="dialogVisible"
-      @close="close"
-      @user_reg="user_reg"
-    ></login>
+    <login :show_reg="show_reg" :show_user="show_user" :dialogVisible="dialogVisible" @close="close" @user_reg="user_reg"></login>
   </header>
 </template>
 
 <script>
-import login from "@/components/regLog.vue";
+import login from '@/components/regLog.vue'
 export default {
-  name: "Header",
+  name: 'Header',
   components: {
     login
   },
@@ -30,53 +24,53 @@ export default {
     return {
       nav: [
         {
-          title: "首页",
-          link: "/home"
+          title: '首页',
+          link: '/home'
         },
         {
-          title: "即时比分",
-          link: "/bifen"
+          title: '即时比分',
+          link: '/bifen'
         },
         {
-          title: "足球推荐",
-          link: "/soccer"
+          title: '足球推荐',
+          link: '/soccer'
         },
         {
-          title: "篮球推荐",
-          link: "/basketball"
+          title: '篮球推荐',
+          link: '/basketball'
         },
         {
-          title: "情报中心",
-          link: "/qingbao"
+          title: '情报中心',
+          link: '/qingbao'
         },
         {
-          title: "高手排行",
-          link: "/gaoshou"
+          title: '高手排行',
+          link: '/gaoshou'
         }
       ],
       dialogVisible: false,
       show_reg: false,
       show_user: false
-    };
+    }
   },
 
   mounted() {},
   methods: {
     show(param) {
-      this.dialogVisible = true;
-      this[param] = true;
+      this.dialogVisible = true
+      this[param] = true
     },
     user_reg(param1, param2) {
-      this[param1] = true;
-      this[param2] = false;
+      this[param1] = true
+      this[param2] = false
     },
     close() {
-      this.dialogVisible = false;
-      this.show_reg = false;
-      this.show_user = false;
+      this.dialogVisible = false
+      this.show_reg = false
+      this.show_user = false
     }
   }
-};
+}
 </script>
 <style lang="stylus" scoped>
 header {
