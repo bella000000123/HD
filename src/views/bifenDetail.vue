@@ -3,7 +3,7 @@
     <div class="back">
       <div class="center box">
         <div>
-          <img src="http://zq.win007.com/Image/team/images/20130418191413.gif?win007=sell" alt />
+          <img :src="homejifen.logo_url" alt class="logo" />
           <h2>{{ matchDetail.home_team_name }}</h2>
         </div>
         <div class="txt">
@@ -14,7 +14,7 @@
           <p class="status">{{ matchDetail.status_name }}</p>
         </div>
         <div>
-          <img src="http://zq.win007.com/Image/team/images/20130418191413.gif?win007=sell" alt />
+          <img :src="awayjifen.logo_url" alt class="logo" />
           <h2>{{ matchDetail.away_team_name }}</h2>
         </div>
       </div>
@@ -69,20 +69,22 @@
       <analyse
         :events="analyseData['events']"
         :statics="analyseData['statics']"
-        :home_team="matchDetail.home_team_name"
-        :away_team="matchDetail.away_team_name"
+        :home_team_name="matchDetail.home_team_name"
+        :away_team_name="matchDetail.away_team_name"
         :matchDetail="matchDetail"
+        :homejifen="homejifen"
+        :awayjifen="awayjifen"
       ></analyse>
     </div>
     <div class="center" v-if="showQingbao">
-      <qingbao></qingbao>
+      <qingbao :matchDetail="matchDetail"></qingbao>
     </div>
   </div>
 </template>
 
 <script>
 import odds from '../common/odds'
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 import qingbao from './bifenDetail/qingbao'
 import analyse from './bifenDetail/analyse'
 export default {
@@ -137,7 +139,9 @@ export default {
       showZhishu: true,
       showAnalyse: false,
       showQingbao: false,
-      analyseData: {}
+      analyseData: {},
+      homejifen: [],
+      awayjifen: []
     }
   },
   methods: {
@@ -164,7 +168,7 @@ export default {
     },
     async getOneMatchDetail() {
       let res = await this.$api.getOneMatchDetail({
-        id: this.match.id
+        id: this.match_id
       })
       this.matchDetail = res
       //事件
@@ -297,7 +301,7 @@ export default {
     },
     async getOneMatchBaiJia() {
       let res = await this.$api.getOneMatchBaiJia({
-        id: this.match.id
+        id: this.match_id
       })
       let yapan = [],
         oupei = [],
@@ -346,14 +350,37 @@ export default {
         }
       })
       this.tableData = { yapan: yapan, oupei: oupei, daxiao: daxiao }
+    },
+    //积分榜
+    async getOneMatchTeamInfo(team_id, team) {
+      let res = await this.$api.getOneMatchTeamInfo({
+        id: team_id
+      })
+      if (team == 'home') {
+        this.homejifen = res
+      } else {
+        this.awayjifen = res
+      }
+      console.log(res)
     }
   },
   mounted() {
     this.getOneMatchBaiJia()
     this.getOneMatchDetail()
+    this.getOneMatchTeamInfo(this.home_team_id, 'home')
+    this.getOneMatchTeamInfo(this.away_team_id, 'away')
   },
   computed: {
-    ...mapState(['match'])
+    // ...mapState(['match'])
+    match_id() {
+      return this.$route.query.match_id
+    },
+    home_team_id() {
+      return this.$route.query.home_team_id
+    },
+    away_team_id() {
+      return this.$route.query.away_team_id
+    }
   }
 }
 </script>
@@ -369,6 +396,12 @@ export default {
     background: url('../assets/bifen/bifen_back.png');
     background-size: 100% 100%;
     color: #fff;
+    .logo{
+      width:120px;
+      height:120px;
+      background:#fff
+      margin-bottom:10px
+    }
     .red {
       font-weight: normal !important;
     }

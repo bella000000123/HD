@@ -72,7 +72,7 @@
           </el-table-column>
           <el-table-column prop="away_team_name" label="客队" width>
             <template slot-scope="scope">
-              <span :class="scope.row.level" v-if="scope.row.away_team_id == match.home_team_id">{{ scope.row.away_team_name }}</span>
+              <span :class="scope.row.level" v-if="scope.row.away_team_id == home_team_id">{{ scope.row.away_team_name }}</span>
               <span v-else>{{ scope.row.away_team_name }}</span>
             </template>
           </el-table-column>
@@ -132,7 +132,7 @@
     <h2>近期战绩</h2>
     <div class="latest history">
       <div class="title">
-        <div class="team-name red">{{ match.home_team_name }}</div>
+        <div class="team-name red">{{ home_team_name }}</div>
         <span v-for="(li, i) in home_latest_tab" :key="i" @click="home_latest_check(i)" :class="{ active: home_latest_index === i }">{{ li }}</span>
         <el-select v-model="home_latest_page" placeholder="请选择" @change="getEndMatchByTeamId">
           <el-option label="10条" value="10"></el-option>
@@ -155,7 +155,7 @@
           </el-table-column>
           <el-table-column prop="away_team_name" label="客队" width>
             <template slot-scope="scope">
-              <span :class="scope.row.level" v-if="scope.row.away_team_id == match.home_team_id">{{ scope.row.away_team_name }}</span>
+              <span :class="scope.row.level" v-if="scope.row.away_team_id == home_team_id">{{ scope.row.away_team_name }}</span>
               <span v-else>{{ scope.row.away_team_name }}</span>
             </template>
           </el-table-column>
@@ -201,7 +201,7 @@
     </div>
     <div class="latest history">
       <div class="title">
-        <div class="team-name blue">{{ match.away_team_name }}</div>
+        <div class="team-name blue">{{ away_team_name }}</div>
         <span v-for="(li, i) in away_latest_tab" :key="i" @click="away_latest_check(i)" :class="{ active: away_latest_index === i }">{{ li }}</span>
         <el-select v-model="away_latest_page" placeholder="请选择" @change="getEndMatchByTeamId">
           <el-option label="10条" value="10"></el-option>
@@ -216,7 +216,7 @@
           </el-table-column>
           <el-table-column prop="home_team_name" label="主队" width>
             <template slot-scope="scope">
-              <span :class="scope.row.level" v-if="scope.row.away_team_id == match.home_team_id">{{ scope.row.home_team_name }}</span>
+              <span :class="scope.row.level" v-if="scope.row.away_team_id == home_team_id">{{ scope.row.home_team_name }}</span>
               <span v-else>{{ scope.row.home_team_name }}</span>
             </template>
           </el-table-column>
@@ -225,7 +225,7 @@
           </el-table-column>
           <el-table-column prop="away_team_name" label="客队" width>
             <template slot-scope="scope">
-              <span :class="scope.row.level" v-if="scope.row.away_team_id != match.home_team_id">{{ scope.row.away_team_name }}</span>
+              <span :class="scope.row.level" v-if="scope.row.away_team_id != home_team_id">{{ scope.row.away_team_name }}</span>
               <span v-else>{{ scope.row.away_team_name }}</span>
             </template>
           </el-table-column>
@@ -273,7 +273,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 import odds from '../../common/odds'
 export default {
   props: ['events', 'statics', 'home_team', 'away_team', 'matchDetail'],
@@ -323,10 +323,7 @@ export default {
         ping: [],
         da: [],
         ying: []
-      },
-
-      homejifen: [],
-      awayjifen: []
+      }
     }
   },
   methods: {
@@ -348,8 +345,8 @@ export default {
     //历史交锋
     async getTwoTeamMatchEd() {
       let data = {
-        home_team_id: this.match.home_team_id,
-        away_team_id: this.match.away_team_id,
+        home_team_id: this.home_team_id,
+        away_team_id: this.away_team_id,
         per_page: parseInt(this.history_page),
         homeLike: this.homeLike
       }
@@ -370,7 +367,7 @@ export default {
         let scoreReduce2 = i.away_team_score - i.home_team_score
         // 主队和客队区别
 
-        if (i.home_team_id == this.match.home_team_id) {
+        if (i.home_team_id == this.home_team_id) {
           if (scoreReduce1 > 0) {
             i['level'] = 'red'
           } else if (scoreReduce1 < 0) {
@@ -534,7 +531,7 @@ export default {
     //近期比赛
     async getEndMatchByTeamId(team) {
       let data = {
-        team_id: team == 'home' ? this.match.home_team_id : this.match.away_team_id,
+        team_id: team == 'home' ? this.home_team_id : this.away_team_id,
         per_page: team == 'home' ? parseInt(this.home_latest_page) : parseInt(this.away_latest_page),
         homeLike: team
       }
@@ -548,21 +545,11 @@ export default {
         this.away_latest = res.data
       }
     },
-    //积分榜
-    async getMatchTournamentRankingByTeamId(tournament_id, season_id, team_id, team) {
-      let data = {
-        tournament_id: 10,
-        season_id: 11125,
-        team_id: 58
-      }
-      let res = await this.$api.getMatchTournamentRankingByTeamId(data)
 
-      this[team + 'jifen'] = res.data
-    },
     //未来比赛
     async getUnBeginMatchByTeamId(team) {
       let res = await this.$api.getUnBeginMatchByTeamId({
-        team_id: team == 'home' ? this.match.home_team_id : this.match.away_team_id
+        team_id: team == 'home' ? this.home_team_id : this.away_team_id
       })
       if (team == 'home') {
         this.home_future = res
@@ -577,11 +564,18 @@ export default {
     this.getEndMatchByTeamId('away')
     this.getUnBeginMatchByTeamId('home')
     this.getUnBeginMatchByTeamId('away')
-    this.getMatchTournamentRankingByTeamId(this.matchDetail.id, this.matchDetail.season_id, this.matchDetail.home_team_id, 'home')
-    this.getMatchTournamentRankingByTeamId(this.matchDetail.id, this.matchDetail.season_id, this.matchDetail.away_team_id, 'away')
   },
   computed: {
-    ...mapState(['match'])
+    // ...mapState(['match'])
+    match_id() {
+      return this.$route.query.match_id
+    },
+    home_team_id() {
+      return this.$route.query.home_team_id
+    },
+    away_team_id() {
+      return this.$route.query.away_team_id
+    }
   }
 }
 </script>

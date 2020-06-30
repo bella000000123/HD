@@ -257,8 +257,10 @@ export default {
       })
 
       if (this.tabType === 'finish') {
+        this.dealdata(finish)
         this.matchList = finish
       } else if (this.tabType === 'future') {
+        this.dealdata(future)
         this.matchList = future
       }
     },
@@ -302,11 +304,12 @@ export default {
     },
     // 选择哪条比赛，进入详情页
     chooseMatch(match) {
-      debugger
       this.$store.commit('chooseMatch', match)
-      this.$router.push({
-        path: `/bifenDetail`
+      let routeUrl = this.$router.resolve({
+        path: '/bifenDetail',
+        query: { match_id: match.id, home_team_id: match.home_team_id, away_team_id: match.away_team_id }
       })
+      window.open(routeUrl.href, '_blank')
     },
     //websocket
     initSocket() {
@@ -380,7 +383,7 @@ export default {
   mounted() {
     this.getPartMatches()
     // 初始化websoket
-    // this.initSocket({ url: 'ws://ws.211aoa.com:8282' })
+    this.initSocket({ url: 'ws://ws.211aoa.com:8282' })
   },
   computed: {
     //当日比赛

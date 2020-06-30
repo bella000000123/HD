@@ -4,8 +4,8 @@
       <h2>比赛信息</h2>
       <div class="box">
         <div>
-          <p>开赛时间：{{ match.match_time }}</p>
-          <p>主裁判：{{ match.referee_cn_name ? match.referee_cn_name : '-' }}</p>
+          <p>开赛时间：{{ matchDetail.match_time }}</p>
+          <p>主裁判：{{ matchDetail.referee_cn_name ? matchDetail.referee_cn_name : '-' }}</p>
           <p>主裁国籍：{{ qingbao.referee.country_cn_name ? qingbao.referee.country_cn_name : '-' }}</p>
           <p>场均黄牌：{{ qingbao.referee.yellowCardsPerGame ? qingbao.referee.yellowCardsPerGame : '-' }}</p>
           <p>场均红牌：{{ qingbao.referee.redCardsPerGame ? qingbao.referee.redCardsPerGame : '-' }}</p>
@@ -15,9 +15,9 @@
           <p>地点：{{ qingbao.stadiu ? qingbao.stadium.city_cn_name : '-' }}{{ qingbao.stadiucity_cn_name ? qingbao.stadiucity_cn_name : '' }}</p>
           <p>地图坐标：{{ qingbao.stadiu ? qingbao.stadium.google_maps_coordinates : '-' }}</p>
         </div>
-        <div v-if="match.weathe">
-          <p>天气：{{ match.weather }}</p>
-          <p>温度：{{ match.weather_desc[0].V }}</p>
+        <div v-if="matchDetail.weathe">
+          <p>天气：{{ matchDetail.weather }}</p>
+          <p>温度：{{ matchDetail.weather_desc[0].V }}</p>
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@
           <p>带队出赛</p>
         </div>
         <div>
-          <p class="red">{{ match.home_team_name }}</p>
+          <p class="red">{{ matchDetail.home_team_name }}</p>
           <p>{{ qingbao.home_coach.en_name ? qingbao.home_coach.en_name : '-' }}</p>
           <p>
             <img v-if="qingbao.home_coach.logo" :src="'https://imgs.oss.cn-south-1.jcloudcs.com/' + qingbao.home_coach.logo.slice(6)" class="avatar" alt />
@@ -50,7 +50,7 @@
           </p>
         </div>
         <div>
-          <p class="blue">{{ match.away_team_name }}</p>
+          <p class="blue">{{ matchDetail.away_team_name }}</p>
           <p>{{ qingbao.away_coach.en_name ? qingbao.away_coach.en_name : '-' }}</p>
           <p>
             <img v-if="qingbao.away_coach.logo" :src="'https://imgs.oss.cn-south-1.jcloudcs.com/' + qingbao.away_coach.logo.slice(6)" class="avatar" alt />
@@ -71,8 +71,8 @@
       <table class="qingbao-item">
         <tr>
           <td class="td1">队伍</td>
-          <td class="td1 red">{{ match.home_team_name }}</td>
-          <td class="td1 blue">{{ match.away_team_name }}</td>
+          <td class="td1 red">{{ matchDetail.home_team_name }}</td>
+          <td class="td1 blue">{{ matchDetail.away_team_name }}</td>
         </tr>
         <tr>
           <td>有利</td>
@@ -93,9 +93,9 @@
     </div>
     <div class="zhishu">
       <h2>指数情报</h2>
-      <p class="red">{{ match.home_team_name }}</p>
+      <p class="red">{{ matchDetail.home_team_name }}</p>
       <p>{{ qingbao.winningOdds.home_desc ? qingbao.winningOdds.home_desc : '-' }}</p>
-      <p class="blue">{{ match.away_team_name }}</p>
+      <p class="blue">{{ matchDetail.away_team_name }}</p>
       <p>{{ qingbao.winningOdds.away_desc ? qingbao.winningOdds.away_desc : '-' }}</p>
     </div>
     <div>
@@ -106,8 +106,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 export default {
+  props: ['matchDetail'],
   data() {
     return {
       qingbao: [],
@@ -117,7 +118,7 @@ export default {
   methods: {
     async getOneMatchInformation() {
       let res = await this.$api.getOneMatchInformation({
-        id: this.match.id
+        id: this.matchDetail.id
       })
       if (res.informatins) {
         let news = {
@@ -166,7 +167,7 @@ export default {
     this.getOneMatchInformation()
   },
   computed: {
-    ...mapState(['match'])
+    // ...mapState(['match'])
   }
 }
 </script>

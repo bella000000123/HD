@@ -56,8 +56,8 @@ const getTwoTeamMatchEd = params => {
 const getMatchTournamentRankingByTeamId = params => {
   return http.post(`/api/home/now_match/getMatchTournamentRankingByTeamId`, params).then(res => res.data)
 }
-const test = params => {
-  return http.post(`/api/home/test_match/getNowMatchList`, params).then(res => res.data)
+const getOneMatchTeamInfo = params => {
+  return http.post(`/api/home/now_match/getOneMatchTeamInfo`, params).then(res => res.data)
 }
 
 export default {
@@ -79,5 +79,5 @@ export default {
   getUnBeginMatchByTeamId: getUnBeginMatchByTeamId,
   getTwoTeamMatchEd: getTwoTeamMatchEd,
   getMatchTournamentRankingByTeamId: getMatchTournamentRankingByTeamId,
-  test: test
+  getOneMatchTeamInfo: getOneMatchTeamInfo
 }
