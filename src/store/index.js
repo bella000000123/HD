@@ -1,25 +1,25 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     pusher: {},
     article: {},
-    match: {},
+    match: {}
   },
   mutations: {
     choosePusher(state, pusher) {
-      state.pusher = pusher;
+      state.pusher = pusher
     },
     chooseArticle(state, article) {
-      state.article = article;
+      state.article = article
     },
     chooseMatch(state, match) {
-      state.match = match;
-    },
+      state.match = match
+    }
   },
   actions: {},
-  modules: {},
-});
+  modules: {}
+})

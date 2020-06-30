@@ -8,12 +8,12 @@
           <router-link to="/jiaodian" class="fr unl" tag="span">查看更多</router-link>
         </div>
         <div class="list">
-          <div v-for="(li,i) in jiaodian" :key="i">
+          <div v-for="(li, i) in jiaodian" :key="i">
             <img :src="li.zhudui_image" alt class="icon-img" />
             <div class="in-block">
-              <p>{{li.match_name}}</p>
+              <p>{{ li.match_name }}</p>
               <img :src="icons.vs" alt />
-              <p>{{li.match_time}}</p>
+              <p>{{ li.match_time }}</p>
             </div>
             <img :src="li.kedui_image" alt class="icon-img" />
           </div>
@@ -26,22 +26,22 @@
           <router-link to="/gaoshou" class="fr unl" tag="span">查看更多</router-link>
         </div>
         <div class="list">
-          <div v-for="(li,i) in renqi" :key="i">
+          <div v-for="(li, i) in renqi" :key="i">
             <div class="box">
               <div class="box">
                 <img :src="li.avatar" alt class="avator" />
                 <div>
-                  <h2>{{li.name}}</h2>
+                  <h2>{{ li.name }}</h2>
                   <p>
                     <img :src="icons.hot" alt="icon" />
-                    {{li.hot}}
+                    {{ li.hot }}
                   </p>
                 </div>
               </div>
               <img :src="li.code_image" alt class="code" />
             </div>
             <div class="box">
-              <p class="red pusher" @click="goPush(li)">{{li.tuijian_num}}篇推荐 [点击查看]</p>
+              <p class="red pusher" @click="goPush(li)">{{ li.tuijian_num }}篇推荐 [点击查看]</p>
               <p>微信扫码了解</p>
             </div>
           </div>
@@ -57,41 +57,41 @@ export default {
   data() {
     return {
       icons: {
-        renqi: require("../assets/renqi_icon.png"),
-        hot: require("../assets/hot.png"),
-        jiaodian: require("../assets//jiaodian_icon.png"),
-        vs: require("../assets/vs.png")
+        renqi: require('../assets/renqi_icon.png'),
+        hot: require('../assets/hot.png'),
+        jiaodian: require('../assets//jiaodian_icon.png'),
+        vs: require('../assets/vs.png')
       },
       renqi: [],
 
       jiaodian: []
-    };
+    }
   },
   methods: {
     async focusMatch() {
-      let res = await this.$api.focusMatch();
-      this.jiaodian = res.data.slice(0, 3);
+      let res = await this.$api.focusMatch()
+      this.jiaodian = res.data.slice(0, 3)
     },
     // 人气推手
     async hotPushers() {
-      let res = await this.$api.hotPushers();
-      this.renqi = res.data.slice(0, 5);
+      let res = await this.$api.hotPushers()
+      this.renqi = res.data.slice(0, 5)
     },
     goPush(pusher) {
-      this.$store.commit("choosePusher", pusher);
+      this.$store.commit('choosePusher', pusher)
       this.$router.push({
         path: `/tuijianDetail`
-      });
+      })
     }
   },
   mounted() {
     // 焦点赛事
-    this.focusMatch();
+    this.focusMatch()
     // 人气推手
-    this.hotPushers();
+    this.hotPushers()
   },
   computed: {}
-};
+}
 </script>
 <style scoped lang="stylus">
 .fl {

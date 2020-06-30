@@ -5,10 +5,7 @@
         <span class="close" @click="close"></span>
 
         <div class="dialog-head">
-          <img
-            src="http://api.211aoa.com/upload/manage/20200528/f8a051dbf90d1a07fdb1a4b4cdb06a61.png"
-            alt
-          />
+          <img src="http://api.211aoa.com/upload/manage/20200528/f8a051dbf90d1a07fdb1a4b4cdb06a61.png" alt />
         </div>
         <div class="inputs">
           <div class="reg" v-if="show_reg">
@@ -51,14 +48,14 @@
             </div>
           </div>
 
-          <div class="btn">{{show_reg?'注册':'登录'}}</div>
+          <div class="btn">{{ show_reg ? '注册' : '登录' }}</div>
           <div class="tip" v-if="show_reg">
             已有账号？
-            <span @click="user_reg('show_user','show_reg')">请登录</span>
+            <span @click="user_reg('show_user', 'show_reg')">请登录</span>
           </div>
-          <div class="tip clearfix" v-if="show_user || show_phone ">
-            <span @click="user_reg('show_reg','show_user')" class="fl">立即注册</span>
-            <span @click="user_phone()" class="fr">{{!show_phone?'手机号登录':'密码登录'}}</span>
+          <div class="tip clearfix" v-if="show_user || show_phone">
+            <span @click="user_reg('show_reg', 'show_user')" class="fl">立即注册</span>
+            <span @click="user_phone()" class="fr">{{ !show_phone ? '手机号登录' : '密码登录' }}</span>
           </div>
         </div>
       </div>
@@ -75,39 +72,39 @@ export default {
       show_phone: false,
       //   dialogVisible: true,
       reg: {
-        username: "",
-        pwd: "",
-        repwd: "",
-        phone: "",
-        code: ""
+        username: '',
+        pwd: '',
+        repwd: '',
+        phone: '',
+        code: ''
       }
-    };
+    }
   },
-  props: ["show_reg", "show_user", "dialogVisible"],
+  props: ['show_reg', 'show_user', 'dialogVisible'],
   methods: {
     close() {
-      this.show_phone = false;
-      this.$emit("close");
+      this.show_phone = false
+      this.$emit('close')
     },
     user_phone() {
       if (this.show_phone) {
-        this.show_phone = false;
-        this.user_reg("show_user", "");
+        this.show_phone = false
+        this.user_reg('show_user', '')
       } else {
-        this.show_phone = true;
-        this.user_reg("", "show_user");
+        this.show_phone = true
+        this.user_reg('', 'show_user')
       }
     },
     user_reg(param1, param2) {
-      if (param1 == "show_reg") {
-        this.show_phone = false;
+      if (param1 == 'show_reg') {
+        this.show_phone = false
       }
-      this.$emit("user_reg", param1, param2);
+      this.$emit('user_reg', param1, param2)
     }
   },
   created() {},
   computed: {}
-};
+}
 </script>
 <style scoped lang="stylus">
 .log {

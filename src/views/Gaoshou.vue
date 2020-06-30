@@ -9,9 +9,9 @@
     <img :src="yingli.image" alt="盈利" class="banner-img" />
     <div class="content clearfix">
       <div class="fl left">
-        <div class="in-block tuishou" v-for="(li,i) in pusherList" :key="i">
+        <div class="in-block tuishou" v-for="(li, i) in pusherList" :key="i">
           <img class="avatar" :src="li.avatar" alt />
-          <h2>{{li.name}}</h2>
+          <h2>{{ li.name }}</h2>
           <p>描述</p>
           <div class="bottom">
             <img :src="li.code_image" alt />
@@ -37,33 +37,33 @@ export default {
   },
   data() {
     return {
-      yingli: "",
+      yingli: '',
       pusherList: []
-    };
+    }
   },
   methods: {
     async getBanner() {
-      let res = await this.$api.getBanner();
-      this.yingli = res["yingli"][0];
+      let res = await this.$api.getBanner()
+      this.yingli = res['yingli'][0]
     },
     // 人气推手
     async hotPushers() {
-      let res = await this.$api.hotPushers();
-      this.pusherList = res.data;
+      let res = await this.$api.hotPushers()
+      this.pusherList = res.data
     },
     goPush(pusher) {
-      this.$store.commit("choosePusher", pusher);
+      this.$store.commit('choosePusher', pusher)
       this.$router.push({
         path: `/tuijianDetail`
-      });
+      })
     }
   },
   mounted() {
-    this.getBanner();
-    this.hotPushers();
+    this.getBanner()
+    this.hotPushers()
   },
   computed: {}
-};
+}
 </script>
 <style scoped lang="stylus">
 .bread {

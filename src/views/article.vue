@@ -11,16 +11,16 @@
         <div class="fl zixun">
           <div class="head">
             <span class="tag">推荐</span>
-            <h1>{{article.title}}</h1>
+            <h1>{{ article.title }}</h1>
             <div class="clearfix">
               <div class="fl">
                 <img src alt />
-                <span class="pusher-name">{{article.pusher_name}}</span>
-                <span>·{{article.time}}</span>
+                <span class="pusher-name">{{ article.pusher_name }}</span>
+                <span>·{{ article.time }}</span>
               </div>
               <div class="fr">
                 <img :src="icons.hot" alt />
-                {{article.hot}}
+                {{ article.hot }}
               </div>
             </div>
           </div>
@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import jifen from "@/components/jifen.vue";
-import { mapState } from "vuex";
+import jifen from '@/components/jifen.vue'
+import { mapState } from 'vuex'
 export default {
   components: {
     jifen
@@ -45,13 +45,13 @@ export default {
   data() {
     return {
       icons: {
-        hot: require("../assets/hot.png"),
-        back: require("../assets/11.gif")
+        hot: require('../assets/hot.png'),
+        back: require('../assets/11.gif')
       },
       zixun: [],
       page: 1, // 初始页码
       per_page: 20
-    };
+    }
   },
   methods: {
     async articleList() {
@@ -59,29 +59,29 @@ export default {
         cate_id: 2,
         per_page: this.per_page,
         page: this.page
-      };
-      let res = await this.$api.articleList(params);
-      this.zixun = res;
+      }
+      let res = await this.$api.articleList(params)
+      this.zixun = res
     },
     // 分页
     pagenatiOnchange(page) {
-      this.page = page;
-      this.pusherList();
+      this.page = page
+      this.pusherList()
     },
     handleSizeChange(size) {
-      this.per_page = size;
-      this.pusherList();
+      this.per_page = size
+      this.pusherList()
     }
   },
   mounted() {
-    this.articleList();
+    this.articleList()
   },
   computed: {
-    ...mapState(["article"])
+    ...mapState(['article'])
   }
-};
+}
 </script>
-<style scoped lang='stylus'>
+<style scoped lang="stylus">
 .soccer {
   // height: 1200px;
   .bread {
