@@ -121,7 +121,7 @@ export default {
           name: 'daxiao'
         },
         {
-          label: '分析',
+          label: '数据分析',
           name: 'analyse'
         },
         {

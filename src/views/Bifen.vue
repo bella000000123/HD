@@ -105,6 +105,11 @@
               <span @click="chooseMatch(scope.row)" class="fenxi red">分析</span>
             </template>
           </el-table-column>
+          <el-table-column label="直播" width="60">
+            <template slot-scope="scope">
+              <span @click="chooseVideo(scope.row)" class="fenxi red">直播</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="name" label="置顶" width="60">
             <template slot-scope="scope">
               <img :src="icons.top" alt @click="setTop(scope)" class="set-top" />
@@ -307,6 +312,14 @@ export default {
       this.$store.commit('chooseMatch', match)
       let routeUrl = this.$router.resolve({
         path: '/bifenDetail',
+        query: { match_id: match.id, home_team_id: match.home_team_id, away_team_id: match.away_team_id }
+      })
+      window.open(routeUrl.href, '_blank')
+    },
+    chooseVideo(match) {
+      this.$store.commit('chooseMatch', match)
+      let routeUrl = this.$router.resolve({
+        path: '/bifenVideo',
         query: { match_id: match.id, home_team_id: match.home_team_id, away_team_id: match.away_team_id }
       })
       window.open(routeUrl.href, '_blank')

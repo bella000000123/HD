@@ -52,6 +52,11 @@ const routes = [
     path: '/bifenDetail',
     name: 'bifenDetail',
     component: () => import('../views/bifenDetail.vue')
+  },
+  {
+    path: '/bifenVideo',
+    name: 'bifenVideo',
+    component: () => import('../views/bifenVideo.vue')
   }
 ]
 
