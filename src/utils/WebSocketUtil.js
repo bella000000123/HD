@@ -83,7 +83,7 @@ class WebSocketUtil {
     // 处理接受的消息
     const result = tryToParseJson(data)
     if (result) {
-      store.dispatch('handleScoreList', result)
+      store.dispatch('handleNewMatchItem', result)
     }
     // return obj;
   }

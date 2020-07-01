@@ -130,6 +130,7 @@
 <script>
 import WebSocketUtil from '@/utils/WebSocketUtil.js'
 import odds from '../common/odds'
+import { mapState } from 'vuex'
 
 export default {
   components: {},
@@ -149,7 +150,7 @@ export default {
       tabType: 'now',
       ups: ['选择公司', '选择赛事', '选择盘路'],
       nowUp: '',
-
+      now_matches: [],
       multipleSelection: [],
       search: '',
       matchList: [],
@@ -335,61 +336,65 @@ export default {
       }
       this.socket.init()
     },
+    //处理每个比赛数据，红牌，黄牌，比分，角球，百家赔率 每一项
+    handleDataItem(i) {
+      i['yapan'] = ['-', '-', '-']
+      i['daxiao'] = ['-', '-', '-']
+      if (i.statics) {
+        i.statics.map(j => {
+          if (j.type_en_name === 'yellow') {
+            i['yellow1'] = parseInt(j.team1)
+            i['yellow2'] = parseInt(j.team2)
+          }
+          if (j.type_en_name === 'red') {
+            i['red1'] = parseInt(j.team1)
+            i['red2'] = parseInt(j.team2)
+          }
+          if (j.type_en_name === 'cornerKicks') {
+            i['corner1'] = parseInt(j.team1)
+            i['corner2'] = parseInt(j.team2)
+          }
+        })
+      }
+      if (i.scores) {
+        i.scores.map(j => {
+          if (j.type === 'Period1') {
+            i['score1'] = parseInt(j.team1)
+            i['score2'] = parseInt(j.team2)
+          }
+        })
+      }
+
+      //亚盘
+      if (i.match_yapan) {
+        let yapan = i.match_yapan['Bet365'] ? i.match_yapan['Bet365'] : i.match_yapan['Vcbet']
+        if (yapan.length == 0) {
+          yapan = i.match_yapan['suibian']
+        }
+        if (yapan.length != 0) {
+          i['yapan'] = [
+            (yapan.fields[0].value - 1).toFixed(2),
+            yapan.ovalue > 0 ? '受' + odds[Math.abs(yapan.ovalue)] : odds[Math.abs(yapan.ovalue)],
+            (yapan.fields[1].value - 1).toFixed(2)
+          ]
+        }
+      }
+
+      //大小球
+      if (i.match_daxiaoqiu) {
+        let daxiaoqiu = i.match_daxiaoqiu['Bet365'] ? i.match_daxiaoqiu['Bet365'] : i.match_daxiaoqiu['Vcbet']
+        if (!daxiaoqiu.length == 0) {
+          daxiaoqiu = i.match_daxiaoqiu['suibian']
+        }
+        if (daxiaoqiu.length != 0) {
+          i['daxiao'] = [(daxiaoqiu.fields[0].value - 1).toFixed(2), odds[Math.abs(daxiaoqiu.ovalue)], (daxiaoqiu.fields[1].value - 1).toFixed(2)]
+        }
+      }
+    },
     //处理每个比赛数据，红牌，黄牌，比分，角球，百家赔率
     dealdata(data) {
       data.map(i => {
-        i['yapan'] = ['-', '-', '-']
-        i['daxiao'] = ['-', '-', '-']
-        if (i.statics) {
-          i.statics.map(j => {
-            if (j.type_en_name === 'yellow') {
-              i['yellow1'] = parseInt(j.team1)
-              i['yellow2'] = parseInt(j.team2)
-            }
-            if (j.type_en_name === 'red') {
-              i['red1'] = parseInt(j.team1)
-              i['red2'] = parseInt(j.team2)
-            }
-            if (j.type_en_name === 'cornerKicks') {
-              i['corner1'] = parseInt(j.team1)
-              i['corner2'] = parseInt(j.team2)
-            }
-          })
-        }
-        if (i.scores) {
-          i.scores.map(j => {
-            if (j.type === 'Period1') {
-              i['score1'] = parseInt(j.team1)
-              i['score2'] = parseInt(j.team2)
-            }
-          })
-        }
-
-        //亚盘
-        if (i.match_yapan) {
-          let yapan = i.match_yapan['Bet365'] ? i.match_yapan['Bet365'] : i.match_yapan['Vcbet']
-          if (yapan.length == 0) {
-            yapan = i.match_yapan['suibian']
-          }
-          if (yapan.length != 0) {
-            i['yapan'] = [
-              (yapan.fields[0].value - 1).toFixed(2),
-              yapan.ovalue > 0 ? '受' + odds[Math.abs(yapan.ovalue)] : odds[Math.abs(yapan.ovalue)],
-              (yapan.fields[1].value - 1).toFixed(2)
-            ]
-          }
-        }
-
-        //大小球
-        if (i.match_daxiaoqiu) {
-          let daxiaoqiu = i.match_daxiaoqiu['Bet365'] ? i.match_daxiaoqiu['Bet365'] : i.match_daxiaoqiu['Vcbet']
-          if (!daxiaoqiu.length == 0) {
-            daxiaoqiu = i.match_daxiaoqiu['suibian']
-          }
-          if (daxiaoqiu.length != 0) {
-            i['daxiao'] = [(daxiaoqiu.fields[0].value - 1).toFixed(2), odds[Math.abs(daxiaoqiu.ovalue)], (daxiaoqiu.fields[1].value - 1).toFixed(2)]
-          }
-        }
+        this.handleDataItem(i)
       })
       return data
     }
@@ -401,7 +406,7 @@ export default {
   },
   computed: {
     //当日比赛
-    now_matches() {
+    now_matches_origin() {
       let sumData = []
       let begin = this.begin
       let unbegin = this.unBegin
@@ -427,6 +432,34 @@ export default {
         return this.now_matches
       } else {
         return this.matchList
+      }
+    },
+    ...mapState({
+      newMatchItem: state => state.newMatchItem
+    })
+  },
+  watch: {
+    now_matches_origin(list) {
+      if (Array.isArray(list)) {
+        this.now_matches = list
+      }
+    },
+    newMatchItem(newMatchItem) {
+      if (Array.isArray(this.now_matches) && this.now_matches.length) {
+        const oldList = [...this.now_matches]
+
+        console.log('newMatchItem', newMatchItem)
+        oldList.forEach((item, index, arr) => {
+          if (item && newMatchItem && Number(item.id) === Number(newMatchItem.match_id)) {
+            const newItem = newMatchItem.message
+            this.handleDataItem(newItem)
+            console.log(item, newItem, index)
+            if (newItem) {
+              arr.splice(index, 1, newItem)
+            }
+          }
+        })
+        this.now_matches = [...oldList]
       }
     }
   }

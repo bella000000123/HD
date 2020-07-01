@@ -8,8 +8,7 @@ export default new Vuex.Store({
     pusher: {},
     article: {},
     match: {},
-    bjList: [],
-    matchList: []
+    newMatchItem: {}
   },
   mutations: {
     choosePusher(state, pusher) {
@@ -21,46 +20,18 @@ export default new Vuex.Store({
     chooseMatch(state, match) {
       state.match = match
     },
-    setBjList(state, list) {
-      state.bjList = list
-    },
-    setMatchList(state, list) {
-      state.matchList = list
+    setNewMatchItem(state, item) {
+      state.newMatchItem = item
     }
   },
   actions: {
-    handleScoreList({ commit, state }, item) {
-      const oldBjList = [...state.bjList]
-      const oldMatchList = [...state.matchList]
-
+    handleNewMatchItem({ commit }, item) {
+      if (item && item.message) {
+        item.message = JSON.parse(item.message)
+      }
       if (item && item.type !== 'init') {
-        let isIn = false
-        if (item && item.data_type === 'baijia') {
-          oldBjList.forEach((oldListItem, index, arr) => {
-            if (Number(oldListItem.match_id) === Number(item.match_id)) {
-              isIn = true
-              arr.splice(index, 1, item)
-            }
-          })
-          commit('setBjList', [...oldBjList])
-        } else if (item && item.data_type === 'match') {
-          oldMatchList.map((oldListItem, index, arr) => {
-            if (Number(oldListItem.match_id) === Number(item.match_id)) {
-              isIn = true
-              arr.splice(index, 1, item)
-            }
-          })
-          commit('setBjList', [...oldMatchList])
-        }
-
-        if (!isIn) {
-          if (item && item.data_type === 'baijia') {
-            const newList = [...oldBjList, item]
-            commit('setBjList', newList)
-          } else if (item && item.data_type === 'match') {
-            const newList = [...oldMatchList, item]
-            commit('setMatchList', newList)
-          }
+        if (item.data_type === 'match') {
+          commit('setNewMatchItem', item)
         }
       }
     }
