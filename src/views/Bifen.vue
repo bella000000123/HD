@@ -107,7 +107,7 @@
           </el-table-column>
           <el-table-column label="直播" width="60">
             <template slot-scope="scope">
-              <span @click="chooseVideo(scope.row)" class="fenxi red">直播</span>
+              <img :src="icons.video" @click="chooseVideo(scope.row)" class="fenxi red" />
             </template>
           </el-table-column>
           <el-table-column prop="name" label="置顶" width="60">
@@ -143,7 +143,8 @@ export default {
         vs: require('../assets/vs.png'),
         corner: require('../assets/bifen/corner.png'),
         date: require('../assets/bifen/date.png'),
-        down: require('../assets/bifen/down.png')
+        down: require('../assets/bifen/down.png'),
+        video: require('../assets/bifen/video.png')
       },
       tabType: 'now',
       ups: ['选择公司', '选择赛事', '选择盘路'],

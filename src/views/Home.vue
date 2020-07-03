@@ -6,7 +6,7 @@
         <div class="in-block div1">
           <el-carousel height="400px">
             <el-carousel-item v-for="(li, i) in bannerList.banner" :key="i">
-              <img :src="li.image" alt />
+              <img :src="li.image" alt class="banner-img" />
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -348,6 +348,10 @@ p {
 .icon-img {
   width: 90px;
   height: 90px;
+}
+.banner-img{
+  width:770px
+  height:440px
 }
 .gaoshou {
   width: 100%;

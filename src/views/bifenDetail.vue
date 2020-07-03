@@ -435,7 +435,7 @@ export default {
     }
   }
   .tabs {
-    width: 830px;
+    width: 950px;
     line-height: 60px;
     // margin: 20px 0;
   }
