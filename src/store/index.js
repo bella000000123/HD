@@ -7,7 +7,11 @@ export default new Vuex.Store({
   state: {
     pusher: {},
     article: {},
-    match: {}
+    match: {},
+    newMatchItem: {},
+    newBaijia: {},
+    hiddenList: [],
+    saveList: []
   },
   mutations: {
     choosePusher(state, pusher) {
@@ -18,8 +22,39 @@ export default new Vuex.Store({
     },
     chooseMatch(state, match) {
       state.match = match
+    },
+    chooseHiddenList(state, item) {
+      state.hiddenList = item
+    },
+    chooseSaveList(state, item) {
+      state.saveList = item
+    },
+    setNewMatchItem(state, item) {
+      if (item.message) {
+        item.message = JSON.parse(item.message)
+        state.newMatchItem = item
+      }
+    },
+    setNewBaijiaItem(state, item) {
+      if (item.message) {
+        item.message = JSON.parse(item.message)
+        state.newBaijia = item.message
+        console.log(state.newBaijia)
+      }
     }
   },
-  actions: {},
+  actions: {
+    // handleNewMatchItem({ commit }, item) {
+    //   if (item && item.message) {
+    //     item.message = JSON.parse(item.message)
+    //   }
+    //   if (item && item.type !== 'init') {
+    //     if (item.data_type === 'match') {
+    //       commit('setNewMatchItem', item)
+    //       console.log(item)
+    //     }
+    //   }
+    // }
+  },
   modules: {}
 })

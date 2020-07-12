@@ -27,7 +27,7 @@ const getNowMatchList = params => {
   return http.post(`/api/home/now_match/getNowMatchList`, params).then(res => res.data)
 }
 const getBeginMatch = params => {
-  return http.post(`/api/home/now_match/getBeginMatch`, params).then(res => res.data)
+  return http.post(`/api/home/now_match/getThreeTypeMatch`, params).then(res => res.data)
 }
 const getEndMatch = params => {
   return http.post(`/api/home/now_match/getEndMatch`, params).then(res => res.data)
@@ -59,6 +59,9 @@ const getMatchTournamentRankingByTeamId = params => {
 const getOneMatchTeamInfo = params => {
   return http.post(`/api/home/now_match/getOneMatchTeamInfo`, params).then(res => res.data)
 }
+const getTournamentMatchByTeamId = params => {
+  return http.post(`/api/home/now_match/getTournamentMatchByTeamId`, params).then(res => res.data)
+}
 
 export default {
   getBanner: getBanner,
@@ -79,5 +82,6 @@ export default {
   getUnBeginMatchByTeamId: getUnBeginMatchByTeamId,
   getTwoTeamMatchEd: getTwoTeamMatchEd,
   getMatchTournamentRankingByTeamId: getMatchTournamentRankingByTeamId,
-  getOneMatchTeamInfo: getOneMatchTeamInfo
+  getOneMatchTeamInfo: getOneMatchTeamInfo,
+  getTournamentMatchByTeamId: getTournamentMatchByTeamId
 }

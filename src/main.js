@@ -22,7 +22,10 @@ import {
   DropdownMenu,
   DropdownItem,
   Select,
-  Option
+  Option,
+  Checkbox,
+  CheckboxButton,
+  CheckboxGroup
 } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './common/reset.css'
@@ -46,6 +49,9 @@ Vue.use(DropdownItem)
 Vue.use(Loading.directive)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Checkbox)
+Vue.use(CheckboxButton)
+Vue.use(CheckboxGroup)
 Vue.prototype.$message = Message
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$api = api

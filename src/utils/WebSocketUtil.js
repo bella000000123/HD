@@ -1,10 +1,11 @@
 import AesUtils from '@/utils/AesUtils'
+import store from '@/store'
 
 function tryToParseJson(str) {
   try {
     return JSON.parse(str)
   } catch (e) {
-    return {}
+    return ''
     //
   }
 }
@@ -80,9 +81,12 @@ class WebSocketUtil {
 
   handleMessage({ data }) {
     // 处理接受的消息
-    // const result = tryToParseJson(data)
-    console.log('data', data)
-    console.log('解密：', AesUtils.decrypt(data))
+    const result = tryToParseJson(data)
+    if (JSON.stringify(result) !== '{}' && result.type !== 'init') {
+      if (result.data_type === 'match') {
+        store.commit('setNewMatchItem', result)
+      }
+    }
 
     // return obj;
   }

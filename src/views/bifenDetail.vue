@@ -8,10 +8,15 @@
         </div>
         <div class="txt">
           <p>
-            <span class="time">{{ matchDetail.match_time }}</span>
+            <span class="time">{{ matchDetail.match_time.slice(0,19) }}</span>
           </p>
           <img :src="icons.vs" alt class="vs" />
-          <p class="status">{{ matchDetail.status_name }}</p>
+          <p class="status">
+            <span
+              :class="[time_play.status_code==1||time_play.status_code==2? 'red' : '']"
+            >{{time_play.status_code==1||time_play.status_code==2?time_play.time:time_play.status_name }}</span>
+            <span class="flash red" v-if="time_play.status_code==1||time_play.status_code==2">'</span>
+          </p>
         </div>
         <div>
           <img :src="awayjifen.logo_url" alt class="logo" />
@@ -47,8 +52,15 @@
         <el-table-column prop="date" label="即时盘" width="150">
           <el-table-column prop="date" :label="table[tabType][0]" width="150">
             <template slot-scope="scope">
-              <span :class="[scope.row.level1 > 0 ? 'red' : 'green']">{{ scope.row.gun1 ? scope.row.gun1 : '-' }}</span>
-              <img :src="scope.row.level1 > 0 ? icons.up : icons.down" alt v-if="scope.row.gun1" class="up-icon" />
+              <span
+                :class="[scope.row.level1 > 0 ? 'red' : 'green']"
+              >{{ scope.row.gun1 ? scope.row.gun1 : '-' }}</span>
+              <img
+                :src="scope.row.level1 > 0 ? icons.up : icons.down"
+                alt
+                v-if="scope.row.gun1"
+                class="up-icon"
+              />
             </template>
           </el-table-column>
           <el-table-column prop="date" :label="table[tabType][1]" width="150">
@@ -58,8 +70,15 @@
           </el-table-column>
           <el-table-column prop="date" :label="table[tabType][2]" width="150">
             <template slot-scope="scope">
-              <span :class="[scope.row.level2 > 0 ? 'red' : 'green']">{{ scope.row.gun3 ? scope.row.gun3 : '-' }}</span>
-              <img :src="scope.row.level2 > 0 ? icons.up : icons.down" alt v-if="scope.row.gun3" class="up-icon" />
+              <span
+                :class="[scope.row.level2 > 0 ? 'red' : 'green']"
+              >{{ scope.row.gun3 ? scope.row.gun3 : '-' }}</span>
+              <img
+                :src="scope.row.level2 > 0 ? icons.up : icons.down"
+                alt
+                v-if="scope.row.gun3"
+                class="up-icon"
+              />
             </template>
           </el-table-column>
         </el-table-column>
@@ -83,10 +102,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import odds from '../common/odds'
-// import { mapState } from 'vuex'
 import qingbao from './bifenDetail/qingbao'
 import analyse from './bifenDetail/analyse'
+import WebSocketUtil from '@/utils/WebSocketUtil.js'
 export default {
   components: { qingbao, analyse },
   data() {
@@ -141,7 +161,8 @@ export default {
       showQingbao: false,
       analyseData: {},
       homejifen: [],
-      awayjifen: []
+      awayjifen: [],
+      time_play: { time: '-', status_name: '-', status_code: '-' }
     }
   },
   methods: {
@@ -171,6 +192,15 @@ export default {
         id: this.match_id
       })
       this.matchDetail = res
+      if (res.time_running == 1) {
+        //足球已进行时间 = (当前时间 - time_update)(秒) + time_played
+        let time = ((new Date().getTime() - new Date(res.time_update.slice(0, 19)).getTime()) / 1000 + parseInt(res.time_played)) / 60
+        this.time_play = { time: parseInt(time), status_name: res.status_name, status_code: res.status_code }
+      } else if (res.time_running == 0) {
+        //足球已进行时间 = time_played
+        this.time_play = { time: parseInt(parseInt(res.time_played) / 60), status_name: res.status_name, status_code: res.status_code }
+      }
+
       //事件
       let eventdata = res['events']
       let staticsdata = res['statics']
@@ -303,6 +333,10 @@ export default {
       let res = await this.$api.getOneMatchBaiJia({
         id: this.match_id
       })
+      let data = this.dealbaijiadata(res)
+      this.tableData = data
+    },
+    dealbaijiadata(res) {
       let yapan = [],
         oupei = [],
         daxiao = []
@@ -349,7 +383,7 @@ export default {
             break
         }
       })
-      this.tableData = { yapan: yapan, oupei: oupei, daxiao: daxiao }
+      return { yapan: yapan, oupei: oupei, daxiao: daxiao }
     },
     //积分榜
     async getOneMatchTeamInfo(team_id, team) {
@@ -361,7 +395,16 @@ export default {
       } else {
         this.awayjifen = res
       }
-      console.log(res)
+    },
+    //websocket
+    initSocket() {
+      this.socket = new WebSocketUtil({ url: 'ws://ws.211aoa.com:8282' })
+      // websocket 初始化成功
+      this.socket.onCreate = () => {
+        this.connected = true
+        console.log('初始化成功')
+      }
+      this.socket.init()
     }
   },
   mounted() {
@@ -369,9 +412,15 @@ export default {
     this.getOneMatchDetail()
     this.getOneMatchTeamInfo(this.home_team_id, 'home')
     this.getOneMatchTeamInfo(this.away_team_id, 'away')
+    // 初始化websoket
+    this.initSocket({ url: 'ws://ws.211aoa.com:8282' })
   },
   computed: {
-    // ...mapState(['match'])
+    ...mapState(['newBaijia', 'newMatchItem']),
+    newTableData() {
+      let data = this.tableData
+      return data
+    },
     match_id() {
       return this.$route.query.match_id
     },
@@ -381,6 +430,24 @@ export default {
     away_team_id() {
       return this.$route.query.away_team_id
     }
+  },
+  watch: {
+    newMatchItem(newMatchItem) {
+      if (newMatchItem.match_id == this.match_id) {
+        let msg = newMatchItem.message
+        console.log(this.match_id + '===' + newMatchItem.match_id)
+        if (msg.status_code == 1 || msg.status_code == 2) {
+          if (msg.time_running == 1) {
+            //足球已进行时间 = (当前时间 - time_update)(秒) + time_played
+            let time = ((new Date().getTime() - new Date(msg.time_update.slice(0, 19)).getTime()) / 1000 + parseInt(msg.time_played)) / 60
+            this.time_play = { time: parseInt(time), status_name: msg.status_name, status_code: msg.status_code }
+          } else if (msg.time_running == 0) {
+            //足球已进行时间 = time_played
+            this.time_play = { time: parseInt(parseInt(msg.time_played) / 60), status_name: msg.status_name, status_code: msg.status_code }
+          }
+        }
+      }
+    }
   }
 }
 </script>
@@ -388,6 +455,26 @@ export default {
 <style scoped lang="stylus">
 .bifen-detail {
   box-sizing: border-box;
+  @keyframes flash {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes flash {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .flash {
+    animation: flash 1s infinite;
+    -webkit-animation: flash 1s infinite;
+  }
   .back {
     width: 100%;
     height: 150px;
@@ -396,11 +483,11 @@ export default {
     background: url('../assets/bifen/bifen_back.png');
     background-size: 100% 100%;
     color: #fff;
-    .logo{
-      width:120px;
-      height:120px;
-      background:#fff
-      margin-bottom:10px
+    .logo {
+      width: 120px;
+      height: 120px;
+      background: #fff;
+      margin-bottom: 10px;
     }
     .red {
       font-weight: normal !important;
