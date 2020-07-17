@@ -212,11 +212,11 @@
           <td align="center">{{team1_all.ying}}</td>
           <td align="center">{{team1_all.zou}}</td>
           <td align="center">{{team1_all.shu}}</td>
-          <td align="center">{{((team1_all.ying/team1_all.len)*100).toFixed(2)}}%</td>
+          <td align="center">{{team1_all.len?((team1_all.ying/team1_all.len)*100).toFixed(2):0}}%:</td>
           <td align="center">{{team1_all.daqiu}}</td>
-          <td align="center">{{((team1_all.daqiu/team1_all.len)*100).toFixed(2)}}%</td>
+          <td align="center">{{team1_all.len?((team1_all.daqiu/team1_all.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team1_all.xiaoqiu}}</td>
-          <td align="center">{{((team1_all.xiaoqiu/team1_all.len)*100).toFixed(2)}}%</td>
+          <td align="center">{{team1_all.len?((team1_all.xiaoqiu/team1_all.len)*100).toFixed(2):0}}%</td>
         </tr>
         <tr height="48">
           <td align="center">
@@ -226,11 +226,15 @@
           <td align="center">{{team1_home.ying}}</td>
           <td align="center">{{team1_home.zou}}</td>
           <td align="center">{{team1_home.shu}}</td>
-          <td align="center">{{((team1_home.ying/team1_home.len)*100).toFixed(2)}}%</td>
+          <td align="center">{{team1_home.len?((team1_home.ying/team1_home.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team1_home.daqiu}}</td>
-          <td align="center">{{((team1_home.daqiu/team1_home.len)*100).toFixed(2)}}%</td>
+          <td
+            align="center"
+          >{{team1_home.len?((team1_home.daqiu/team1_home.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team1_home.xiaoqiu}}</td>
-          <td align="center">{{((team1_home.xiaoqiu/team1_home.len)*100).toFixed(2)}}%</td>
+          <td
+            align="center"
+          >{{team1_home.len?((team1_home.xiaoqiu/team1_home.len)*100).toFixed(2):0}}%</td>
         </tr>
         <tr height="48">
           <td align="center">
@@ -240,11 +244,15 @@
           <td align="center">{{team1_away.ying}}</td>
           <td align="center">{{team1_away.zou}}</td>
           <td align="center">{{team1_away.shu}}</td>
-          <td align="center">{{((team1_away.ying/team1_away.len)*100).toFixed(2)}}%</td>
+          <td align="center">{{team1_away.len?((team1_away.ying/team1_away.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team1_away.daqiu}}</td>
-          <td align="center">{{((team1_away.daqiu/team1_away.len)*100).toFixed(2)}}%</td>
+          <td
+            align="center"
+          >{{team1_away.len?((team1_away.daqiu/team1_away.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team1_away.xiaoqiu}}</td>
-          <td align="center">{{((team1_away.xiaoqiu/team1_away.len)*100).toFixed(2)}}%</td>
+          <td
+            align="center"
+          >{{team1_away.len?((team1_away.xiaoqiu/team1_away.len)*100).toFixed(2):0}}%</td>
         </tr>
       </table>
 
@@ -276,11 +284,11 @@
           <td align="center">{{team2_all.ying}}</td>
           <td align="center">{{team2_all.zou}}</td>
           <td align="center">{{team2_all.shu}}</td>
-          <td align="center">{{((team2_all.ying/team2_all.len)*100).toFixed(2)}}%</td>
+          <td align="center">{{team2_all.len?((team2_all.ying/team2_all.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team2_all.daqiu}}</td>
-          <td align="center">{{((team2_all.daqiu/team2_all.len)*100).toFixed(2)}}%</td>
+          <td align="center">{{team2_all.len?((team2_all.daqiu/team2_all.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team2_all.xiaoqiu}}</td>
-          <td align="center">{{((team2_all.xiaoqiu/team2_all.len)*100).toFixed(2)}}%</td>
+          <td align="center">{{team2_all.len?((team2_all.xiaoqiu/team2_all.len)*100).toFixed(2):0}}%</td>
         </tr>
         <tr height="48">
           <td align="center">
@@ -290,11 +298,15 @@
           <td align="center">{{team2_home.ying}}</td>
           <td align="center">{{team2_home.zou}}</td>
           <td align="center">{{team2_home.shu}}</td>
-          <td align="center">{{((team2_home.ying/team2_home.len)*100).toFixed(2)}}%</td>
+          <td align="center">{{team2_home.len?((team2_home.ying/team2_home.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team2_home.daqiu}}</td>
-          <td align="center">{{((team2_home.daqiu/team2_home.len)*100).toFixed(2)}}%</td>
+          <td
+            align="center"
+          >{{team2_home.len?((team2_home.daqiu/team2_home.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team2_home.xiaoqiu}}</td>
-          <td align="center">{{((team2_home.xiaoqiu/team2_home.len)*100).toFixed(2)}}%</td>
+          <td
+            align="center"
+          >{{team2_home.len?((team2_home.xiaoqiu/team2_home.len)*100).toFixed(2):0}}%</td>
         </tr>
         <tr height="48">
           <td align="center">
@@ -304,11 +316,15 @@
           <td align="center">{{team2_away.ying}}</td>
           <td align="center">{{team2_away.zou}}</td>
           <td align="center">{{team2_away.shu}}</td>
-          <td align="center">{{((team2_away.ying/team2_away.len)*100).toFixed(2)}}%</td>
+          <td align="center">{{team2_away.len?((team2_away.ying/team2_away.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team2_away.daqiu}}</td>
-          <td align="center">{{((team2_away.daqiu/team2_away.len)*100).toFixed(2)}}%</td>
+          <td
+            align="center"
+          >{{team2_away.len?((team2_away.daqiu/team2_away.len)*100).toFixed(2):0}}%</td>
           <td align="center">{{team2_away.xiaoqiu}}</td>
-          <td align="center">{{((team2_away.xiaoqiu/team2_away.len)*100).toFixed(2)}}%</td>
+          <td
+            align="center"
+          >{{team2_away.len?((team2_away.xiaoqiu/team2_away.len)*100).toFixed(2):0}}%</td>
         </tr>
       </table>
     </div>
@@ -403,8 +419,10 @@
         </el-table>
       </div>
       <div class="txt">
-        近{{ parseInt(this.history_page) }}场：胜出
-        <span class="red">{{ historycount.sheng.length }}</span> 场， 平局
+        近{{ parseInt(this.history_data.length) }}场：胜出
+        <span
+          class="red"
+        >{{ historycount.sheng.length }}</span> 场， 平局
         <span class="blue">{{ historycount.ping.length }}</span> 场， 负
         <span class="green">{{ historycount.fu.length }}</span> 场， 胜率:
         <span
@@ -425,12 +443,9 @@
     <div class="latest history">
       <div class="title">
         <div class="team-name red">{{ matchDetail.home_team_name }}</div>
-        <span
-          v-for="(li, i) in home_latest_tab"
-          :key="i"
-          @click="home_latest_check(i)"
-          :class="{ active: home_latest_index === i }"
-        >{{ li }}</span>
+        <span :class="{ active: active1 ==0 }" @click="home_latest_check(0)">全部赛事</span>
+        <span :class="{ active: active1 ==1 }" @click="home_latest_check(1)">主相同</span>
+
         <el-select v-model="home_latest_page" placeholder="请选择" @change="getEndMatchByTeamId">
           <el-option label="10条" value="10"></el-option>
           <el-option label="15条" value="15"></el-option>
@@ -444,7 +459,11 @@
           </el-table-column>
           <el-table-column prop="home_team_name" label="主队" width>
             <template slot-scope="scope">
-              <span :class="scope.row.level">{{ scope.row.home_team_name }}</span>
+              <span
+                :class="scope.row.level"
+                v-if="scope.row.home_team_id == home_team_id"
+              >{{ scope.row.home_team_name }}</span>
+              <span v-else>{{ scope.row.home_team_name }}</span>
             </template>
           </el-table-column>
           <el-table-column label="比分" width="50">
@@ -500,7 +519,7 @@
         </el-table>
       </div>
       <div class="txt">
-        近{{ parseInt(this.history_page) }}场：胜出
+        近{{ parseInt(this.home_latest.length) }}场：胜出
         <span class="red">{{ homecount.sheng.length }}</span> 场， 平局
         <span class="blue">{{ homecount.ping.length }}</span> 场， 负
         <span class="green">{{ homecount.fu.length }}</span> 场， 胜率:
@@ -520,12 +539,9 @@
     <div class="latest history">
       <div class="title">
         <div class="team-name blue">{{ matchDetail.away_team_name }}</div>
-        <span
-          v-for="(li, i) in away_latest_tab"
-          :key="i"
-          @click="away_latest_check(i)"
-          :class="{ active: away_latest_index === i }"
-        >{{ li }}</span>
+        <span :class="{ active: active2 ==0 }" @click="away_latest_check(0)">全部赛事</span>
+        <span :class="{ active: active2 ==1 }" @click="away_latest_check(1)">主相同</span>
+
         <el-select v-model="away_latest_page" placeholder="请选择" @change="getEndMatchByTeamId">
           <el-option label="10条" value="10"></el-option>
           <el-option label="15条" value="15"></el-option>
@@ -541,7 +557,7 @@
             <template slot-scope="scope">
               <span
                 :class="scope.row.level"
-                v-if="scope.row.away_team_id == home_team_id"
+                v-if="scope.row.home_team_id == away_team_id"
               >{{ scope.row.home_team_name }}</span>
               <span v-else>{{ scope.row.home_team_name }}</span>
             </template>
@@ -555,7 +571,7 @@
             <template slot-scope="scope">
               <span
                 :class="scope.row.level"
-                v-if="scope.row.away_team_id != home_team_id"
+                v-if="scope.row.away_team_id == away_team_id"
               >{{ scope.row.away_team_name }}</span>
               <span v-else>{{ scope.row.away_team_name }}</span>
             </template>
@@ -599,7 +615,7 @@
         </el-table>
       </div>
       <div class="txt">
-        近{{ parseInt(this.history_page) }}场：胜出
+        近{{ parseInt(this.away_latest.length) }}场：胜出
         <span class="red">{{ awaycount.sheng.length }}</span> 场， 平局
         <span class="blue">{{ awaycount.ping.length }}</span> 场， 负
         <span class="green">{{ awaycount.fu.length }}</span> 场， 胜率:
@@ -621,7 +637,7 @@
 
 <script>
 // import { mapState } from 'vuex'
-import odds from '../../common/odds'
+import odds from '../../common/odds';
 export default {
   props: ['events', 'statics', 'home_team', 'away_team', 'matchDetail'],
   data() {
@@ -637,16 +653,20 @@ export default {
       homeLike: 0,
 
       home_latest: [],
+      active1: 0,
       home_latest_page: '10条',
       home_latest_tab: ['全部赛事', '主相同'],
       home_latest_index: 0,
       home_latest_homelike: 0,
+      now_id1: '',
 
       away_latest: [],
+      active2: 0,
       away_latest_page: '10条',
       away_latest_tab: ['全部赛事', '客相同'],
       away_latest_index: 0,
       away_latest_homelike: 0,
+      now_id2: '',
 
       home_future: [],
       away_future: [],
@@ -730,23 +750,25 @@ export default {
       team2_all: {},
       team2_home: {},
       team2_away: {}
-    }
+    };
   },
   methods: {
     history_check(i) {
-      this.history_index = i
-      this.homeLike = i
-      this.getTwoTeamMatchEd()
+      this.history_index = i;
+      this.homeLike = i;
+      this.getTwoTeamMatchEd();
     },
     home_latest_check(i) {
-      this.home_latest_index = i
-      this.home_latest_homelike = i
-      this.getEndMatchByTeamId('home')
+      // this.home_latest_index = i;
+      this.active1 = i;
+      // this.home_latest_homelike = i;
+      this.getEndMatchByTeamId('home');
     },
     away_latest_check(i) {
-      this.away_latest_index = i
-      this.away_latest_homelike = i
-      this.getEndMatchByTeamId('away')
+      this.active2 = i;
+      // this.away_latest_index = i;
+      // this.away_latest_homelike = i;
+      this.getEndMatchByTeamId('away');
     },
     //历史交锋
     async getTwoTeamMatchEd() {
@@ -755,134 +777,141 @@ export default {
         away_team_id: this.away_team_id,
         per_page: parseInt(this.history_page),
         homeLike: this.homeLike
-      }
-      let res = await this.$api.getTwoTeamMatchEd(data)
+      };
+      let res = await this.$api.getTwoTeamMatchEd(data);
 
-      this.dealMathchData(res.data, 'history')
+      this.dealMathchData(res.data, 'history', this.home_team_id);
 
-      this.history_data = res.data
+      this.history_data = res.data;
     },
     changehomelike() {
-      this.homeLike = 1
+      this.homeLike = 1;
     },
 
-    dealMathchData(data, team) {
+    dealMathchData(data, team, id) {
       data.map(i => {
         //主队红绿蓝显示
-        let scoreReduce1 = i.home_team_score - i.away_team_score
-        let scoreReduce2 = i.away_team_score - i.home_team_score
+        let scoreReduce = i.home_team_score - i.away_team_score;
         // 主队和客队区别
-
-        if (i.home_team_id == this.home_team_id) {
-          if (scoreReduce1 > 0) {
-            i['level'] = 'red'
-          } else if (scoreReduce1 < 0) {
-            i['level'] = 'green'
+        if (team == 'home') {
+          this.now_id1 = id;
+        } else {
+          this.now_id2 = id;
+        }
+        if (i.home_team_id == id) {
+          if (scoreReduce > 0) {
+            i['level'] = 'red';
+          } else if (scoreReduce < 0) {
+            i['level'] = 'green';
           } else {
-            i['level'] = 'blue'
+            i['level'] = 'blue';
           }
         } else {
-          if (scoreReduce2 > 0) {
-            i['level'] = 'red'
-          } else if (scoreReduce2 < 0) {
-            i['level'] = 'green'
+          if (scoreReduce < 0) {
+            i['level'] = 'red';
+          } else if (scoreReduce > 0) {
+            i['level'] = 'green';
           } else {
-            i['level'] = 'blue'
+            i['level'] = 'blue';
           }
         }
 
+        i['qiu'] = '-';
+        i['ya'] = '-';
+        i['sheng'] = '-';
+
         //亚盘
         if (i.match_yapan) {
-          let yapan = i.match_yapan['Bet365'] ? i.match_yapan['Bet365'] : i.match_yapan['Vcbet']
+          let yapan = i.match_yapan['Bet365'] ? i.match_yapan['Bet365'] : i.match_yapan['Vcbet'];
           if (Object.prototype.toString.call(yapan) != '[object Object]') {
-            yapan = i.match_yapan['suibian']
+            yapan = i.match_yapan['suibian'];
           }
           if (Object.prototype.toString.call(yapan) == '[object Object]') {
             i['yapan'] = [
               (yapan.fields[0].value - 1).toFixed(2),
               yapan.ovalue > 0 ? '受' + odds[Math.abs(yapan.ovalue)] : odds[Math.abs(yapan.ovalue)],
               (yapan.fields[1].value - 1).toFixed(2)
-            ]
+            ];
 
-            let bifen = i.home_team_score + yapan.ovalue - i.away_team_score
+            let bifen = i.home_team_score + yapan.ovalue - i.away_team_score;
             if (bifen > 0) {
               if (i.home_team_id == this.home_team_id) {
-                i['ya'] = '赢'
+                i['ya'] = '赢';
               } else {
-                i['ya'] = '输'
+                i['ya'] = '输';
               }
             } else if (bifen < 0) {
               if (i.home_team_id == this.home_team_id) {
-                i['ya'] = '输'
+                i['ya'] = '输';
               } else {
-                i['ya'] = '赢'
+                i['ya'] = '赢';
               }
             } else {
-              i['ya'] = '走'
+              i['ya'] = '走';
             }
           }
         }
         //欧赔
         if (i.match_oupei) {
-          let oupei = i.match_oupei['Bet365'] ? i.match_oupei['Bet365'] : i.match_oupei['Vcbet']
+          let oupei = i.match_oupei['Bet365'] ? i.match_oupei['Bet365'] : i.match_oupei['Vcbet'];
           if (Object.prototype.toString.call(oupei) != '[object Object]') {
-            oupei = i.match_oupei['suibian']
+            oupei = i.match_oupei['suibian'];
           }
           if (Object.prototype.toString.call(oupei) == '[object Object]') {
-            i['oupei'] = [oupei.fields[0].value.toFixed(2), oupei.fields[2].value.toFixed(2), oupei.fields[1].value.toFixed(2)]
+            i['oupei'] = [oupei.fields[0].value.toFixed(2), oupei.fields[2].value.toFixed(2), oupei.fields[1].value.toFixed(2)];
           }
 
           if (i.home_team_score > i.away_team_score) {
-            i['sheng'] = '胜'
+            i['sheng'] = '胜';
 
             if (team == 'away') {
-              i['sheng'] = '负'
+              i['sheng'] = '负';
             }
           } else if (i.home_team_score < i.away_team_score) {
-            i['sheng'] = '负'
+            i['sheng'] = '负';
 
             if (team == 'away') {
-              i['sheng'] = '胜'
+              i['sheng'] = '胜';
             }
           } else {
-            i['sheng'] = '平'
+            i['sheng'] = '平';
           }
         }
         //大小球
         if (i.match_daxiaoqiu) {
-          let daxiaoqiu = i.match_daxiaoqiu['Bet365'] ? i.match_daxiaoqiu['Bet365'] : i.match_daxiaoqiu['Vcbet']
+          let daxiaoqiu = i.match_daxiaoqiu['Bet365'] ? i.match_daxiaoqiu['Bet365'] : i.match_daxiaoqiu['Vcbet'];
           if (Object.prototype.toString.call(daxiaoqiu) != '[object Object]') {
-            daxiaoqiu = i.match_daxiaoqiu['suibian']
+            daxiaoqiu = i.match_daxiaoqiu['suibian'];
           }
           if (Object.prototype.toString.call(daxiaoqiu) == '[object Object]') {
-            i['daxiao'] = [(daxiaoqiu.fields[0].value - 1).toFixed(2), odds[Math.abs(daxiaoqiu.ovalue)], (daxiaoqiu.fields[1].value - 1).toFixed(2)]
-            i['qiupan'] = i.home_team_score + i.away_team_score - daxiaoqiu.ovalue
+            i['daxiao'] = [(daxiaoqiu.fields[0].value - 1).toFixed(2), odds[Math.abs(daxiaoqiu.ovalue)], (daxiaoqiu.fields[1].value - 1).toFixed(2)];
+            i['qiupan'] = i.home_team_score + i.away_team_score - daxiaoqiu.ovalue;
           }
         }
         if (i['qiupan'] > 0) {
-          i['qiu'] = '大'
+          i['qiu'] = '大';
         } else if (i['qiupan'] < 0) {
-          i['qiu'] = '小'
+          i['qiu'] = '小';
         } else {
-          i['qiu'] = '走'
+          i['qiu'] = '走';
         }
-      })
+      });
       data.map(item => {
         if (item.sheng == '胜') {
-          this[team + 'count'].sheng.push(item.sheng)
+          this[team + 'count'].sheng.push(item.sheng);
         } else if (item.sheng == '负') {
-          this[team + 'count'].fu.push(item.sheng)
+          this[team + 'count'].fu.push(item.sheng);
         } else if (item.sheng == '平') {
-          this[team + 'count'].ping.push(item.sheng)
+          this[team + 'count'].ping.push(item.sheng);
         }
         if (item.qiu == '大') {
-          this[team + 'count'].da.push(item.qiu)
+          this[team + 'count'].da.push(item.qiu);
         }
         if (item.ya == '赢') {
-          this[team + 'count'].ying.push(item.ya)
+          this[team + 'count'].ying.push(item.ya);
         }
-      })
-      return data
+      });
+      return data;
     },
 
     //近期比赛
@@ -890,16 +919,16 @@ export default {
       let data = {
         team_id: team == 'home' ? this.home_team_id : this.away_team_id,
         per_page: team == 'home' ? parseInt(this.home_latest_page) : parseInt(this.away_latest_page),
-        homeLike: team
-      }
-      let res = await this.$api.getEndMatchByTeamId(data)
+        homeLike: team == 'home' ? (this.active1 == 1 ? 'home' : '') : this.active2 == 1 ? 'away' : ''
+      };
+      let res = await this.$api.getEndMatchByTeamId(data);
 
       if (team == 'home') {
-        this.dealMathchData(res.data, 'home')
-        this.home_latest = res.data
+        this.dealMathchData(res.data, 'home', this.home_team_id);
+        this.home_latest = res.data;
       } else {
-        this.dealMathchData(res.data, 'away')
-        this.away_latest = res.data
+        this.dealMathchData(res.data, 'away', this.away_team_id);
+        this.away_latest = res.data;
       }
     },
 
@@ -907,11 +936,11 @@ export default {
     async getUnBeginMatchByTeamId(team) {
       let res = await this.$api.getUnBeginMatchByTeamId({
         team_id: team == 'home' ? this.home_team_id : this.away_team_id
-      })
+      });
       if (team == 'home') {
-        this.home_future = res
+        this.home_future = res;
       } else {
-        this.away_future = res
+        this.away_future = res;
       }
     },
     //积分榜
@@ -920,7 +949,7 @@ export default {
         tournament_id: this.tournament_id,
         season_id: this.season_id,
         team_id: team == 'home' ? this.home_team_id : this.away_team_id
-      })
+      });
       let home_rank_total = {
         matchesTotal: '',
         winTotal: '',
@@ -932,8 +961,8 @@ export default {
         pointsTotal: '',
         positionTotal: '',
         winPctTotal: ''
-      }
-      let home_rank = {}
+      };
+      let home_rank = {};
       let home_rank_home = {
         matchesHome: '',
         winwinHome: '',
@@ -945,19 +974,19 @@ export default {
         pointsHome: '',
         positionHome: '',
         winPctHome: ''
-      }
+      };
 
-      let away_rank = {}
+      let away_rank = {};
 
       if (res.tables.length > 0 && res.tables[0].statics.length > 0) {
         if (team == 'home') {
           res.tables[0].statics.map(i => {
-            this.home_rank[i.type_en_name] = i.value ? i.value : '-'
-          })
+            this.home_rank[i.type_en_name] = i.value ? i.value : '-';
+          });
         } else {
           res.tables[0].statics.map(i => {
-            this.away_rank[i.type_en_name] = i.value ? i.value : '-'
-          })
+            this.away_rank[i.type_en_name] = i.value ? i.value : '-';
+          });
         }
       }
       // this.home_rank = home_rank
@@ -969,109 +998,109 @@ export default {
         season_id: this.season_id,
         team_id: team == 'home' ? this.home_team_id : this.away_team_id,
         per_page: 20
-      })
-      this.dealData(res.data, team)
+      });
+      this.dealData(res.data, team);
     },
     dealData(data, team) {
-      let yapan = null
-      let daxiaoqiu = null
-      let shu = 0
-      let zhushu = 0
-      let keshu = 0
-      let ying = 0
-      let zhuying = 0
-      let keying = 0
-      let zou = 0
-      let zhuzou = 0
-      let kezou = 0
-      let daqiu = 0
-      let zhudaqiu = 0
-      let kedaqiu = 0
-      let xiaoqiu = 0
-      let zhuxiaoqiu = 0
-      let kexiaoqiu = 0
-      let zouqiu = 0
-      let zhuzouqiu = 0
-      let kezouqiu = 0
-      let zhusai = 0
-      let kesai = 0
+      let yapan = null;
+      let daxiaoqiu = null;
+      let shu = 0;
+      let zhushu = 0;
+      let keshu = 0;
+      let ying = 0;
+      let zhuying = 0;
+      let keying = 0;
+      let zou = 0;
+      let zhuzou = 0;
+      let kezou = 0;
+      let daqiu = 0;
+      let zhudaqiu = 0;
+      let kedaqiu = 0;
+      let xiaoqiu = 0;
+      let zhuxiaoqiu = 0;
+      let kexiaoqiu = 0;
+      let zouqiu = 0;
+      let zhuzouqiu = 0;
+      let kezouqiu = 0;
+      let zhusai = 0;
+      let kesai = 0;
 
       data.map(i => {
         if (i.match_yapan) {
-          yapan = i.match_yapan['Bet365'] ? i.match_yapan['Bet365'] : i.match_yapan['Vcbet']
+          yapan = i.match_yapan['Bet365'] ? i.match_yapan['Bet365'] : i.match_yapan['Vcbet'];
         }
         if (Object.prototype.toString.call(yapan) != '[object Object]') {
-          yapan = i.match_yapan['suibian']
+          yapan = i.match_yapan['suibian'];
         }
         if (i.match_daxiaoqiu) {
-          daxiaoqiu = i.match_daxiaoqiu['Bet365'] ? i.match_daxiaoqiu['Bet365'] : i.match_daxiaoqiu['Vcbet']
+          daxiaoqiu = i.match_daxiaoqiu['Bet365'] ? i.match_daxiaoqiu['Bet365'] : i.match_daxiaoqiu['Vcbet'];
         }
         if (Object.prototype.toString.call(daxiaoqiu) != '[object Object]') {
-          daxiaoqiu = i.match_daxiaoqiu['suibian']
+          daxiaoqiu = i.match_daxiaoqiu['suibian'];
         }
         //亚盘
-        let bifen = i.home_team_score + yapan.ovalue - i.away_team_score
+        let bifen = i.home_team_score + yapan.ovalue - i.away_team_score;
         //大小球
-        let daxiao = i.home_team_score + i.away_team_score - daxiaoqiu.ovalue
+        let daxiao = i.home_team_score + i.away_team_score - daxiaoqiu.ovalue;
         //主客队
-        let team_id = team == 'home' ? this.home_team_id : this.away_team_id
+        let team_id = team == 'home' ? this.home_team_id : this.away_team_id;
 
         if (i.home_team_id == team_id) {
-          zhusai++
+          zhusai++;
           //亚盘
           if (bifen > 0) {
-            i['yapan'] = '赢'
-            ying++
-            zhuying++
+            i['yapan'] = '赢';
+            ying++;
+            zhuying++;
           } else if (bifen < 0) {
-            i['yapan'] = '输'
-            shu++
-            zhushu++
+            i['yapan'] = '输';
+            shu++;
+            zhushu++;
           } else {
-            i['yapan'] = '走'
-            zou++
-            zhuzou++
+            i['yapan'] = '走';
+            zou++;
+            zhuzou++;
           }
           //大小球
           if (daxiao > 0) {
-            daqiu++
-            zhudaqiu++
+            daqiu++;
+            zhudaqiu++;
           } else if (daxiao < 0) {
-            xiaoqiu++
-            zhuxiaoqiu++
+            xiaoqiu++;
+            zhuxiaoqiu++;
           } else {
-            zouqiu++
-            zhuzouqiu++
+            zouqiu++;
+            zhuzouqiu++;
           }
         } else {
-          kesai++
+          kesai++;
           //亚盘
           if (bifen > 0) {
-            i['yapan'] = '输'
-            shu++
-            keshu++
+            i['yapan'] = '输';
+            shu++;
+            keshu++;
           } else if (bifen < 0) {
-            i['yapan'] = '赢'
-            ying++
-            keying++
+            i['yapan'] = '赢';
+            ying++;
+            keying++;
           } else {
-            i['yapan'] = '走'
-            zou++
-            kezou++
+            i['yapan'] = '走';
+            zou++;
+            kezou++;
           }
           //大小球
           if (daxiao > 0) {
-            daqiu++
-            kedaqiu++
+            daqiu++;
+            kedaqiu++;
           } else if (daxiao < 0) {
-            xiaoqiu++
-            kexiaoqiu++
+            xiaoqiu++;
+            kexiaoqiu++;
           } else {
-            zouqiu++
-            kezouqiu++
+            zouqiu++;
+            kezouqiu++;
           }
         }
-      })
+      });
       if (team == 'home') {
         this.team1_all = {
           len: data.length,
@@ -1080,7 +1109,7 @@ export default {
           shu: shu,
           daqiu: daqiu,
           xiaoqiu: xiaoqiu
-        }
+        };
         this.team1_home = {
           len: zhusai,
           ying: zhuying,
@@ -1088,7 +1117,7 @@ export default {
           shu: zhushu,
           daqiu: zhudaqiu,
           xiaoqiu: zhuxiaoqiu
-        }
+        };
         this.team1_away = {
           len: kesai,
           ying: keying,
@@ -1096,7 +1125,7 @@ export default {
           shu: keshu,
           daqiu: kedaqiu,
           xiaoqiu: kexiaoqiu
-        }
+        };
       } else {
         this.team2_all = {
           len: data.length,
@@ -1105,7 +1134,7 @@ export default {
           shu: shu,
           daqiu: daqiu,
           xiaoqiu: xiaoqiu
-        }
+        };
         this.team2_home = {
           len: zhusai,
           ying: zhuying,
@@ -1113,7 +1142,7 @@ export default {
           shu: zhushu,
           daqiu: zhudaqiu,
           xiaoqiu: zhuxiaoqiu
-        }
+        };
         this.team2_away = {
           len: kesai,
           ying: keying,
@@ -1121,44 +1150,40 @@ export default {
           shu: keshu,
           daqiu: kedaqiu,
           xiaoqiu: kexiaoqiu
-        }
+        };
       }
-
-      console.log(this.team2_all)
-      console.log(this.team2_home)
-      console.log(this.team2_away)
     }
   },
   mounted() {
-    this.getTwoTeamMatchEd()
-    this.getEndMatchByTeamId('home')
-    this.getEndMatchByTeamId('away')
-    this.getUnBeginMatchByTeamId('home')
-    this.getUnBeginMatchByTeamId('away')
-    this.getMatchTournamentRankingByTeamId('home')
-    this.getMatchTournamentRankingByTeamId('away')
-    this.getTournamentMatchByTeamId('home')
-    this.getTournamentMatchByTeamId('away')
+    this.getTwoTeamMatchEd();
+    this.getEndMatchByTeamId('home');
+    this.getEndMatchByTeamId('away');
+    this.getUnBeginMatchByTeamId('home');
+    this.getUnBeginMatchByTeamId('away');
+    this.getMatchTournamentRankingByTeamId('home');
+    this.getMatchTournamentRankingByTeamId('away');
+    this.getTournamentMatchByTeamId('home');
+    this.getTournamentMatchByTeamId('away');
   },
   computed: {
     // ...mapState(['match'])
     match_id() {
-      return this.$route.query.match_id
+      return this.$route.query.match_id;
     },
     home_team_id() {
-      return this.$route.query.home_team_id
+      return this.$route.query.home_team_id;
     },
     away_team_id() {
-      return this.$route.query.away_team_id
+      return this.$route.query.away_team_id;
     },
     tournament_id() {
-      return this.$route.query.tournament_id
+      return this.$route.query.tournament_id;
     },
     season_id() {
-      return this.$route.query.season_id
+      return this.$route.query.season_id;
     }
   }
-}
+};
 </script>
 
 <style scoped lang="stylus">

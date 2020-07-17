@@ -38,14 +38,19 @@
           <p class="red">{{ matchDetail.home_team_name }}</p>
           <p>{{ qingbao.home_coach.en_name ? qingbao.home_coach.en_name : '-' }}</p>
           <p>
-            <img v-if="qingbao.home_coach.logo" :src="'https://imgs.oss.cn-south-1.jcloudcs.com/' + qingbao.home_coach.logo.slice(6)" class="avatar" alt />
+            <img
+              v-if="qingbao.home_coach.logo"
+              :src="'https://imgs.oss.cn-south-1.jcloudcs.com/' + qingbao.home_coach.logo.slice(6)"
+              class="avatar"
+              alt
+            />
           </p>
           <p>{{ qingbao.home_coach.birthdate ? qingbao.home_coach.birthdate.slice(0, 10) : '-' }}</p>
           <p>{{ qingbao.home_coach.style ? qingbao.home_coach.style : '-' }}</p>
           <p>{{ qingbao.home_coach.score ? qingbao.home_coach.score : '-' }}</p>
           <p>
             {{ qingbao.home_coach.game_count ? qingbao.home_coach.game_count : '-' }}（胜：{{ qingbao.home_coach.win ? qingbao.home_coach.win : '-' }}，平{{
-              qingbao.home_coach.draw ? qingbao.home_coach.draw : '-'
+            qingbao.home_coach.draw ? qingbao.home_coach.draw : '-'
             }}，负{{ qingbao.home_coach.lose ? qingbao.home_coach.lose : '-' }}）
           </p>
         </div>
@@ -53,14 +58,19 @@
           <p class="blue">{{ matchDetail.away_team_name }}</p>
           <p>{{ qingbao.away_coach.en_name ? qingbao.away_coach.en_name : '-' }}</p>
           <p>
-            <img v-if="qingbao.away_coach.logo" :src="'https://imgs.oss.cn-south-1.jcloudcs.com/' + qingbao.away_coach.logo.slice(6)" class="avatar" alt />
+            <img
+              v-if="qingbao.away_coach.logo"
+              :src="'https://imgs.oss.cn-south-1.jcloudcs.com/' + qingbao.away_coach.logo.slice(6)"
+              class="avatar"
+              alt
+            />
           </p>
           <p>{{ qingbao.away_coach.birthdate ? qingbao.away_coach.birthdate.slice(0, 10) : '-' }}</p>
           <p>{{ qingbao.away_coach.style ? qingbao.away_coach.style : '-' }}</p>
           <p>{{ qingbao.away_coach.score ? qingbao.away_coach.score : '-' }}</p>
           <p>
             {{ qingbao.away_coach.game_count ? qingbao.away_coach.game_count : '-' }}（胜：{{ qingbao.away_coach.win ? qingbao.away_coach.win : '-' }}，平{{
-              qingbao.away_coach.draw ? qingbao.away_coach.draw : '-'
+            qingbao.away_coach.draw ? qingbao.away_coach.draw : '-'
             }}，负{{ qingbao.away_coach.lose ? qingbao.away_coach.lose : '-' }}）
           </p>
         </div>
@@ -113,13 +123,13 @@ export default {
     return {
       qingbao: [],
       news: {}
-    }
+    };
   },
   methods: {
     async getOneMatchInformation() {
       let res = await this.$api.getOneMatchInformation({
         id: this.matchDetail.id
-      })
+      });
       if (res.informatins) {
         let news = {
           // zhuqing: '',
@@ -128,48 +138,47 @@ export default {
           // keshang: [],
           // zhishu: [],
           // yuce: []
-        }
+        };
         res.informatins.map(i => {
           if (i.type_id == 3) {
             if (i.benefit == 0) {
-              news['zhuzhong'] += i.content
+              news['zhuzhong'] += i.content;
             } else if (i.benefit == 2) {
-              news['zhuli'] += i.content
+              news['zhuli'] += i.content;
             } else if (i.benefit == 4) {
-              news['zhuhai'] += i.content
+              news['zhuhai'] += i.content;
             }
             // news["zhuqing"].push(i);
           } else if (i.type_id == 4) {
             if (i.benefit == 1) {
-              news['kezhong'] += i.content
+              news['kezhong'] += i.content;
             } else if (i.benefit == 3) {
-              news['keli'] += i.content
+              news['keli'] += i.content;
             } else if (i.benefit == 5) {
-              news['kehai'] += i.content
+              news['kehai'] += i.content;
             }
             // news["keqing"].push(i);
           } else if (i.type_id == 1) {
-            news['zhushang'] = i.content
+            news['zhushang'] = i.content;
           } else if (i.type_id == 2) {
-            news['keshang'] = i.content
+            news['keshang'] = i.content;
           } else if (i.type_id == 6) {
-            news['yuce'] += i.content
+            news['yuce'] += i.content;
           }
-        })
+        });
 
-        this.news = news
+        this.news = news;
       }
-      this.qingbao = res
-      console.log(this.news)
+      this.qingbao = res;
     }
   },
   mounted() {
-    this.getOneMatchInformation()
+    this.getOneMatchInformation();
   },
   computed: {
     // ...mapState(['match'])
   }
-}
+};
 </script>
 
 <style scoped lang="stylus">

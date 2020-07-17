@@ -17,7 +17,12 @@
             <router-link to="/qingbao" class="fr unl" tag="span">查看更多</router-link>
           </div>
           <ul class="list">
-            <li v-for="(li, i) in articleType['qingbao']['data']" :key="i" :class="{ red: li.is_red == 1 }" @click="chooseArticle(li)">
+            <li
+              v-for="(li, i) in articleType['qingbao']['data']"
+              :key="i"
+              :class="{ red: li.is_red == 1 }"
+              @click="chooseArticle(li)"
+            >
               <span></span>
               {{ li.title }}
             </li>
@@ -54,7 +59,11 @@
             <div class="zixun">
               <div v-for="(li, i) in articleType['pankou']" :key="i">
                 <img :src="li.image" alt class="icon-img" />
-                <div class="pankou-list" :class="{ red: li.is_red == 1 }" @click="chooseArticle(li)">
+                <div
+                  class="pankou-list"
+                  :class="{ red: li.is_red == 1 }"
+                  @click="chooseArticle(li)"
+                >
                   <h2>{{ li.title }}</h2>
                   <p>{{ li.introduction }}</p>
                   <p>
@@ -210,40 +219,49 @@ export default {
       pusherList: [],
       jifenType: 'yingchao',
       jifen: [],
-      activeName: 'all'
-    }
+      activeName: 'all',
+      type: 0
+    };
   },
   mounted() {
-    this.getBanner()
+    this.getBanner();
     // 情报中心
-    this.articleList(3, 11, 'qingbao')
+    this.articleList(3, 11, 'qingbao');
     // 焦点赛事
-    this.focusMatch()
+    this.focusMatch();
     // 盘口分析
-    this.analyseList()
+    this.analyseList();
     // 赔盘
-    this.articleList(4, 15, 'peipan')
+    this.articleList(4, 15, 'peipan');
     // 人气推手
-    this.hotPushers()
+    this.hotPushers();
     // 积分榜
-    this.rankingList()
+    this.rankingList();
     // 高手全部
-    this.gaoshouAllList(15)
+    this.gaoshouAllList(15);
   },
   methods: {
     // 分页
     pagenatiOnchange(page) {
-      this.page = page
-      this.pusherList()
+      this.page = page;
+      if (this.type == 0) {
+        this.gaoshouAllList();
+      } else if (this.type == 4) {
+        this.articleList(4, 15, 'peipan');
+      } else if (this.type == 5) {
+        this.articleList(5, 15, 'liansai');
+      } else if (this.type == 6) {
+        this.articleList(6, 15, 'gaoshou');
+      }
     },
     handleSizeChange(size) {
-      this.per_page = size
-      this.pusherList()
+      this.per_page = size;
+      this.articleList();
     },
     //banner
     async getBanner() {
-      let res = await this.$api.getBanner()
-      this.bannerList = res
+      let res = await this.$api.getBanner();
+      this.bannerList = res;
     },
     //文章
     async articleList(cate_id, per_page, type) {
@@ -252,68 +270,73 @@ export default {
         cate_id: cate_id,
         per_page: per_page ? per_page : this.per_page,
         page: this.page
-      }
-      let res = await this.$api.articleList(params)
-      this.articleType[type] = res
+      };
+      let res = await this.$api.articleList(params);
+      this.articleType[type] = res;
     },
     // 焦点赛事
     async focusMatch() {
-      let res = await this.$api.focusMatch()
-      this.articleType['jiaodian'] = res.data
+      let res = await this.$api.focusMatch();
+      this.articleType['jiaodian'] = res.data;
     },
     // 盘口分析
     async analyseList() {
-      let res = await this.$api.analyseList()
-      this.articleType['pankou'] = res.data
+      let res = await this.$api.analyseList();
+      this.articleType['pankou'] = res.data;
     },
     // 高手tab切换
     gaoshouTab(type) {
       if (type.name === 'peipan') {
-        this.articleList(4, 15, 'peipan')
+        this.type = 4;
+        this.articleList(4, 15, 'peipan');
       } else if (type.name === 'liansai') {
-        this.articleList(5, 15, 'liansai')
+        this.type = 5;
+        this.articleList(5, 15, 'liansai');
       } else if (type.name === 'gaoshou') {
-        this.articleList(6, 15, 'gaoshou')
+        this.type = 6;
+        this.articleList(6, 15, 'gaoshou');
+      } else {
+        this.type = 0;
+        this.gaoshouAllList();
       }
 
-      this.gaoshouType = type.name
+      this.gaoshouType = type.name;
     },
     async gaoshouAllList() {
       let params = {
         per_page: 15,
         page: this.page
-      }
-      let res = await this.$api.getThreeCateArticle(params)
-      this.articleType['gaoshouAll'] = res
+      };
+      let res = await this.$api.getThreeCateArticle(params);
+      this.articleType['gaoshouAll'] = res;
     },
     // 人气推手
     async hotPushers() {
-      let res = await this.$api.hotPushers()
-      this.pusherList = res.data.slice(0, 5)
+      let res = await this.$api.hotPushers();
+      this.pusherList = res.data.slice(0, 5);
     },
     // 积分榜
     async rankingList() {
-      let res = await this.$api.rankingList()
-      this.jifen = res
-      console.log(this.jifen)
+      let res = await this.$api.rankingList();
+      this.jifen = res;
     },
     jifenTab(type) {
-      this.jifenType = type.name
+      this.jifenType = type.name;
     },
     chooseArticle(article) {
-      this.$store.commit('chooseArticle', article)
+      this.$store.commit('chooseArticle', article);
       this.$router.push({
         path: `/article`
-      })
+      });
     },
     goPush(pusher) {
-      this.$store.commit('choosePusher', pusher)
+      this.$store.commit('choosePusher', pusher);
       this.$router.push({
         path: `/tuijianDetail`
-      })
+      });
     }
   }
-}
+};
 </script>
 <style lang="stylus" scoped>
 p {
@@ -349,9 +372,9 @@ p {
   width: 90px;
   height: 90px;
 }
-.banner-img{
-  width:770px
-  height:440px
+.banner-img {
+  width: 770px;
+  height: 440px;
 }
 .gaoshou {
   width: 100%;

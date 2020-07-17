@@ -20,7 +20,7 @@
           </span>
           <span>
             隐藏
-            <span class="red">0</span> 场
+            <span class="red">{{allLen-total}}</span> 场
           </span>
           <span class="red show" @click="showAll">[显示]</span>
         </div>
@@ -111,7 +111,7 @@
       <div class="table">
         <el-table
           ref="multipleTable"
-          :data="now_matches"
+          :data="show_matches"
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="tableSelectChange"
@@ -137,30 +137,39 @@
               <span class="flash red" v-if="scope.row.status_code==1||scope.row.status_code==2">'</span>
             </template>
           </el-table-column>
-          <el-table-column prop="home_team_name" label="主队" width></el-table-column>
-          <el-table-column abel="比分" width="120">
+          <el-table-column label="主队" width>
             <template slot-scope="scope">
-              <span v-if="scope.row.status != 1" class="red">
+              <div class="align-right">
                 <span class="red-card" v-show="scope.row.red1">{{ scope.row.red1 }}</span>
                 <span class="yellow-card" v-show="scope.row.yellow1">{{ scope.row.yellow1 }}</span>
-                {{ scope.row.home_team_score + '-' + scope.row.away_team_score }}
-                <span
-                  class="yellow-card"
-                  v-show="scope.row.yellow2"
-                >{{ scope.row.yellow2 }}</span>
-
-                <span class="red-card" v-show="scope.row.red2">{{ scope.row.red2 }}</span>
-              </span>
+                <span>{{scope.row.home_team_name}}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column abel="比分" width="60">
+            <template slot-scope="scope">
+              <span
+                v-if="scope.row.status != 1"
+                class="red"
+              >{{ scope.row.home_team_score + '-' + scope.row.away_team_score }}</span>
               <img :src="icons.vs" v-else class="vs-icon" />
             </template>
           </el-table-column>
-          <el-table-column prop="away_team_name" label="客队" width></el-table-column>
-          <el-table-column label="半场" width>
+          <el-table-column prop="away_team_name" label="客队" width>
+            <template slot-scope="scope">
+              <div class="align-left">
+                <span>{{scope.row.away_team_name}}</span>
+                <span class="yellow-card" v-show="scope.row.yellow2">{{ scope.row.yellow2 }}</span>
+                <span class="red-card" v-show="scope.row.red2">{{ scope.row.red2 }}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="半场" width="60">
             <template slot-scope="scope">
               <span>{{ scope.row.home_team_half_time_score }}-{{ scope.row.away_team_half_time_score }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="角球" width>
+          <el-table-column prop="name" label="角球" width="90">
             <template slot-scope="scope">
               <img :src="icons.corner" v-show="scope.row.corner1 || scope.row.corner2" alt />
               <span>{{ scope.row.corner1 }}-{{ scope.row.corner2 }}</span>
@@ -188,7 +197,14 @@
           </el-table-column>
           <el-table-column prop="name" label="置顶" width="60">
             <template slot-scope="scope">
-              <img :src="icons.top" alt @click="setTop(scope)" class="set-top" />
+              <img
+                :src="icons.top2"
+                alt
+                @click="setTop(scope)"
+                class="set-top"
+                v-if="scope.row.top"
+              />
+              <img v-else :src="icons.top" alt @click="setTop(scope)" class="set-top" />
             </template>
           </el-table-column>
         </el-table>
@@ -225,9 +241,9 @@
 </template>
 
 <script>
-import WebSocketUtil from '@/utils/WebSocketUtil.js'
-import odds from '../common/odds'
-import { mapState } from 'vuex'
+import WebSocketUtil from '@/utils/WebSocketUtil.js';
+import odds from '../common/odds';
+import { mapState } from 'vuex';
 
 export default {
   components: {},
@@ -242,6 +258,7 @@ export default {
         voice: require('../assets/bifen/voice.png'),
         voice1: require('../assets/bifen/voice1.png'),
         top: require('../assets/bifen/top.png'),
+        top2: require('../assets/bifen/top2.png'),
         vs: require('../assets/vs.png'),
         corner: require('../assets/bifen/corner.png'),
         date: require('../assets/bifen/date.png'),
@@ -292,32 +309,32 @@ export default {
       showMatch3: false,
       activeName: 'first',
       search3: ''
-    }
+    };
   },
   methods: {
     //选择日期
     chooseTab(type) {
-      this.tabType = type.name
-      this.before7d = []
-      this.after7d = []
-      this.checkedDate = ''
+      this.tabType = type.name;
+      this.before7d = [];
+      this.after7d = [];
+      this.checkedDate = '';
       if (type.name === 'finish') {
-        this.get7day(true, this.before7d)
-        this.dateList = this.before7d
-        let date = this.checkedDate.split(' ')[0] ? this.checkedDate.split(' ')[0] : this.dateList[0].split(' ')[0]
-        this.getNowMatchList(date)
+        this.get7day(true, this.before7d);
+        this.dateList = this.before7d;
+        let date = this.checkedDate.split(' ')[0] ? this.checkedDate.split(' ')[0] : this.dateList[0].split(' ')[0];
+        this.getNowMatchList(date);
       } else if (type.name === 'future') {
-        this.get7day(false, this.after7d)
-        this.dateList = this.after7d
-        let date = this.checkedDate.split(' ')[0] ? this.checkedDate.split(' ')[0] : this.dateList[0].split(' ')[0]
-        this.getNowMatchList(date)
+        this.get7day(false, this.after7d);
+        this.dateList = this.after7d;
+        let date = this.checkedDate.split(' ')[0] ? this.checkedDate.split(' ')[0] : this.dateList[0].split(' ')[0];
+        this.getNowMatchList(date);
       }
     },
     get7day(before, dateArray) {
       //设置日期，当前日期的前七天
-      let myDate = new Date() //获取今天日期
-      let today = myDate.getMonth() + 1 + '-' + myDate.getDate()
-      let year = myDate.getFullYear()
+      let myDate = new Date(); //获取今天日期
+      let today = myDate.getMonth() + 1 + '-' + myDate.getDate();
+      let year = myDate.getFullYear();
       let week = {
         0: '星期天',
         1: '星期一',
@@ -326,86 +343,84 @@ export default {
         4: '星期四',
         5: '星期五',
         6: '星期六'
-      }
+      };
 
       if (before) {
-        myDate.setDate(myDate.getDate() - 6)
+        myDate.setDate(myDate.getDate() - 6);
       } else {
-        myDate.setDate(myDate.getDate())
+        myDate.setDate(myDate.getDate());
       }
-      let dateTemp
-      let flag = 1
-      let len = before ? 6 : 7
+      let dateTemp;
+      let flag = 1;
+      let len = before ? 6 : 7;
 
       for (var i = 0; i < len; i++) {
-        var weekday = myDate.getDay()
+        var weekday = myDate.getDay();
 
-        dateTemp = year + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate() + ' ' + week[weekday]
+        dateTemp = year + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate() + ' ' + week[weekday];
 
-        dateArray.push(dateTemp)
-        myDate.setDate(myDate.getDate() + flag)
+        dateArray.push(dateTemp);
+        myDate.setDate(myDate.getDate() + flag);
       }
       if (before) {
-        dateArray.push(year + '-' + today + ' ' + week[myDate.getDay()])
-        dateArray.reverse()
+        dateArray.push(year + '-' + today + ' ' + week[myDate.getDay()]);
+        dateArray.reverse();
       }
     },
     toggleDate() {
-      this.showDate = !this.showDate
+      this.showDate = !this.showDate;
     },
     checkDate(day) {
-      this.checkedDate = day
-      this.showDate = false
-      let date = this.checkedDate.split(' ')[0] ? this.checkedDate.split(' ')[0] : this.dateList[0].split(' ')[0]
-      this.getNowMatchList(date)
+      this.checkedDate = day;
+      this.showDate = false;
+      let date = this.checkedDate.split(' ')[0] ? this.checkedDate.split(' ')[0] : this.dateList[0].split(' ')[0];
+      this.getNowMatchList(date);
     },
     //隐藏保存数据
     tableSelectChange(val) {
-      this.multipleSelection = val
+      this.multipleSelection = val;
     },
     save() {
-      this.$store.commit('chooseSaveList', this.multipleSelection)
-      this.now_matches = this.multipleSelection
-      console.log(this.saveList)
+      this.$store.commit('chooseSaveList', this.multipleSelection);
+      this.now_matches = this.multipleSelection;
     },
     hidden() {
-      this.$store.commit('chooseHiddenList', this.multipleSelection)
-      let list = this.multipleSelection
-      let all = this.now_matches
+      this.$store.commit('chooseHiddenList', this.multipleSelection);
+      let list = this.multipleSelection;
+      let all = [...this.now_matches];
       if (list.length > 0) {
         list.map(i => {
           let index = all.findIndex(item => {
-            return i.id == item.id
-          })
+            return i.id == item.id;
+          });
           if (index != -1) {
-            all.splice(index, 1)
+            all.splice(index, 1);
           }
-        })
-        this.now_matches = all
-        console.log(this.hiddenList)
+        });
+        this.now_matches = all;
       }
     },
     showAll() {
-      this.$store.commit('chooseHiddenList', [])
-      this.$store.commit('chooseSaveList', [])
-      this.getBeginMatch()
+      this.$store.commit('chooseHiddenList', []);
+      this.$store.commit('chooseSaveList', []);
+      this.getBeginMatch();
     },
 
     up(i) {
       if (i == 0) {
-        this.showMatch = true
+        this.showMatch = true;
       } else {
-        this.showMatch = false
+        this.showMatch = false;
       }
       if (this.nowUp === i) {
-        this.nowUp = ''
-        return
+        this.nowUp = '';
+        return;
       }
-      this.nowUp = i
+      this.nowUp = i;
     },
-    // setTop(scope) {
-    //   console.log(scope + '--------------------------------')
-    // },
+    setTop(scope) {
+      this.$store.commit('setTop', scope.row);
+    },
 
     //比赛列表(已完结和未开始)
     async getNowMatchList(date, keywords, liansai, rangqiu, jinqiu) {
@@ -416,68 +431,137 @@ export default {
         liansai: liansai ? liansai : '',
         rangqiu: rangqiu ? rangqiu : '',
         jinqiu: jinqiu ? jinqiu : ''
-      }
+      };
 
-      let res = await this.$api.getNowMatchList(data)
+      let res = await this.$api.getNowMatchList(data);
       //ststus:1 未开始 2 进行中 3 已结束
-      let finish = []
-      let future = []
-      let ing = []
+      let finish = [];
+      let future = [];
+      let ing = [];
       res.data.map(item => {
         if (item.status == 1) {
-          future.push(item)
+          future.push(item);
         } else if (item.status == 2) {
-          ing.push(item)
+          ing.push(item);
         } else if (item.status === 3) {
-          finish.push(item)
+          finish.push(item);
         }
-      })
+      });
 
       if (this.tabType === 'finish') {
-        this.dealdata(finish)
-        this.now_matches = finish
+        this.dealdata(finish);
+        this.now_matches = finish;
+        this.selectItem(finish);
+        this.$store.commit('setAllLen', finish.length);
       } else if (this.tabType === 'future') {
-        this.dealdata(future)
-        this.now_matches = future
+        this.dealdata(future);
+        this.now_matches = future;
+        this.selectItem(future);
+        this.$store.commit('setAllLen', future.length);
       }
     },
 
     //今日比赛
     async getBeginMatch(keywords, liansai, rangqiu, jinqiu) {
-      this.nowUp = ''
+      this.nowUp = '';
 
       let data = {
         keywords: keywords ? keywords : '',
         liansai: liansai ? liansai : '',
         rangqiu: rangqiu ? rangqiu : '',
         jinqiu: jinqiu ? jinqiu : ''
-      }
+      };
 
-      let res = await this.$api.getBeginMatch(data)
-      this.loading = true
-      let list = res.beginmatch.concat(res.unbeginmatch).concat(res.endmatch)
-
+      let res = await this.$api.getBeginMatch(data);
+      this.loading = true;
+      let list = res.beginmatch.concat(res.unbeginmatch).concat(res.endmatch);
+      this.$store.commit('setAllLen', list.length);
       if (this.hiddenList.length > 0) {
         list.map(i => {
           let index = this.hiddenList.findIndex(item => {
-            return i.id == item.id
-          })
+            return i.id == item.id;
+          });
           if (index != -1) {
-            list.splice(index, 1)
+            list.splice(index, 1);
           }
-        })
+        });
       }
       if (this.saveList.length > 0) {
-        list = this.saveList
+        list = this.saveList;
       }
 
-      this.dealdata(list)
-      this.now_matches = list
+      this.dealdata(list);
+      this.selectItem(list);
+      this.now_matches = list;
     },
+    selectItem(list) {
+      let names = [];
+      let ids = [];
 
+      let yapan = [];
+      let yapan_ids = [];
+
+      let daxiao = [];
+      let daxiao_ids = [];
+
+      list.map(i => {
+        //选择赛事
+        let index = names.findIndex(item => {
+          return item.id == i.tournament_id;
+        });
+        if (index != -1) {
+          names[index].num += 1;
+        } else {
+          names.push({ name: i.tournament_alias, id: i.tournament_id, num: 1 });
+        }
+        //选择亚盘
+        if (i['yapan'][1] != '-') {
+          let index2 = yapan.findIndex(item => {
+            return parseFloat(item['yapan']) == parseFloat(i['yapan'][3]);
+          });
+          if (index2 != -1) {
+            yapan[index2].num += 1;
+          } else {
+            yapan.push({ yapan: i['yapan'][3], name: i['yapan'][1], id: i.tournament_id, num: 1 });
+          }
+        }
+        //选择大小球
+        if (i['daxiao'][1] != '-') {
+          let index3 = daxiao.findIndex(item => {
+            return parseFloat(item['daxiao']) == parseFloat(i['daxiao'][1]);
+          });
+          if (index3 != -1) {
+            daxiao[index3].num += 1;
+          } else {
+            daxiao.push({ daxiao: i['daxiao'][1], id: i.tournament_id, num: 1 });
+          }
+        }
+      });
+
+      names.map(i => {
+        ids.push(i.id);
+      });
+
+      yapan.map(i => {
+        yapan_ids.push(i.yapan);
+      });
+      daxiao.map(i => {
+        daxiao_ids.push(i.daxiao);
+      });
+
+      this.countMatchName = names;
+      this.countMatchId = ids;
+      this.checkedMatchs = ids;
+      this.countMatchName2 = yapan;
+      this.countMatchId2 = yapan_ids;
+      this.checkedMatchs2 = yapan_ids;
+      this.countMatchName3 = daxiao;
+      this.countMatchId3 = daxiao_ids;
+      this.checkedMatchs3 = daxiao_ids;
+    },
     // 选择哪条比赛，进入详情页
     chooseMatch(match) {
-      this.$store.commit('chooseMatch', match)
+      this.$store.commit('chooseMatch', match);
       let routeUrl = this.$router.resolve({
         path: '/bifenDetail',
         query: {
@@ -487,55 +571,55 @@ export default {
           tournament_id: match.tournament_id,
           season_id: match.season_id
         }
-      })
-      window.open(routeUrl.href, '_blank')
+      });
+      window.open(routeUrl.href, '_blank');
     },
     chooseVideo(match) {
-      this.$store.commit('chooseMatch', match)
+      this.$store.commit('chooseMatch', match);
       let routeUrl = this.$router.resolve({
         path: '/bifenVideo',
         query: { match_id: match.id, home_team_id: match.home_team_id, away_team_id: match.away_team_id }
-      })
-      window.open(routeUrl.href, '_blank')
+      });
+      window.open(routeUrl.href, '_blank');
     },
     //websocket
     initSocket() {
-      this.socket = new WebSocketUtil({ url: 'ws://ws.211aoa.com:8282' })
+      this.socket = new WebSocketUtil({ url: 'ws://ws.211aoa.com:8282' });
       // websocket 初始化成功
       this.socket.onCreate = () => {
-        this.connected = true
-        console.log('初始化成功')
-      }
-      this.socket.init()
+        this.connected = true;
+        console.log('初始化成功');
+      };
+      this.socket.init();
     },
 
     //处理每个比赛数据，红牌，黄牌，比分，角球，百家赔率
     dealdata(data) {
       data.map(i => {
-        i['yapan'] = ['-', '-', '-']
-        i['daxiao'] = ['-', '-', '-']
+        i['yapan'] = ['-', '-', '-'];
+        i['daxiao'] = ['-', '-', '-'];
         if (i.statics) {
           i.statics.map(j => {
             if (j.type_en_name === 'yellow') {
-              i['yellow1'] = parseInt(j.team1)
-              i['yellow2'] = parseInt(j.team2)
+              i['yellow1'] = parseInt(j.team1);
+              i['yellow2'] = parseInt(j.team2);
             }
             if (j.type_en_name === 'red') {
-              i['red1'] = parseInt(j.team1)
-              i['red2'] = parseInt(j.team2)
+              i['red1'] = parseInt(j.team1);
+              i['red2'] = parseInt(j.team2);
             }
             if (j.type_en_name === 'cornerKicks') {
-              i['corner1'] = parseInt(j.team1)
-              i['corner2'] = parseInt(j.team2)
+              i['corner1'] = parseInt(j.team1);
+              i['corner2'] = parseInt(j.team2);
             }
-          })
+          });
         }
 
         //亚盘
         if (i.match_yapan) {
-          let yapan = i.match_yapan['Bet365'] ? i.match_yapan['Bet365'] : i.match_yapan['Vcbet']
+          let yapan = i.match_yapan['Bet365'] ? i.match_yapan['Bet365'] : i.match_yapan['Vcbet'];
           if (Object.prototype.toString.call(yapan) != '[object Object]') {
-            yapan = i.match_yapan['suibian']
+            yapan = i.match_yapan['suibian'];
           }
           if (Object.prototype.toString.call(yapan) == '[object Object]') {
             if (i.status == 1) {
@@ -544,215 +628,146 @@ export default {
                 yapan.ovalue0 > 0 ? '受' + odds[Math.abs(yapan.ovalue0)] : odds[Math.abs(yapan.ovalue0)],
                 (yapan.fields[1].value0 - 1).toFixed(2),
                 yapan.ovalue0
-              ]
+              ];
             } else {
               i['yapan'] = [
                 (yapan.fields[0].value - 1).toFixed(2),
                 yapan.ovalue > 0 ? '受' + odds[Math.abs(yapan.ovalue)] : odds[Math.abs(yapan.ovalue)],
                 (yapan.fields[1].value - 1).toFixed(2),
                 yapan.ovalue
-              ]
+              ];
             }
           }
         }
 
         //大小球
         if (i.match_daxiaoqiu) {
-          let daxiaoqiu = i.match_daxiaoqiu['Bet365'] ? i.match_daxiaoqiu['Bet365'] : i.match_daxiaoqiu['Vcbet']
+          let daxiaoqiu = i.match_daxiaoqiu['Bet365'] ? i.match_daxiaoqiu['Bet365'] : i.match_daxiaoqiu['Vcbet'];
           if (Object.prototype.toString.call(daxiaoqiu) != '[object Object]') {
-            daxiaoqiu = i.match_daxiaoqiu['suibian']
+            daxiaoqiu = i.match_daxiaoqiu['suibian'];
           }
           if (Object.prototype.toString.call(daxiaoqiu) == '[object Object]') {
             if (i.status == 1) {
-              i['daxiao'] = [(daxiaoqiu.fields[0].value0 - 1).toFixed(2), daxiaoqiu.ovalue0, (daxiaoqiu.fields[1].value0 - 1).toFixed(2)]
+              i['daxiao'] = [(daxiaoqiu.fields[0].value0 - 1).toFixed(2), daxiaoqiu.ovalue0, (daxiaoqiu.fields[1].value0 - 1).toFixed(2)];
             } else {
-              i['daxiao'] = [(daxiaoqiu.fields[0].value - 1).toFixed(2), daxiaoqiu.ovalue, (daxiaoqiu.fields[1].value - 1).toFixed(2)]
+              i['daxiao'] = [(daxiaoqiu.fields[0].value - 1).toFixed(2), daxiaoqiu.ovalue, (daxiaoqiu.fields[1].value - 1).toFixed(2)];
             }
           }
         }
 
         //时间
-        i['time_play'] = { time: '-' }
+        i['time_play'] = { time: '-' };
         if (i.status_code == 1 || i.status_code == 2) {
           if (i.time_running == 1) {
             if (i.time_update) {
               //足球已进行时间 = (当前时间 - time_update)(秒) + time_played
-              let time = ((new Date().getTime() - new Date(i.time_update.slice(0, 19)).getTime()) / 1000 + parseInt(i.time_played)) / 60
-              i['time_play'] = { time: parseInt(time) }
+              let time = ((new Date().getTime() - new Date(i.time_update.slice(0, 19)).getTime()) / 1000 + parseInt(i.time_played)) / 60;
+              i['time_play'] = { time: parseInt(time) };
             }
           } else if (i.time_running == 0) {
             //足球已进行时间 = time_played
-            i['time_play'] = { time: parseInt(parseInt(i.time_played) / 60) }
+            i['time_play'] = { time: parseInt(parseInt(i.time_played) / 60) };
           }
         }
-      })
+      });
 
-      return data
+      return data;
     },
     //赛事筛选
     checkedChangeMatch(value) {
-      let checkedCount = value.length
-      this.checkAll1 = checkedCount === this.countMatchName.length
-      this.isIndeterminate1 = checkedCount > 0 && checkedCount < this.countMatchName.length
-      let val = value.join(',')
-      this.search1 = val
-      console.log(typeof val)
+      let checkedCount = value.length;
+      this.checkAll1 = checkedCount === this.countMatchName.length;
+      this.isIndeterminate1 = checkedCount > 0 && checkedCount < this.countMatchName.length;
+      let val = value.join(',');
+      this.search1 = val;
     },
     checkAllMatch(val) {
-      this.checkedMatchs = val ? this.countMatchId : []
-      this.isIndeterminate1 = false
-      let value = this.checkedMatchs.join(',')
+      this.checkedMatchs = val ? this.countMatchId : [];
+      this.isIndeterminate1 = false;
+      let value = this.checkedMatchs.join(',');
 
-      this.search1 = value
-      console.log(value)
+      this.search1 = value;
     },
     checkedChangeMatch2(value) {
-      let checkedCount = value.length
-      this.checkAll2 = checkedCount === this.countMatchName2.length
-      this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.countMatchName2.length
-      let val = value.join(',')
-      this.search2 = val
-      console.log(val)
+      let checkedCount = value.length;
+      this.checkAll2 = checkedCount === this.countMatchName2.length;
+      this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.countMatchName2.length;
+      let val = value.join(',');
+      this.search2 = val;
     },
     checkAllMatch2(val) {
-      this.checkedMatchs2 = val ? this.countMatchId2 : []
-      this.isIndeterminate2 = false
-      let value = this.checkedMatchs2.join(',')
-      this.search2 = value
-      console.log(value)
+      this.checkedMatchs2 = val ? this.countMatchId2 : [];
+      this.isIndeterminate2 = false;
+      let value = this.checkedMatchs2.join(',');
+      this.search2 = value;
     },
     checkedChangeMatch3(value) {
-      let checkedCount = value.length
-      this.checkAll3 = checkedCount === this.countMatchName3.length
-      this.isIndeterminate3 = checkedCount > 0 && checkedCount < this.countMatchName3.length
-      let val = value.join(',')
-      this.search3 = val
-      console.log(val)
+      let checkedCount = value.length;
+      this.checkAll3 = checkedCount === this.countMatchName3.length;
+      this.isIndeterminate3 = checkedCount > 0 && checkedCount < this.countMatchName3.length;
+      let val = value.join(',');
+      this.search3 = val;
     },
     checkAllMatch3(val) {
-      this.checkedMatchs3 = val ? this.countMatchId3 : []
-      this.isIndeterminate3 = false
-      let value = this.checkedMatchs3.join(',')
-      this.search3 = value
-      console.log(value)
+      this.checkedMatchs3 = val ? this.countMatchId3 : [];
+      this.isIndeterminate3 = false;
+      let value = this.checkedMatchs3.join(',');
+      this.search3 = value;
     }
   },
   mounted() {
-    this.getBeginMatch()
+    this.getBeginMatch();
     setInterval(() => {
-      this.getBeginMatch()
-    }, 1200000)
+      this.getBeginMatch();
+    }, 1200000);
     // 初始化websoket
-    this.initSocket({ url: 'ws://ws.211aoa.com:8282' })
+    this.initSocket({ url: 'ws://ws.211aoa.com:8282' });
     // this.dealdata([this.newMatchItem.message])
   },
 
   computed: {
-    ...mapState(['newMatchItem', 'hiddenList', 'saveList']),
+    ...mapState(['newMatchItem', 'hiddenList', 'saveList', 'topList', 'allLen']),
 
     //比赛列表的length
     total() {
-      return this.now_matches.length
+      return this.now_matches.length;
+    },
+    show_matches() {
+      // let matches = [...this.now_matches];
+      // let all = this.topList.concat(matches);
+      return Array.from(new Set(this.topList.concat(this.now_matches)));
     }
   },
   watch: {
-    now_matches(list) {
-      if (Array.isArray(list)) {
-        this.now_matches = list
-        let names = []
-        let ids = []
-
-        let yapan = []
-        let yapan_ids = []
-
-        let daxiao = []
-        let daxiao_ids = []
-
-        list.map(i => {
-          //选择赛事
-          let index = names.findIndex(item => {
-            return item.id == i.tournament_id
-          })
-          if (index != -1) {
-            names[index].num += 1
-          } else {
-            names.push({ name: i.tournament_alias, id: i.tournament_id, num: 1 })
-          }
-          //选择亚盘
-          if (i['yapan'][1] != '-') {
-            let index2 = yapan.findIndex(item => {
-              return parseFloat(item['yapan']) == parseFloat(i['yapan'][3])
-            })
-            if (index2 != -1) {
-              yapan[index2].num += 1
-            } else {
-              yapan.push({ yapan: i['yapan'][3], name: i['yapan'][1], id: i.tournament_id, num: 1 })
-            }
-          }
-          //选择大小球
-          if (i['daxiao'][1] != '-') {
-            let index3 = daxiao.findIndex(item => {
-              return parseFloat(item['daxiao']) == parseFloat(i['daxiao'][1])
-            })
-            if (index3 != -1) {
-              daxiao[index3].num += 1
-            } else {
-              daxiao.push({ daxiao: i['daxiao'][1], id: i.tournament_id, num: 1 })
-            }
-          }
-        })
-
-        names.map(i => {
-          ids.push(i.id)
-        })
-
-        yapan.map(i => {
-          yapan_ids.push(i.yapan)
-        })
-        daxiao.map(i => {
-          daxiao_ids.push(i.daxiao)
-        })
-
-        this.countMatchName = names
-        this.countMatchId = ids
-        this.checkedMatchs = ids
-        this.countMatchName2 = yapan
-        this.countMatchId2 = yapan_ids
-        this.checkedMatchs2 = yapan_ids
-        this.countMatchName3 = daxiao
-        this.countMatchId3 = daxiao_ids
-        this.checkedMatchs3 = daxiao_ids
-      }
-    },
     newMatchItem(newMatchItem) {
       if (Array.isArray(this.now_matches) && this.now_matches.length) {
-        const sumData = [...this.now_matches]
+        const sumData = [...this.now_matches];
 
         if (sumData.length > 0) {
           let index = sumData.findIndex(item => {
             if (item.id == newMatchItem.match_id) {
-              console.log(item.id + '===' + newMatchItem.match_id)
-              this.$refs.audio.play()
+              console.log(item.id + '===' + newMatchItem.match_id);
+              // this.$refs.audio.play()
             }
-            return item.id == newMatchItem.match_id
-          })
+            return item.id == newMatchItem.match_id;
+          });
           if (index != -1) {
-            let newItem = this.dealdata([newMatchItem.message])
-            let del = sumData.splice(index, 1, newItem[0])
+            let newItem = this.dealdata([newMatchItem.message]);
+            let del = sumData.splice(index, 1, newItem[0]);
 
             if (
               parseInt(newItem[0].away_team_score) > parseInt(del[0].away_team_score) ||
               parseInt(newItem[0].home_team_score) > parseInt(del[0].home_team_score)
             ) {
-              this.$refs.audio.play()
+              this.$refs.audio.play();
             }
-            this.now_matches = [...sumData]
+            this.now_matches = [...sumData];
           }
         }
       }
     }
   }
-}
+};
 </script>
 <style scoped lang="stylus">
 .center {
@@ -784,6 +799,16 @@ export default {
     to {
       opacity: 1;
     }
+  }
+  .set-top {
+    width: 20px;
+    height: 20px;
+  }
+  .align-left {
+    text-align: left;
+  }
+  .align-right {
+    text-align: right;
   }
   .flash {
     animation: flash 1s infinite;

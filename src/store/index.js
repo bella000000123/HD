@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -11,35 +11,49 @@ export default new Vuex.Store({
     newMatchItem: {},
     newBaijia: {},
     hiddenList: [],
-    saveList: []
+    saveList: [],
+    topList: [],
+    allLen: ''
   },
   mutations: {
     choosePusher(state, pusher) {
-      state.pusher = pusher
+      state.pusher = pusher;
     },
     chooseArticle(state, article) {
-      state.article = article
+      state.article = article;
     },
     chooseMatch(state, match) {
-      state.match = match
+      state.match = match;
     },
     chooseHiddenList(state, item) {
-      state.hiddenList = item
+      state.hiddenList = item;
     },
     chooseSaveList(state, item) {
-      state.saveList = item
+      state.saveList = item;
+    },
+    setAllLen(state, item) {
+      state.allLen = item;
     },
     setNewMatchItem(state, item) {
       if (item.message) {
-        item.message = JSON.parse(item.message)
-        state.newMatchItem = item
+        item.message = JSON.parse(item.message);
+        state.newMatchItem = item;
       }
     },
     setNewBaijiaItem(state, item) {
       if (item.message) {
-        item.message = JSON.parse(item.message)
-        state.newBaijia = item.message
-        console.log(state.newBaijia)
+        item.message = JSON.parse(item.message);
+        state.newBaijia = item.message;
+      }
+    },
+    setTop(state, item) {
+      let index = state.topList.findIndex(i => {
+        return i.id == item.id;
+      });
+      if (index == -1) {
+        state.topList.unshift(Object.assign(item, { top: true }));
+      } else {
+        state.topList.splice(index, 1);
       }
     }
   },
@@ -57,4 +71,4 @@ export default new Vuex.Store({
     // }
   },
   modules: {}
-})
+});

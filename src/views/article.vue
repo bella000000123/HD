@@ -26,7 +26,7 @@
           </div>
           <div>
             <img :src="icons.back" alt />
-            <div class="text" style="white-space: pre-wrap;" v-html="article.detail"></div>
+            <div class="text" style="white-space: pre-wrap;" v-html="article_detail.detail"></div>
           </div>
         </div>
         <jifen></jifen>
@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import jifen from '@/components/jifen.vue'
-import { mapState } from 'vuex'
+import jifen from '@/components/jifen.vue';
+import { mapState } from 'vuex';
 export default {
   components: {
     jifen
@@ -50,36 +50,35 @@ export default {
       },
       zixun: [],
       page: 1, // 初始页码
-      per_page: 20
-    }
+      per_page: 20,
+      article_detail: ''
+    };
   },
   methods: {
-    async articleList() {
+    async getArticleDetail() {
       let params = {
-        cate_id: 2,
-        per_page: this.per_page,
-        page: this.page
-      }
-      let res = await this.$api.articleList(params)
-      this.zixun = res
+        id: this.article.id
+      };
+      let res = await this.$api.getArticleDetail(params);
+      this.article_detail = res;
     },
     // 分页
     pagenatiOnchange(page) {
-      this.page = page
-      this.pusherList()
+      this.page = page;
+      this.pusherList();
     },
     handleSizeChange(size) {
-      this.per_page = size
-      this.pusherList()
+      this.per_page = size;
+      this.pusherList();
     }
   },
   mounted() {
-    this.articleList()
+    this.getArticleDetail();
   },
   computed: {
     ...mapState(['article'])
   }
-}
+};
 </script>
 <style scoped lang="stylus">
 .soccer {

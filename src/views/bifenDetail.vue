@@ -2,20 +2,32 @@
   <div class="bifen-detail">
     <div class="back">
       <div class="center box">
+        <div
+          class="score-box box"
+          v-show="time_play.status_code == 1 || time_play.status_code == 2"
+        >
+          <p>{{time_play.home_team_score}}</p>
+          <p>{{time_play.away_team_score}}</p>
+        </div>
         <div>
           <img :src="homejifen.logo_url" alt class="logo" />
           <h2>{{ matchDetail.home_team_name }}</h2>
         </div>
         <div class="txt">
           <p>
-            <span class="time">{{ matchDetail.match_time.slice(0,19) }}</span>
+            <span class="time">{{ matchDetail.match_time}}</span>
           </p>
           <img :src="icons.vs" alt class="vs" />
           <p class="status">
+            <span :class="[time_play.status_code == 1 || time_play.status_code == 2 ? 'red' : '']">
+              {{
+              time_play.status_code == 1 || time_play.status_code == 2 ? time_play.time : time_play.status_name
+              }}
+            </span>
             <span
-              :class="[time_play.status_code==1||time_play.status_code==2? 'red' : '']"
-            >{{time_play.status_code==1||time_play.status_code==2?time_play.time:time_play.status_name }}</span>
-            <span class="flash red" v-if="time_play.status_code==1||time_play.status_code==2">'</span>
+              class="flash red"
+              v-if="time_play.status_code == 1 || time_play.status_code == 2"
+            >'</span>
           </p>
         </div>
         <div>
@@ -102,11 +114,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import odds from '../common/odds'
-import qingbao from './bifenDetail/qingbao'
-import analyse from './bifenDetail/analyse'
-import WebSocketUtil from '@/utils/WebSocketUtil.js'
+import { mapState } from 'vuex';
+import odds from '../common/odds';
+import qingbao from './bifenDetail/qingbao';
+import analyse from './bifenDetail/analyse';
+import WebSocketUtil from '@/utils/WebSocketUtil.js';
 export default {
   components: { qingbao, analyse },
   data() {
@@ -162,27 +174,28 @@ export default {
       analyseData: {},
       homejifen: [],
       awayjifen: [],
-      time_play: { time: '-', status_name: '-', status_code: '-' }
-    }
+      time_play: { time: '-', status_name: '-', status_code: '-', away_team_score: '', home_team_score: '' }
+    };
   },
   methods: {
     chooseTab(type) {
-      this.tabType = type.name
+      this.tabType = type.name;
       switch (type.name) {
         case 'analyse':
-          this.showZhishu = false
-          this.showQingbao = false
-          this.showAnalyse = true
-          break
+          this.showZhishu = false;
+          this.showQingbao = false;
+          this.showAnalyse = true;
+          break;
         case 'qingbao':
-          this.showQingbao = true
-          this.showZhishu = false
-          this.showAnalyse = false
-          break
+          this.showQingbao = true;
+          this.showZhishu = false;
+          this.showAnalyse = false;
+          break;
         default:
-          this.showZhishu = true
-          this.showQingbao = false
-          this.showAnalyse = false
+          this.getOneMatchBaiJia();
+          this.showZhishu = true;
+          this.showQingbao = false;
+          this.showAnalyse = false;
       }
 
       //   console.log(type.name);
@@ -190,22 +203,29 @@ export default {
     async getOneMatchDetail() {
       let res = await this.$api.getOneMatchDetail({
         id: this.match_id
-      })
-      this.matchDetail = res
-      if (res.time_running == 1) {
+      });
+      this.matchDetail = res;
+      this.matchDetail.match_time = res.match_time.slice(0, 19);
+
+      this.time_play.home_team_score = res.home_team_score;
+      this.time_play.away_team_score = res.away_team_score;
+      this.time_play.status_code = res.status_code;
+      this.time_play.status_name = res.status_name;
+
+      if (res.time_running == 1 && res.time_update != null) {
         //足球已进行时间 = (当前时间 - time_update)(秒) + time_played
-        let time = ((new Date().getTime() - new Date(res.time_update.slice(0, 19)).getTime()) / 1000 + parseInt(res.time_played)) / 60
-        this.time_play = { time: parseInt(time), status_name: res.status_name, status_code: res.status_code }
-      } else if (res.time_running == 0) {
-        //足球已进行时间 = time_played
-        this.time_play = { time: parseInt(parseInt(res.time_played) / 60), status_name: res.status_name, status_code: res.status_code }
+
+        let time = ((new Date().getTime() - new Date(res.time_update.slice(0, 19)).getTime()) / 1000 + parseInt(res.time_played)) / 60;
+        this.time_play.time = time ? parseInt(time) : '';
+      } else if (res.time_running == 0 && res.time_played != null) {
+        this.time_play.time = parseInt(parseInt(res.time_played) / 60);
       }
 
       //事件
-      let eventdata = res['events']
-      let staticsdata = res['statics']
-      let event = []
-      let statics = []
+      let eventdata = res['events'];
+      let staticsdata = res['statics'];
+      let event = [];
+      let statics = [];
       eventdata.map(i => {
         switch (parseInt(i.type_id)) {
           case 23: //替补
@@ -218,8 +238,8 @@ export default {
               out: this.icons.out,
               src: this.icons.tibu,
               team: i.team
-            })
-            break
+            });
+            break;
           case 30: //角球
             event.push({
               time: Math.ceil(i.time / 60),
@@ -228,8 +248,8 @@ export default {
               player2: i.player_name2 ? i.player_name2 : '',
               src: this.icons.jiaoqiu,
               team: i.team
-            })
-            break
+            });
+            break;
           case 9: //进球
             event.push({
               time: Math.ceil(i.time / 60),
@@ -238,38 +258,38 @@ export default {
               player2: i.player_name2 ? ` (助攻 ${i.player_name2})` : '',
               src: this.icons.jinqiu,
               team: i.team
-            })
-            break
+            });
+            break;
           case 18: //黄牌
             event.push({
               time: Math.ceil(i.time / 60),
               name: i.type_name,
               player: i.player_name,
               player2: i.player_name2 ? i.player_name2 : '',
-              src: this.icons.jiaoqiu,
+              src: this.icons.yellow,
               team: i.team
-            })
-            break
-          case 21: //红黄牌
-            event.push({
-              time: Math.ceil(i.time / 60),
-              name: i.type_name,
-              player: i.player_name,
-              player2: i.player_name2 ? i.player_name2 : '',
-              src: this.icons.jiaoqiu,
-              team: i.team
-            })
-            break
+            });
+            break;
+          // case 21: //红黄牌
+          //   event.push({
+          //     time: Math.ceil(i.time / 60),
+          //     name: i.type_name,
+          //     player: i.player_name,
+          //     player2: i.player_name2 ? i.player_name2 : '',
+          //     src: this.icons.lianghuang,
+          //     team: i.team
+          //   })
+          //   break
           case 22: //红牌
             event.push({
               time: Math.ceil(i.time / 60),
               name: i.type_name,
               player: i.player_name,
               player2: i.player_name2 ? i.player_name2 : '',
-              src: this.icons.jiaoqiu,
+              src: this.icons.red,
               team: i.team
-            })
-            break
+            });
+            break;
         }
         switch (i.goal_type) {
           case 2: //乌龙球
@@ -279,8 +299,8 @@ export default {
               player: i.player_name,
               src: this.icons.jiaoqiu,
               team: i.team == 1 ? this.matchDetail.home_team_name : this.matchDetail.away_team_name
-            })
-            break
+            });
+            break;
 
           case 4: //点球
             event.push({
@@ -290,56 +310,56 @@ export default {
               player2: i.player_name2 ? i.player_name2 : '',
               src: this.icons.jiaoqiu,
               team: i.team == 1 ? this.matchDetail.home_team_name : this.matchDetail.away_team_name
-            })
-            break
+            });
+            break;
         }
-      })
-      this.analyseData['events'] = event
+      });
+      this.analyseData['events'] = event;
       //技术统计
       staticsdata.map(i => {
         switch (i.type_en_name) {
           case 'BallPossession': //控球率
-            statics.push(i)
-            break
+            statics.push(i);
+            break;
           case 'cornerKicks': //角球
-            statics.push(i)
-            break
+            statics.push(i);
+            break;
           case 'attack': //进攻
-            statics.push(i)
-            break
+            statics.push(i);
+            break;
           case 'goalKicks': //射门
-            statics.push(i)
-            break
+            statics.push(i);
+            break;
           case 'yellow': //黄牌
-            statics.push(i)
-            break
+            statics.push(i);
+            break;
           case 'red': //红牌
-            statics.push(i)
-            break
+            statics.push(i);
+            break;
           case 'dangerAttack': //危险进攻
-            statics.push(i)
-            break
+            statics.push(i);
+            break;
           case 'shotsBlocked': //射门被封
-            statics.push(i)
-            break
+            statics.push(i);
+            break;
           case 'accuratePasses': //准确传球
-            statics.push(i)
-            break
+            statics.push(i);
+            break;
         }
-      })
-      this.analyseData['statics'] = statics
+      });
+      this.analyseData['statics'] = statics;
     },
     async getOneMatchBaiJia() {
       let res = await this.$api.getOneMatchBaiJia({
         id: this.match_id
-      })
-      let data = this.dealbaijiadata(res)
-      this.tableData = data
+      });
+      let data = this.dealbaijiadata(res);
+      this.tableData = data;
     },
     dealbaijiadata(res) {
       let yapan = [],
         oupei = [],
-        daxiao = []
+        daxiao = [];
       res.map(item => {
         switch (item.type_id) {
           case 1:
@@ -353,8 +373,8 @@ export default {
               gun3: (item.fields[1].value - 1).toFixed(2),
               level1: item.fields[0].value - item.fields[0].value0,
               level2: item.fields[1].value - item.fields[1].value0
-            })
-            break
+            });
+            break;
           case 2:
             oupei.push({
               company: item.book_cn_name,
@@ -366,90 +386,95 @@ export default {
               gun3: item.fields[1].value.toFixed(2),
               level1: item.fields[0].value - item.fields[0].value0,
               level2: item.fields[1].value - item.fields[1].value0
-            })
-            break
+            });
+            break;
           case 3:
             daxiao.push({
               company: item.book_cn_name,
               chu1: (item.fields[0].value0 - 1).toFixed(2),
-              chu2: odds[Math.abs(item.ovalue0)],
+              chu2: item.ovalue0,
               chu3: (item.fields[1].value0 - 1).toFixed(2),
               gun1: (item.fields[0].value - 1).toFixed(2),
-              gun2: odds[Math.abs(item.ovalue)],
+              gun2: item.ovalue,
               gun3: (item.fields[1].value - 1).toFixed(2),
               level1: item.fields[0].value - item.fields[0].value0,
               level2: item.fields[1].value - item.fields[1].value0
-            })
-            break
+            });
+            break;
         }
-      })
-      return { yapan: yapan, oupei: oupei, daxiao: daxiao }
+      });
+      return { yapan: yapan, oupei: oupei, daxiao: daxiao };
     },
     //积分榜
     async getOneMatchTeamInfo(team_id, team) {
       let res = await this.$api.getOneMatchTeamInfo({
         id: team_id
-      })
+      });
       if (team == 'home') {
-        this.homejifen = res
+        this.homejifen = res;
       } else {
-        this.awayjifen = res
+        this.awayjifen = res;
       }
     },
     //websocket
     initSocket() {
-      this.socket = new WebSocketUtil({ url: 'ws://ws.211aoa.com:8282' })
+      this.socket = new WebSocketUtil({ url: 'ws://ws.211aoa.com:8282' });
       // websocket 初始化成功
       this.socket.onCreate = () => {
-        this.connected = true
-        console.log('初始化成功')
-      }
-      this.socket.init()
+        this.connected = true;
+        console.log('初始化成功');
+      };
+      this.socket.init();
     }
   },
   mounted() {
-    this.getOneMatchBaiJia()
-    this.getOneMatchDetail()
-    this.getOneMatchTeamInfo(this.home_team_id, 'home')
-    this.getOneMatchTeamInfo(this.away_team_id, 'away')
+    this.getOneMatchBaiJia();
+    this.getOneMatchDetail();
+    this.getOneMatchTeamInfo(this.home_team_id, 'home');
+    this.getOneMatchTeamInfo(this.away_team_id, 'away');
     // 初始化websoket
-    this.initSocket({ url: 'ws://ws.211aoa.com:8282' })
+    this.initSocket({ url: 'ws://ws.211aoa.com:8282' });
   },
   computed: {
     ...mapState(['newBaijia', 'newMatchItem']),
     newTableData() {
-      let data = this.tableData
-      return data
+      let data = this.tableData;
+      return data;
     },
     match_id() {
-      return this.$route.query.match_id
+      return this.$route.query.match_id;
     },
     home_team_id() {
-      return this.$route.query.home_team_id
+      return this.$route.query.home_team_id;
     },
     away_team_id() {
-      return this.$route.query.away_team_id
+      return this.$route.query.away_team_id;
     }
   },
   watch: {
     newMatchItem(newMatchItem) {
       if (newMatchItem.match_id == this.match_id) {
-        let msg = newMatchItem.message
-        console.log(this.match_id + '===' + newMatchItem.match_id)
+        let msg = newMatchItem.message;
+        console.log(this.match_id + '===' + newMatchItem.match_id);
         if (msg.status_code == 1 || msg.status_code == 2) {
-          if (msg.time_running == 1) {
+          this.time_play.home_team_score = msg.home_team_score;
+          this.time_play.away_team_score = msg.away_team_score;
+          this.time_play.status_code = msg.status_code;
+          this.time_play.status_name = msg.status_name;
+
+          if (msg.time_running == 1 && msg.time_update != null) {
             //足球已进行时间 = (当前时间 - time_update)(秒) + time_played
-            let time = ((new Date().getTime() - new Date(msg.time_update.slice(0, 19)).getTime()) / 1000 + parseInt(msg.time_played)) / 60
-            this.time_play = { time: parseInt(time), status_name: msg.status_name, status_code: msg.status_code }
-          } else if (msg.time_running == 0) {
-            //足球已进行时间 = time_played
-            this.time_play = { time: parseInt(parseInt(msg.time_played) / 60), status_name: msg.status_name, status_code: msg.status_code }
+
+            let time = ((new Date().getTime() - new Date(msg.time_update.slice(0, 19)).getTime()) / 1000 + parseInt(msg.time_played)) / 60;
+            this.time_play.time = time ? parseInt(time) : '';
+          } else if (msg.time_running == 0 && msg.time_played != null) {
+            this.time_play.time = parseInt(parseInt(msg.time_played) / 60);
           }
         }
       }
     }
   }
-}
+};
 </script>
 
 <style scoped lang="stylus">
@@ -501,6 +526,14 @@ export default {
     .center {
       text-align: center;
       width: 800px;
+      position: relative;
+      .score-box {
+        position: absolute;
+        top: 70px;
+        left: 275px;
+        width: 250px;
+        color: #d11d19;
+      }
       h2, p {
         font-size: 24px;
       }
