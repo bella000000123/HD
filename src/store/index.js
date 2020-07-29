@@ -13,7 +13,9 @@ export default new Vuex.Store({
     hiddenList: [],
     saveList: [],
     topList: [],
-    allLen: ''
+    allLen: '',
+    isLogin: false,
+    userInfo: {}
   },
   mutations: {
     choosePusher(state, pusher) {
@@ -55,6 +57,12 @@ export default new Vuex.Store({
       } else {
         state.topList.splice(index, 1);
       }
+    },
+    setLogin(state, item) {
+      state.isLogin = item;
+    },
+    setUserinfo(state, item) {
+      state.userInfo = item;
     }
   },
   actions: {

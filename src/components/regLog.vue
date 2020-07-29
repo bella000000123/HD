@@ -5,50 +5,86 @@
         <span class="close" @click="close"></span>
 
         <div class="dialog-head">
-          <img src="http://api.211aoa.com/upload/manage/20200528/f8a051dbf90d1a07fdb1a4b4cdb06a61.png" alt />
+          <img :src="logo.image" alt="LOGO" class="logo" />
         </div>
         <div class="inputs">
           <div class="reg" v-if="show_reg">
-            <el-input placeholder="请输入5-8位字母或数字的用户名" clearable v-model="reg.username">
+            <el-input
+              placeholder="请输入5-8位字母或数字的用户名"
+              clearable
+              v-model.trim="reg.username"
+              maxlength="8"
+            >
               <i slot="prefix" class="el-input__icon user"></i>
             </el-input>
-            <el-input placeholder="请输入6-10位字母或数字的密码" clearable show-password v-model="reg.pwd">
+            <el-input
+              placeholder="请输入6-10位字母或数字的密码"
+              clearable
+              show-password
+              v-model.trim="reg.password"
+              maxlength="10"
+            >
               <i slot="prefix" class="el-input__icon pwd"></i>
             </el-input>
-            <el-input placeholder="请再次输入密码" clearable show-password v-model="reg.repwd">
+            <el-input
+              placeholder="请再次输入密码"
+              clearable
+              show-password
+              v-model.trim="reg.repwd"
+              maxlength="10"
+            >
               <i slot="prefix" class="el-input__icon pwd"></i>
             </el-input>
-            <el-input placeholder="请输入手机号" clearable v-model="reg.phone">
+            <el-input placeholder="请输入手机号" clearable v-model.trim="reg.phone" maxlength="11">
               <i slot="prefix" class="el-input__icon phone"></i>
             </el-input>
             <div class="codes">
-              <el-input placeholder="请输入验证码" clearable v-model="reg.code">
+              <el-input placeholder="请输入验证码" clearable v-model.trim="reg.code" maxlength="6">
                 <i slot="prefix" class="el-input__icon code"></i>
               </el-input>
-              <p class="get-code">获取验证码</p>
+              <div class="get-code">
+                <span v-show="showCode" @click="getPhoneCode">获取验证码</span>
+                <span v-show="!showCode" class="count">{{count}}S</span>
+              </div>
             </div>
           </div>
           <div class="login" v-if="show_user && !show_phone">
-            <el-input placeholder="请输入5-8位字母或数字的用户名" clearable v-model="reg.username">
+            <el-input
+              placeholder="请输入5-8位字母或数字的用户名"
+              clearable
+              v-model.trim="pwdlog.username"
+              maxlength="8"
+            >
               <i slot="prefix" class="el-input__icon user"></i>
             </el-input>
-            <el-input placeholder="请输入6-10位字母或数字的密码" clearable show-password v-model="reg.pwd">
+            <el-input
+              placeholder="请输入6-10位字母或数字的密码"
+              clearable
+              show-password
+              v-model.trim="pwdlog.password"
+              maxlength="10"
+            >
               <i slot="prefix" class="el-input__icon pwd"></i>
             </el-input>
           </div>
-          <div v-if="!show_user && show_phone">
-            <el-input placeholder="请输入手机号" clearable v-model="reg.phone">
+          <div v-if="!show_user && show_phone" maxlength="11">
+            <el-input placeholder="请输入手机号" clearable v-model.trim="codelog.username" maxlength="11">
               <i slot="prefix" class="el-input__icon phone"></i>
             </el-input>
-            <div class="codes">
-              <el-input placeholder="请输入验证码" clearable v-model="reg.code">
+            <div class="codes" maxlength="6">
+              <el-input placeholder="请输入验证码" clearable v-model.trim="codelog.code" maxlength="6">
                 <i slot="prefix" class="el-input__icon code"></i>
               </el-input>
-              <p class="get-code">获取验证码</p>
+              <div class="get-code">
+                <span v-show="showCode" @click="getPhoneCode">获取验证码</span>
+                <span v-show="!showCode" class="count">{{count}}S</span>
+              </div>
             </div>
           </div>
 
-          <div class="btn">{{ show_reg ? '注册' : '登录' }}</div>
+          <div class="btn" v-if="show_reg" @click="register">注册</div>
+          <div class="btn" v-else @click="login">登录</div>
+          <!-- <div class="btn">{{ show_reg ? '注册' : '登录' }}</div> -->
           <div class="tip" v-if="show_reg">
             已有账号？
             <span @click="user_reg('show_user', 'show_reg')">请登录</span>
@@ -60,7 +96,6 @@
         </div>
       </div>
     </div>
-    <!-- <el-dialog :visible.sync="dialogVisible" width="30%" center></el-dialog> -->
   </div>
 </template>
 
@@ -70,41 +105,180 @@ export default {
   data() {
     return {
       show_phone: false,
+      logo: '',
+      showCode: true,
+      count: 0,
+      timer: null,
       //   dialogVisible: true,
       reg: {
         username: '',
-        pwd: '',
+        password: '',
         repwd: '',
         phone: '',
         code: ''
+      },
+      pwdlog: {
+        username: '',
+        password: ''
+      },
+      codelog: {
+        username: '',
+        code: ''
       }
-    }
+    };
   },
   props: ['show_reg', 'show_user', 'dialogVisible'],
   methods: {
     close() {
-      this.show_phone = false
-      this.$emit('close')
+      this.show_phone = false;
+      this.$emit('close');
     },
     user_phone() {
       if (this.show_phone) {
-        this.show_phone = false
-        this.user_reg('show_user', '')
+        this.show_phone = false;
+        this.user_reg('show_user', '');
       } else {
-        this.show_phone = true
-        this.user_reg('', 'show_user')
+        this.show_phone = true;
+        this.user_reg('', 'show_user');
       }
     },
     user_reg(param1, param2) {
       if (param1 == 'show_reg') {
-        this.show_phone = false
+        this.show_phone = false;
       }
-      this.$emit('user_reg', param1, param2)
+      this.$emit('user_reg', param1, param2);
+    },
+    async getBanner() {
+      let res = await this.$api.getBanner();
+      this.logo = res.logo[0];
+    },
+    getCode() {
+      if (!this.timer) {
+        let TIME_COUNT = 60;
+        this.count = TIME_COUNT;
+        this.showCode = false;
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= TIME_COUNT) {
+            this.count--;
+          } else {
+            this.showCode = true;
+            clearInterval(this.timer);
+            this.timer = null;
+          }
+        }, 1000);
+      }
+    },
+    async getPhoneCode() {
+      if (!this.reg.phone && this.showCode) {
+        this.$message.error('请输入手机号');
+        return;
+      }
+      if (!this.checkPhone()) {
+        return;
+      }
+
+      let res = await this.$api.getCode({ phone: this.show_reg ? this.reg.phone : this.codelog.username });
+      if (res.code == 1) {
+        this.getCode();
+      }
+    },
+    async checkPhone() {
+      if (!this.reg.phone && this.showCode) {
+        this.$message.error('请输入手机号');
+        return;
+      }
+      let res = await this.$api.checkPhone({ phone: this.show_reg ? this.reg.phone : this.codelog.username });
+      return res.code == 1 ? true : false;
+    },
+
+    validReg() {
+      if (!this.reg.username) {
+        this.$message.error('请输入用户名');
+        return false;
+      }
+      if (!this.reg.password) {
+        this.$message.error('请输入密码');
+        return false;
+      }
+      if (!this.reg.repwd) {
+        this.$message.error('请输入重复密码');
+        return false;
+      }
+      if (!this.reg.phone) {
+        this.$message.error('请输入电话号码');
+        return false;
+      }
+      if (!this.reg.code) {
+        this.$message.error('请输入验证码');
+        return false;
+      }
+      return true;
+    },
+    validPwdlog() {
+      if (!this.pwdlog.username) {
+        this.$message.error('请输入用户名');
+        return false;
+      }
+      if (!this.pwdlog.password) {
+        this.$message.error('请输入密码');
+        return false;
+      }
+      return true;
+    },
+    validCodelog() {
+      if (!this.codelog.username) {
+        this.$message.error('请输入手机号');
+        return false;
+      }
+      if (!this.codelog.code) {
+        this.$message.error('请输入验证码');
+        return false;
+      }
+      return true;
+    },
+    async register() {
+      if (!this.validReg()) {
+        return;
+      }
+
+      let res = await this.$api.register(this.reg);
+      if (res.code == 1) {
+        this.login(true);
+      }
+    },
+    async login(isreg) {
+      let res = '';
+      if (isreg) {
+        res = await this.$api.passwordLogin({ username: this.reg.username, password: this.reg.password });
+      } else {
+        if (this.show_user && !this.show_phone) {
+          if (!this.validPwdlog()) {
+            return;
+          }
+          res = await this.$api.passwordLogin(this.pwdlog);
+        } else {
+          if (!this.validCodelog()) {
+            return;
+          }
+          res = await this.$api.codeLogin(this.codelog);
+        }
+      }
+
+      if (res.code == 1) {
+        this.close();
+        this.$store.commit('setLogin', true);
+        this.getUserInfo();
+      }
+    },
+    async getUserInfo() {
+      let res = await this.$api.getUserInfo();
+      this.$store.commit('setUserinfo', res);
     }
   },
-  created() {},
-  computed: {}
-}
+  mounted() {
+    this.getBanner();
+  }
+};
 </script>
 <style scoped lang="stylus">
 .log {
@@ -120,11 +294,11 @@ export default {
     background: rgba(0, 0, 0, 0.6);
   }
   .dialog {
-    padding: 70px 0 50px;
+    padding: 50px 0;
     position: relative;
     margin: 15vh auto 50px;
     border-radius: 2px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    // box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     box-sizing: border-box;
     width: 30%;
     background: #fff;
@@ -134,7 +308,7 @@ export default {
       img {
         display: block;
         margin: 0 auto;
-        width: 80%;
+        width: 70px;
       }
     }
     .close {
@@ -179,7 +353,7 @@ export default {
   }
   .get-code {
     position: absolute;
-    bottom: 13px;
+    bottom: 20px;
     right: 38px;
     color: blue;
     text-decoration: underline;
@@ -196,8 +370,8 @@ export default {
   }
 }
 .log /deep/ .el-input__inner {
-  margin: 5px 0;
-  height: 35px;
+  margin: 10px 0;
+  height: 40px;
   border-radius: 30px;
   background: #eee;
 }

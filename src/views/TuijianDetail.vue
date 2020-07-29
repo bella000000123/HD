@@ -3,52 +3,33 @@
     <img :src="icons.back" alt class="back" />
 
     <div class="center">
-      <div class="div1 clearfix">
-        <div class="fl left">
-          <img :src="pusher.avatar" alt class="avatar" />
-          <h2>{{ pusher.name }}</h2>
+      <div class="div1 box">
+        <div class="left">
+          <img :src="zixun.data[0].pusher_avatar" alt class="avatar" />
+          <h2>{{ zixun.data[0].pusher_name }}</h2>
         </div>
-        <div class="fl right">
-          <p>{{ pusher.introduction }}</p>
+        <div class="right">
+          <p>{{ zixun.data[0].introduction }}</p>
           <div class="title">
             <img :src="icons.article" alt="icon" class="in-block" />
-            <span>文章： {{ pusher.tuijian_num }}</span>
+            <span>文章： {{ zixun.data[0].pusher_tuijian_num }}</span>
 
             <img :src="icons.hot" alt="icon" class="in-block hot" />
-            <span>热度： {{ pusher.hot }}</span>
+            <span>热度： {{ zixun.data[0].hot }}</span>
           </div>
         </div>
       </div>
 
-      <div class="zixun">
-        <div v-for="(li, i) in zixun.data" :key="i">
-          <img :src="li.image" alt class="icon-img" />
-          <div class="pankou-list" @click="chooseArticle(li)">
-            <h2>{{ li.title }}</h2>
-            <p>{{ li.introduction }}</p>
-            <p>·{{ li.time }}</p>
-          </div>
-        </div>
-
-        <!-- 翻页 -->
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="pagenatiOnchange"
-          :current-page="page"
-          :page-size="15"
-          layout="prev, pager, next, jumper"
-          :total="zixun['total']"
-          background
-        ></el-pagination>
-      </div>
+      <article-list :zixun="zixun" @articleList="articleList"></article-list>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
+import articleList from '@/components/articleList.vue';
 export default {
-  components: {},
+  components: { articleList },
   data() {
     return {
       icons: {
@@ -59,41 +40,37 @@ export default {
       zixun: [],
       page: 1, // 初始页码
       per_page: 20
-    }
+    };
   },
   methods: {
-    async articleList() {
+    async articleList(page, per_page) {
       let params = {
         per_page: this.per_page,
         page: this.page,
-        pusher_id: this.pusher.id
-      }
-      let res = await this.$api.articleList(params)
-      this.zixun = res
+        pusher_id: this.$route.query.pusher_id
+      };
+      let res = await this.$api.articleList(params);
+      this.zixun = res;
     },
-    // 分页
-    pagenatiOnchange(page) {
-      this.page = page
-      this.pusherList()
-    },
-    handleSizeChange(size) {
-      this.per_page = size
-      this.pusherList()
-    },
+
     chooseArticle(article) {
-      this.$store.commit('chooseArticle', article)
-      this.$router.push({
-        path: `/article`
-      })
+      this.$store.commit('chooseArticle', article);
+      let routeUrl = this.$router.resolve({
+        path: '/article',
+        query: {
+          id: article.id
+        }
+      });
+      window.open(routeUrl.href, '_blank');
     }
   },
   mounted() {
-    this.articleList()
+    this.articleList(1, 20);
   },
   computed: {
     ...mapState(['pusher'])
   }
-}
+};
 </script>
 <style scoped lang="stylus">
 .soccer {
@@ -126,6 +103,7 @@ export default {
     .div1 {
       padding: 50px;
       .left {
+        width: 110px;
         h2 {
           text-align: center;
         }
@@ -133,9 +111,11 @@ export default {
           width: 100px;
           height: 100px;
           border-radius: 50%;
+          border: 2px solid #91c619;
         }
       }
       .right {
+        width: 1000px;
         margin: 20px 0 0 50px;
         p {
           height: 80px;

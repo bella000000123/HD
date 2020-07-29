@@ -7,25 +7,49 @@
       </el-breadcrumb>
     </div>
     <img :src="yingli.image" alt="盈利" class="banner-img" />
-    <div class="content clearfix">
-      <div class="fl left">
-        <div class="in-block tuishou" v-for="(li, i) in pusherList" :key="i">
-          <img class="avatar" :src="li.avatar" alt />
-          <h2>{{ li.name }}</h2>
-          <p>描述</p>
-          <div class="bottom">
-            <img :src="li.code_image" alt />
-            <div class="in-block">
-              <p>微信扫码 专业推荐</p>
-              <span class="in-block" @click="goPush(li)">更多推荐</span>
-            </div>
+    <div class="content">
+      <div class="in-block renqi-box" v-for="(li, i) in pusherList" :key="i">
+        <div class="avatar-box">
+          <img :src="li.avatar" alt class="avator" />
+          <p>
+            {{ li.name }}
+            <span class="renqi-txt">
+              （
+              <img :src="icons.hot" alt="icon" />
+              {{ li.hot}}）
+            </span>
+          </p>
+        </div>
+        <div class="box">
+          <img :src="li.code_image" alt class="code" />
+          <div class="guanzhu-box">
+            <p class="guanzhu" @click="doFollowPusher(li.id)">
+              <span v-if="li.is_follow">
+                <img :src="icons.guanzhu2" alt /> 已关注
+              </span>
+              <span v-else>
+                <img :src="icons.guanzhu1" alt />关注
+              </span>
+            </p>
+            <p class="more" @click="goPush(li)">更多推荐</p>
           </div>
         </div>
+        <p class="green">立即扫码，专业推荐</p>
       </div>
       <!-- <div class="fl right">
         <jifen></jifen>
       </div>-->
     </div>
+    <!-- 翻页 -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="pagenatiOnchange"
+      :current-page="page"
+      :page-size="12"
+      layout="prev, pager, next, jumper"
+      :total="all['total']"
+      background
+    ></el-pagination>
   </div>
 </template>
 
@@ -38,40 +62,70 @@ export default {
   data() {
     return {
       yingli: '',
-      pusherList: []
-    }
+      pusherList: [],
+      all: {},
+      page: 1, // 初始页码
+      per_page: 12,
+      icons: {
+        hot: require('../assets/hot.png'),
+        guanzhu1: require('../assets/guanzhu1.png'),
+        guanzhu2: require('../assets/guanzhu2.png')
+      }
+    };
   },
   methods: {
     async getBanner() {
-      let res = await this.$api.getBanner()
-      this.yingli = res['yingli'][0]
+      let res = await this.$api.getBanner();
+      this.yingli = res['yingli'][0];
     },
     // 人气推手
     async hotPushers() {
-      let res = await this.$api.hotPushers()
-      this.pusherList = res.data
+      let params = {
+        per_page: this.per_page,
+        page: this.page
+      };
+      let res = await this.$api.hotPushers(params);
+      this.pusherList = res.data;
+      this.all = res;
+    },
+    // 分页
+    pagenatiOnchange(page) {
+      this.page = page;
+      this.hotPushers();
+    },
+    handleSizeChange(size) {
+      this.per_page = size;
+      this.hotPushers();
     },
     goPush(pusher) {
-      this.$store.commit('choosePusher', pusher)
-      this.$router.push({
-        path: `/tuijianDetail`
-      })
+      this.$store.commit('choosePusher', pusher);
+      let routeUrl = this.$router.resolve({
+        path: '/tuijianDetail',
+        query: {
+          pusher_id: pusher.id
+        }
+      });
+      window.open(routeUrl.href, '_blank');
+    },
+    async doFollowPusher(id) {
+      let res = await this.$api.doFollowPusher({ id: id });
+      this.hotPushers();
     }
   },
   mounted() {
-    this.getBanner()
-    this.hotPushers()
+    this.getBanner();
+    this.hotPushers();
   },
   computed: {}
-}
+};
 </script>
 <style scoped lang="stylus">
 .bread {
   padding: 30px 10px 15px;
 }
-.center {
-  width: 80%;
-}
+// .center {
+// width: 80%;
+// }
 .content {
   margin-top: 20px;
 }
@@ -80,42 +134,71 @@ export default {
   display: block;
   margin: 0 auto;
 }
-.content .left {
-  height: 100%;
-  // padding: 10px 20px;
-  // width: 65%;
-  .tuishou {
-    margin: 0 25px 40px;
-    padding: 10px;
-    background-color: #FFF9EF;
-    border: 1px dashed #ccc;
+.content {
+  .renqi-box {
+    width: 20%;
+    margin: 10px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
     text-align: center;
     p {
-      line-height: 30px;
+      line-height: 27px;
     }
-    .avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-    }
-    .bottom {
-      padding-top: 10px;
-      border-top: 1px solid #ccc;
-      img {
-        width: 60px;
-        height: 60px;
-        margin-right: 15px;
-        vertical-align: middle;
+    .box {
+      width: 160px;
+      margin: 10px auto;
+      .guanzhu-box {
+        p {
+          width: 80px;
+          height: 27px;
+          border-radius: 5px;
+          line-height: 27px;
+          font-size: 12px;
+          text-align: center;
+          cursor: pointer;
+        }
+        .more {
+          width: 83px;
+          margin-top: 10px;
+          background-color: #91c619;
+          color: #fff;
+        }
+        .guanzhu {
+          border: 1px solid #91c619;
+        }
+        img {
+          width: 15px;
+          height: 15px;
+          vertical-align: middle;
+        }
       }
-      span {
-        width: 100px;
-        height: 26px;
-        line-height: 26px;
-        background: url('../assets/btn.png');
-        background-size: 100% 100%;
-        cursor: pointer;
+    }
+    .avatar-box {
+      cursor: pointer;
+      .renqi-txt {
+        font-size: 12px;
+        img {
+          width: 10px;
+          height: 10px;
+        }
       }
     }
   }
+  .avator {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #797979;
+  }
+  .code {
+    width: 70px;
+    height: 70px;
+  }
+}
+/deep/ .el-pagination {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 16px;
 }
 </style>

@@ -16,13 +16,13 @@
           <!-- <span :class="['btn', { btn1: chooseAll }]" @click="getAllMatches">更多</span> -->
           <span>
             共
-            <span class="red">{{ total }}</span> 场，
+            <span class="green">{{ total }}</span> 场，
           </span>
           <span>
             隐藏
-            <span class="red">{{allLen-total}}</span> 场
+            <span class="green">{{allLen-total}}</span> 场
           </span>
-          <span class="red show" @click="showAll">[显示]</span>
+          <span class="green show" @click="showAll">[显示]</span>
         </div>
         <div class="div1 time-box" v-else>
           <p @click="toggleDate">
@@ -150,7 +150,7 @@
             <template slot-scope="scope">
               <span
                 v-if="scope.row.status != 1"
-                class="red"
+                class="green"
               >{{ scope.row.home_team_score + '-' + scope.row.away_team_score }}</span>
               <img :src="icons.vs" v-else class="vs-icon" />
             </template>
@@ -187,14 +187,14 @@
           </el-table-column>
           <el-table-column label="数据" width="60">
             <template slot-scope="scope">
-              <span @click="chooseMatch(scope.row)" class="fenxi red">分析</span>
+              <span @click="chooseMatch(scope.row)" class="fenxi">分析</span>
             </template>
           </el-table-column>
-          <el-table-column label="直播" width="60">
+          <!-- <el-table-column label="直播" width="60">
             <template slot-scope="scope">
               <img :src="icons.video" @click="chooseVideo(scope.row)" class="fenxi red" />
             </template>
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column prop="name" label="置顶" width="60">
             <template slot-scope="scope">
               <img
@@ -259,7 +259,7 @@ export default {
         voice1: require('../assets/bifen/voice1.png'),
         top: require('../assets/bifen/top.png'),
         top2: require('../assets/bifen/top2.png'),
-        vs: require('../assets/vs.png'),
+        vs: require('../assets/bifen/vs.png'),
         corner: require('../assets/bifen/corner.png'),
         date: require('../assets/bifen/date.png'),
         down: require('../assets/bifen/down.png'),
@@ -774,6 +774,9 @@ export default {
   // width: 85%;
 }
 .bifen {
+  .green {
+    color: #91c619;
+  }
   .banner {
     width: 100%;
     height: 150px;
@@ -801,8 +804,8 @@ export default {
     }
   }
   .set-top {
-    width: 20px;
-    height: 20px;
+    width: 12px;
+    height: 15px;
   }
   .align-left {
     text-align: left;
@@ -835,7 +838,7 @@ export default {
     position: relative;
     margin-top: 10px;
     padding-bottom: 30px;
-    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
+    // box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
     background: #fff;
     .table {
       text-align: center;
@@ -912,8 +915,8 @@ export default {
       font-weight: normal !important;
     }
     .vs-icon {
-      width: 20px;
-      height: 15px;
+      width: 13px;
+      height: 10px;
     }
     .zhishu {
       span {
@@ -944,7 +947,7 @@ export default {
             margin: 5px 5px;
             padding: 5px 0;
             &:hover {
-              background-color: #904a0c;
+              background-color: #91c619;
               color: #fff;
             }
           }
@@ -977,11 +980,11 @@ export default {
           margin: 0 15px;
           padding: 5px 25px;
           border-radius: 20px;
-          border: 1px solid #904A0C;
+          border: 1px solid #91c619;
           cursor: pointer;
         }
         .btn1 {
-          background: #904A0C;
+          background: #91c619;
           color: #fff;
           border: none;
         }
@@ -1028,7 +1031,7 @@ export default {
               margin: 0 5px;
             }
             .span2 {
-              background: #904a0c;
+              background: #91c619;
               color: #fff;
             }
             .span1 {
@@ -1068,17 +1071,17 @@ export default {
   line-height: 62px;
 }
 .bifen .tabs /deep/ .el-tabs__header {
-  background: url('../assets/nav1.png');
+  // background: url('../assets/nav1.png');
   background-size: 100% 100%;
 }
 .bifen .tabs /deep/ .el-tabs__item.is-active, .bifen /deep/ .el-loading-text {
-  color: #904a0c;
+  color: #91c619;
 }
 .bifen .tabs /deep/ .el-tabs__item.is-active:hover {
-  color: #904a0c;
+  color: #91c619;
 }
 .bifen .tabs /deep/.el-tabs__active-bar {
-  background-color: #904a0c;
+  background-color: #91c619;
 }
 .bifen /deep/ .el-input__inner {
   margin: 5px 0;

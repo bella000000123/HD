@@ -8,76 +8,56 @@
         </el-breadcrumb>
       </div>
 
-      <div class="fl zixun">
-        <div v-for="(li, i) in zixun.data" :key="i">
-          <img :src="li.image" alt class="icon-img" />
-          <div class="pankou-list" @click="chooseArticle(li)">
-            <h2>{{ li.title }}</h2>
-            <p>{{ li.introduction }}</p>
-            <p>·{{ li.time }}</p>
-          </div>
-        </div>
-
-        <!-- 翻页 -->
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="pagenatiOnchange"
-          :current-page="page"
-          :page-size="15"
-          layout="prev, pager, next, jumper"
-          :total="zixun['total']"
-          background
-        ></el-pagination>
+      <div class="box">
+        <article-list :zixun="zixun" @articleList="articleList"></article-list>
+        <jifen></jifen>
       </div>
-      <jifen></jifen>
     </div>
   </div>
 </template>
 
 <script>
-import jifen from '@/components/jifen.vue'
+import jifen from '@/components/jifen.vue';
+import articleList from '@/components/articleList.vue';
 export default {
   components: {
-    jifen
+    jifen,
+    articleList
   },
   data() {
     return {
       zixun: [],
       page: 1, // 初始页码
       per_page: 20
-    }
+    };
   },
   methods: {
-    async articleList() {
+    async articleList(page, per_page) {
       let params = {
         cate_id: 1,
-        per_page: this.per_page,
-        page: this.page
-      }
-      let res = await this.$api.articleList(params)
-      this.zixun = res
+        per_page: per_page,
+        page: page
+      };
+      let res = await this.$api.articleList(params);
+      this.zixun = res;
     },
-    // 分页
-    pagenatiOnchange(page) {
-      this.page = page
-      this.pusherList()
-    },
-    handleSizeChange(size) {
-      this.per_page = size
-      this.pusherList()
-    },
+
     chooseArticle(article) {
-      this.$store.commit('chooseArticle', article)
-      this.$router.push({
-        path: `/article`
-      })
+      this.$store.commit('chooseArticle', article);
+      let routeUrl = this.$router.resolve({
+        path: '/article',
+        query: {
+          id: article.id
+        }
+      });
+      window.open(routeUrl.href, '_blank');
     }
   },
   mounted() {
-    this.articleList()
+    this.articleList(1, 20);
   },
   computed: {}
-}
+};
 </script>
 <style scoped lang="stylus">
 .soccer {
@@ -85,44 +65,5 @@ export default {
   .bread {
     padding: 30px 10px 15px;
   }
-  .zixun {
-    height: 100%;
-    padding: 10px 20px;
-    width: 65%;
-    img {
-      width: 20%;
-      height: 100px;
-    }
-    &>div {
-      margin-bottom: 30px;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 30px;
-    }
-    .pankou-list {
-      width: 75%;
-      height: 70px;
-      display: inline-block;
-      vertical-align: top;
-      margin-left: 10px;
-      cursor: pointer;
-      h2 {
-        font-size: 16px;
-      }
-      p {
-        margin: 5px 0;
-        color: #6F6F6F;
-        word-break: break-all;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-      }
-    }
-  }
-}
-.el-pagination {
-  text-align: center;
-  font-size: 16px;
 }
 </style>

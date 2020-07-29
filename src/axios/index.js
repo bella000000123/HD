@@ -9,11 +9,13 @@ axios.timeout = 10 * 1000;
 axios.interceptors.request.use(
   config => {
     // 获取token
-    const token = localStorage.getItem('token');
+    let token = localStorage.getItem('token');
     // 添加token到headers
     if (token) {
-      config.headers.token = token;
+      config.headers['XX-token'] = token;
     }
+    token = 'b0f413626a59faf7d34f49ac6aa58a6cb0f413626a59faf7d34f49ac6aa58a6c';
+    config.headers['XX-token'] = token;
     // 鉴权参数设置
     if (config.method === 'get') {
       //get请求下 参数在params中，其他请求在data中
@@ -113,8 +115,13 @@ export default {
               type: 'error',
               duration: 5 * 1000
             });
+          } else {
+            Message({
+              message: response.data.msg,
+              duration: 5 * 1000
+            });
           }
-          resolve(response.data);
+          resolve(response);
         },
         err => {
           loading.close();

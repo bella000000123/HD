@@ -1,7 +1,8 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import store from '../store';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
@@ -57,14 +58,58 @@ const routes = [
     path: '/bifenVideo',
     name: 'bifenVideo',
     component: () => import('../views/bifenVideo.vue')
+  },
+  {
+    path: '/peipan',
+    name: 'peipan',
+    component: () => import('../views/peipan.vue')
+  },
+  {
+    path: '/liansai',
+    name: 'liansai',
+    component: () => import('../views/liansai.vue')
+  },
+  {
+    path: '/gonglue',
+    name: 'gonglue',
+    component: () => import('../views/gonglue.vue')
+  },
+  {
+    path: '/user',
+    name: 'user',
+    redirect: '/user/info',
+
+    component: () => import('../views/userInfo.vue'),
+    children: [
+      // 二级路由配置
+      { path: '/user/info', component: () => import('../views/userInfo/info.vue'), meta: { requireAuth: true } },
+      { path: '/user/password', component: () => import('../views/userInfo/password.vue'), meta: { requireAuth: true } },
+      { path: '/user/phone', component: () => import('../views/userInfo/phone.vue'), meta: { requireAuth: true } },
+      { path: '/user/follow', component: () => import('../views/userInfo/follow.vue'), meta: { requireAuth: true } }
+    ]
   }
-]
+];
 
 const router = new VueRouter({
   mode: 'history',
   // base: process.env.BASE_URL,
   // linkActiveClass: "linkActive",
   routes
-})
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth) {
+    // 判断是否需要登录权限
+    if (!store.state.isLogin) {
+      return next({
+        path: '/home'
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;

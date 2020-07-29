@@ -1,180 +1,256 @@
 <template>
   <div class="home">
-    <div class="center">
+    <div class="banner-box">
       <!-- banner -->
       <div class="con1">
-        <div class="in-block div1">
+        <div class="div1">
           <el-carousel height="400px">
             <el-carousel-item v-for="(li, i) in bannerList.banner" :key="i">
               <img :src="li.image" alt class="banner-img" />
             </el-carousel-item>
           </el-carousel>
         </div>
-        <div class="in-block div2 border back-white">
-          <div class="title">
-            <img :src="icons.qingbao" alt="icon" class="in-block" />
-            <h1 class="in-block">情报中心</h1>
-            <router-link to="/qingbao" class="fr unl" tag="span">查看更多</router-link>
+      </div>
+    </div>
+    <div class="center con2 box">
+      <div class="qingbao">
+        <div class="qingbao-list title">
+          <!-- <img :src="icons.qingbao" alt="icon" class="in-block" /> -->
+          <span>情报中心</span>
+        </div>
+        <ul class="list">
+          <li
+            v-for="(li, i) in articleType['qingbao']['data']"
+            :key="i"
+            :class="[{ '': li.is_red == 1 }, 'box']"
+            @click="chooseArticle(li)"
+          >
+            <span class="span1">{{ li.title }}</span>
+
+            <span class="black">{{ li.time }}</span>
+          </li>
+        </ul>
+        <div class="qingbao-list qingbao-list1">
+          查看
+          <router-link to="/qingbao" tag="span" class="green">更多情报>></router-link>
+        </div>
+      </div>
+      <div class="imgs">
+        <div class="div1">
+          <el-carousel height="400px">
+            <el-carousel-item v-for="(li, i) in qingbaoImg" :key="i">
+              <img :src="li.image" alt class="banner-img" />
+              <div class="desc" @click="chooseArticle(li)">{{ li.title }}</div>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+      </div>
+    </div>
+
+    <div class="center con3">
+      <p class="title box">
+        <span>焦点赛事</span>
+        <span class="more">
+          <span>查看更多</span>
+
+          <img :src="icons.more" alt />
+        </span>
+      </p>
+      <div>
+        <div class="jiaodian-box in-block" v-for="(li, i) in articleType['jiaodian']" :key="i">
+          <div class="box">
+            <span>{{ li.match_name }}</span>
+            <span>{{ li.match_time }}</span>
           </div>
-          <ul class="list">
-            <li
-              v-for="(li, i) in articleType['qingbao']['data']"
-              :key="i"
-              :class="{ red: li.is_red == 1 }"
-              @click="chooseArticle(li)"
-            >
-              <span></span>
-              {{ li.title }}
+          <div class="box jiaodian">
+            <div>
+              <img :src="li.zhudui_image" alt class="logo" />
+              <!-- <img src="https://imgs.oss.cn-south-1.jcloudcs.com/league/20160525/20160525151248998_280x280.png" alt="" class="logo" /> -->
+              <!-- <span>{{ li.zhudui_image }}</span> -->
+            </div>
+            <div class="tuijian">
+              <!-- <img :src="icons.vs" alt="" /> -->
+              <p class="vs">VS</p>
+              <p>
+                <span class="red">5</span>
+                <span class="green">篇推荐</span>
+              </p>
+            </div>
+            <div>
+              <img :src="li.kedui_image" alt class="logo" />
+              <!-- <img src="https://imgs.oss.cn-south-1.jcloudcs.com/league/20160525/20160525151248998_280x280.png" alt="" class="logo" /> -->
+              <!-- <span>{{ li.home_team_name }}</span> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="center con4">
+      <div class="box">
+        <div class="renqi">
+          <p class="title box">
+            <span>人气推手</span>
+            <span class="more">
+              <router-link to="/gaoshou" class="unl" tag="span">查看更多</router-link>
+              <img :src="icons.more" alt />
+            </span>
+          </p>
+          <div class="in-block renqi-box" v-for="(li, i) in pusherList" :key="i">
+            <div class="avatar-box">
+              <img :src="li.avatar" alt class="avator" />
+              <p>
+                {{ li.name }}
+                <span class="renqi-txt">
+                  （
+                  <img :src="icons.hot" alt="icon" />
+                  {{ li.hot}}）
+                </span>
+              </p>
+            </div>
+            <div class="box">
+              <img :src="li.code_image" alt class="code" />
+              <div class="guanzhu-box">
+                <p class="guanzhu" @click="doFollowPusher(li.id)">
+                  <span v-if="li.is_follow">
+                    <img :src="icons.guanzhu2" alt /> 已关注
+                  </span>
+                  <span v-else>
+                    <img :src="icons.guanzhu1" alt />关注
+                  </span>
+                </p>
+                <p class="more" @click="goPush(li)">更多推荐</p>
+              </div>
+            </div>
+            <p class="green">立即扫码，专业推荐</p>
+          </div>
+        </div>
+
+        <div class="jifen border back-white">
+          <div class="title">
+            <!-- <img :src="icons.jifen" alt="icon" class="in-block" /> -->
+            <h1 class="in-block">积分榜</h1>
+          </div>
+          <div class="list">
+            <el-tabs type="border-card" v-model="jifenType" @tab-click="jifenTab">
+              <el-tab-pane name="yingchao" label="英超"></el-tab-pane>
+              <el-tab-pane name="aochao" label="澳超"></el-tab-pane>
+              <el-tab-pane name="xijia" label="西甲"></el-tab-pane>
+              <el-tab-pane name="dejia" label="德甲"></el-tab-pane>
+              <el-tab-pane name="yijia" label="意甲"></el-tab-pane>
+              <el-tab-pane name="zhongchao" label="中超"></el-tab-pane>
+            </el-tabs>
+            <ul class="list-content">
+              <li>
+                <span class="id">排名</span>
+                <span>胜</span>
+                <span>平</span>
+                <span>负</span>
+                <span>积分</span>
+              </li>
+              <li v-for="(li, i) in jifen" :key="i" class="jifen-num">
+                <span class="id">{{ i+1 }} {{ li.team_name }}</span>
+                <span>{{ li.winTotal }}</span>
+                <span>{{ li.drawTotal }}</span>
+                <span>{{ li.lossTotal }}</span>
+                <span class="red">{{ li.pointsTotal }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="center con5">
+      <p class="title gaoshou-title">高手攻略</p>
+      <div class="gaoshou-box box">
+        <div class="gaoshou">
+          <div class="gaoshou-logo gaoshou-logo1">赔盘技巧</div>
+          <span class="more" @click="goto('peipan')">
+            <span>查看更多</span>
+            <img :src="icons.more" alt />
+          </span>
+          <div class="imgs">
+            <el-carousel height="200px" indicator-position="none">
+              <el-carousel-item v-for="(li, i) in articleType['peipan']" :key="i">
+                <img :src="li.image" alt class="banner-img" />
+                <div class="desc" @click="chooseArticle(li)">{{ li.title }}</div>
+              </el-carousel-item>
+            </el-carousel>
+          </div>
+          <ul>
+            <li v-for="(li, i) in articleType['peipan']" :key="i">
+              <img :src="icons.right" alt />
+              <span class="title span1" @click="chooseArticle(li)">{{ li.title }}</span>
+              <span class="time">{{ li.time }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="gaoshou">
+          <!-- <img :src="icons.gaoshou1" alt="" class="gaoshou-logo" /> -->
+          <div class="gaoshou-logo gaoshou-logo2">联赛攻略</div>
+          <span class="more" @click="goto('liansai')">
+            <span>查看更多</span>
+            <img :src="icons.more" alt />
+          </span>
+          <div class="imgs">
+            <el-carousel height="200px" indicator-position="none">
+              <el-carousel-item v-for="(li, i) in articleType['liansai']" :key="i">
+                <img :src="li.image" alt class="banner-img" />
+                <div class="desc" @click="chooseArticle(li)">{{ li.title }}</div>
+              </el-carousel-item>
+            </el-carousel>
+          </div>
+          <ul>
+            <li v-for="(li, i) in articleType['liansai']" :key="i">
+              <img :src="icons.right" alt />
+              <span class="title span1" @click="chooseArticle(li)">{{ li.title }}</span>
+              <span class="time">{{ li.time }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="gaoshou">
+          <div class="gaoshou-logo gaoshou-logo3">高手心得</div>
+          <span class="more" @click="goto('gonglue')">
+            <span>查看更多</span>
+            <img :src="icons.more" alt />
+          </span>
+          <div class="imgs">
+            <el-carousel height="200px" indicator-position="none">
+              <el-carousel-item v-for="(li, i) in articleType['gaoshou']" :key="i">
+                <img :src="li.image" alt class="banner-img" />
+                <div class="desc" @click="chooseArticle(li)">{{ li.title }}</div>
+              </el-carousel-item>
+            </el-carousel>
+          </div>
+          <ul>
+            <li v-for="(li, i) in articleType['gaoshou']" :key="i">
+              <img :src="icons.right" alt />
+              <span class="title span1" @click="chooseArticle(li)">{{ li.title }}</span>
+              <span class="time">{{ li.time }}</span>
             </li>
           </ul>
         </div>
       </div>
-      <!-- 焦点赛事 -->
-      <div class="con2">
-        <div class="in-block div1 border back-white">
-          <div class="title">
-            <img :src="icons.jiaodian" alt="icon" class="in-block" />
-            <h1 class="in-block pankou">焦点赛事</h1>
-            <router-link to="/bifen" class="fr unl" tag="span">查看更多</router-link>
-          </div>
-          <div class="overflow">
-            <div v-for="(li, i) in articleType['jiaodian']" :key="i" class="list">
-              <img :src="li.zhudui_image" alt class="icon-img" />
-              <div class="in-block">
-                <p>{{ li.match_name }}</p>
-                <img :src="icons.vs" alt />
-                <p>{{ li.match_time }}</p>
-              </div>
-              <img :src="li.kedui_image" alt class="icon-img" />
-            </div>
-          </div>
-        </div>
-        <div class="in-block div2 border back-white">
-          <div class="title pankou">
-            <img :src="icons.pankou" alt="icon" class="in-block" />
-            <h1 class="in-block">盘口分析</h1>
-            <router-link to="/soccer" class="fr unl" tag="span">查看更多</router-link>
-          </div>
-          <div class="overflow">
-            <div class="zixun">
-              <div v-for="(li, i) in articleType['pankou']" :key="i">
-                <img :src="li.image" alt class="icon-img" />
-                <div
-                  class="pankou-list"
-                  :class="{ red: li.is_red == 1 }"
-                  @click="chooseArticle(li)"
-                >
-                  <h2>{{ li.title }}</h2>
-                  <p>{{ li.introduction }}</p>
-                  <p>
-                    ·{{ li.time }}
-                    <!-- <span>·昨天</span> -->
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    </div>
+    <div class="con6 center box">
+      <div>
+        <img :src="icons.quan" alt />
+        <p>全球上千类体育</p>
+        <p>赛事资料全网罗</p>
       </div>
-      <!-- 高手成长之路 -->
-      <img :src="icons.gaoshou" alt="高手成长之路" class="gaoshou" />
-      <div class="con3">
-        <div class="fl div1 border back-white">
-          <el-tabs v-model="gaoshouType" @tab-click="gaoshouTab">
-            <el-tab-pane label="全部" name="gaoshouAll"></el-tab-pane>
-            <el-tab-pane label="赔盘技巧" name="peipan"></el-tab-pane>
-            <el-tab-pane label="联赛攻略" name="liansai"></el-tab-pane>
-            <el-tab-pane label="高手心得" name="gaoshou"></el-tab-pane>
-          </el-tabs>
-          <div class="overflow">
-            <div class="zixun">
-              <div v-for="(li, i) in articleType[gaoshouType]['data']" :key="i">
-                <img :src="li.image" alt class="icon-img" />
-                <div class="pankou-list" @click="chooseArticle(li)">
-                  <h2>{{ li.title }}</h2>
-                  <p>{{ li.introduction }}</p>
-                  <p>
-                    {{ li.time }}
-                    <span>·昨天</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- 翻页 -->
-
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="pagenatiOnchange"
-            :current-page="page"
-            :page-size="15"
-            layout="prev, pager, next, jumper"
-            :total="articleType[gaoshouType]['total']"
-            background
-          ></el-pagination>
-        </div>
-        <div class="fl div2">
-          <div class="renqi border back-white">
-            <div class="title">
-              <img :src="icons.renqi" alt="icon" class="in-block" />
-              <h1 class="in-block">人气推手</h1>
-              <router-link to="/gaoshou" class="fr unl" tag="span">查看更多</router-link>
-            </div>
-            <div class="list">
-              <div v-for="(li, i) in pusherList" :key="i">
-                <div class="box">
-                  <div class="box">
-                    <img :src="li.avatar" alt class="avator" />
-                    <div>
-                      <h2>{{ li.name }}</h2>
-                      <p>
-                        <img :src="icons.hot" alt="icon" />
-                        {{ li.hot }}
-                      </p>
-                    </div>
-                  </div>
-                  <img :src="li.code_image" alt class="code" />
-                </div>
-                <div class="box">
-                  <p class="red" @click="goPush(li)">{{ li.tuijian_num }}篇推荐 [点击查看]</p>
-                  <p>微信扫码了解</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="jifen border back-white">
-            <div class="title">
-              <img :src="icons.jifen" alt="icon" class="in-block" />
-              <h1 class="in-block">积分榜</h1>
-            </div>
-            <div class="list">
-              <el-tabs type="border-card" v-model="jifenType" @tab-click="jifenTab">
-                <el-tab-pane name="yingchao" label="英超"></el-tab-pane>
-                <el-tab-pane name="aochao" label="澳超"></el-tab-pane>
-                <el-tab-pane name="xijia" label="西甲"></el-tab-pane>
-                <el-tab-pane name="dejia" label="德甲"></el-tab-pane>
-                <el-tab-pane name="yijia" label="意甲"></el-tab-pane>
-                <el-tab-pane name="zhongchao" label="中超"></el-tab-pane>
-              </el-tabs>
-              <ul class="list-content">
-                <li>
-                  <span class="id">排名</span>
-                  <span>胜</span>
-                  <span>平</span>
-                  <span>负</span>
-                  <span>积分</span>
-                </li>
-                <li v-for="(li, i) in jifen[jifenType]" :key="i" class="jifen-num">
-                  <span class="id">{{ li.paiming }} {{ li.team_name }}</span>
-                  <span>{{ li.win }}</span>
-                  <span>{{ li.draw }}</span>
-                  <span>{{ li.defeat }}</span>
-                  <span class="red">{{ li.score }}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      <div>
+        <img :src="icons.quan" alt />
+        <p>每日几百场比分</p>
+        <p>比分信息瞬间掌握</p>
+      </div>
+      <div>
+        <img :src="icons.quan" alt />
+        <p>各类赔率数据</p>
+        <p>变化时时更新</p>
+      </div>
+      <div>
+        <img :src="icons.quan" alt />
+        <p>不间断提供</p>
+        <p>各类数据</p>
       </div>
     </div>
   </div>
@@ -200,7 +276,15 @@ export default {
         renqi: require('../assets/renqi_icon.png'),
         hot: require('../assets/hot.png'),
         gaoshou: require('../assets/gaoshou.png'),
-        vs: require('../assets/vs.png')
+        vs: require('../assets/vs.png'),
+        more: require('../assets/more.png'),
+        right: require('../assets/right.png'),
+        gaoshou1: require('../assets/gaoshou1.png'),
+        gaoshou2: require('../assets/gaoshou2.png'),
+        gaoshou3: require('../assets/gaoshou3.png'),
+        quan: require('../assets/quan.png'),
+        guanzhu1: require('../assets/guanzhu1.png'),
+        guanzhu2: require('../assets/guanzhu2.png')
       },
       page: 1, // 初始页码
       per_page: 10,
@@ -230,30 +314,23 @@ export default {
     // 焦点赛事
     this.focusMatch();
     // 盘口分析
-    this.analyseList();
+    // this.analyseList();
     // 赔盘
-    this.articleList(4, 15, 'peipan');
+    // this.articleList(4, 15, 'peipan');
     // 人气推手
     this.hotPushers();
     // 积分榜
-    this.rankingList();
+    this.rankingList(9);
     // 高手全部
-    this.gaoshouAllList(15);
+    // this.gaoshouAllList(15);
+    //赔pan
+    this.articleList(4, 15, 'peipan');
+    this.articleList(5, 15, 'liansai');
+    this.articleList(6, 15, 'gaoshou');
   },
   methods: {
     // 分页
-    pagenatiOnchange(page) {
-      this.page = page;
-      if (this.type == 0) {
-        this.gaoshouAllList();
-      } else if (this.type == 4) {
-        this.articleList(4, 15, 'peipan');
-      } else if (this.type == 5) {
-        this.articleList(5, 15, 'liansai');
-      } else if (this.type == 6) {
-        this.articleList(6, 15, 'gaoshou');
-      }
-    },
+
     handleSizeChange(size) {
       this.per_page = size;
       this.articleList();
@@ -271,259 +348,248 @@ export default {
         per_page: per_page ? per_page : this.per_page,
         page: this.page
       };
-      let res = await this.$api.articleList(params);
+      let res = '';
+      if (cate_id == 4 || cate_id == 5 || cate_id == 6) {
+        let res1 = await this.$api.articleList(params);
+        res = res1.data.slice(0, 10);
+      } else {
+        res = await this.$api.articleList(params);
+      }
       this.articleType[type] = res;
     },
     // 焦点赛事
     async focusMatch() {
       let res = await this.$api.focusMatch();
-      this.articleType['jiaodian'] = res.data;
+      this.articleType['jiaodian'] = res.data.slice(0, 6);
     },
     // 盘口分析
     async analyseList() {
       let res = await this.$api.analyseList();
       this.articleType['pankou'] = res.data;
     },
-    // 高手tab切换
-    gaoshouTab(type) {
-      if (type.name === 'peipan') {
-        this.type = 4;
-        this.articleList(4, 15, 'peipan');
-      } else if (type.name === 'liansai') {
-        this.type = 5;
-        this.articleList(5, 15, 'liansai');
-      } else if (type.name === 'gaoshou') {
-        this.type = 6;
-        this.articleList(6, 15, 'gaoshou');
-      } else {
-        this.type = 0;
-        this.gaoshouAllList();
-      }
 
-      this.gaoshouType = type.name;
-    },
-    async gaoshouAllList() {
-      let params = {
-        per_page: 15,
-        page: this.page
-      };
-      let res = await this.$api.getThreeCateArticle(params);
-      this.articleType['gaoshouAll'] = res;
-    },
     // 人气推手
     async hotPushers() {
       let res = await this.$api.hotPushers();
-      this.pusherList = res.data.slice(0, 5);
+      this.pusherList = res.data.slice(0, 9);
     },
     // 积分榜
-    async rankingList() {
-      let res = await this.$api.rankingList();
+    // 澳超：49
+    // 意甲：15
+    // 英超：9
+    // 西甲：3
+    // 德甲：
+    // 中超：
+    async rankingList(id) {
+      let res = await this.$api.rankingList({ tournament_id: id });
       this.jifen = res;
     },
     jifenTab(type) {
+      if (type.name == 'yingchao') {
+        this.rankingList(9);
+      } else if (type.name == 'aochao') {
+        this.rankingList(49);
+      } else if (type.name == 'yijia') {
+        this.rankingList(15);
+      } else if (type.name == 'xijia') {
+        this.rankingList(3);
+      } else if (type.name == 'dejia') {
+        this.rankingList(9);
+      } else if (type.name == 'zhongchao') {
+        this.rankingList(9);
+      }
       this.jifenType = type.name;
     },
     chooseArticle(article) {
       this.$store.commit('chooseArticle', article);
-      this.$router.push({
-        path: `/article`
+      let routeUrl = this.$router.resolve({
+        path: '/article',
+        query: {
+          id: article.id
+        }
       });
+      window.open(routeUrl.href, '_blank');
     },
     goPush(pusher) {
       this.$store.commit('choosePusher', pusher);
-      this.$router.push({
-        path: `/tuijianDetail`
+      let routeUrl = this.$router.resolve({
+        path: '/tuijianDetail',
+        query: {
+          pusher_id: pusher.id
+        }
       });
+      window.open(routeUrl.href, '_blank');
+      // this.$router.push({
+      //   path: `/tuijianDetail`
+      // });
+    },
+    goto(path) {
+      this.$router.push({
+        path: `/${path}`
+      });
+    },
+    async doFollowPusher(id) {
+      let res = await this.$api.doFollowPusher({ id: id });
+      this.hotPushers();
+    }
+  },
+  computed: {
+    qingbaoImg() {
+      let list = [];
+      if (this.articleType['qingbao']['data'] && this.articleType['qingbao']['data'].length > 0) {
+        list = this.articleType['qingbao']['data'].slice(0, 5);
+      }
+      return list;
     }
   }
 };
 </script>
 <style lang="stylus" scoped>
-p {
-  line-height: 22px;
-}
-.title {
-  font-size: 16px;
-  padding: 0 10px;
-  line-height: 36px;
-  background: url('../assets/nav1.png');
-  background-size: 100% 100%;
-  span {
-    font-size: 12px;
-    cursor: pointer;
-  }
-  img {
-    margin-right: 5px;
-  }
-}
-.overflow {
-  overflow: hidden;
-  height: 88%;
-}
-.border {
-  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
-}
-.red {
-  color: #d11d19 !important;
-  font-weight: bold;
-  cursor: pointer;
-}
-.icon-img {
-  width: 90px;
-  height: 90px;
-}
-.banner-img {
-  width: 770px;
-  height: 440px;
-}
-.gaoshou {
-  width: 100%;
-  margin-top: 40px;
-}
-.pankou {
-  height: 45px;
-  line-height: 45px;
-}
-.zixun {
-  height: 1150px;
-  padding: 10px;
-  img {
-    width: 20%;
-    height: 100px;
-  }
-  &>div {
-    margin-bottom: 30px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 30px;
-  }
-  .pankou-list {
-    width: 75%;
-    height: 70px;
+.home {
+  color: #797979;
+  .span1 {
     display: inline-block;
-    vertical-align: top;
-    margin-left: 10px;
-    cursor: pointer;
-    h2 {
-      font-size: 16px;
-    }
-    p {
-      margin: 5px 0;
-      color: #6F6F6F;
-      word-break: break-all;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+    width: 380px;
+    margin-right: 20px;
+    overflow: hidden; // 超出的文本隐藏
+    text-overflow: ellipsis; // 溢出用省略号显示
+    white-space: nowrap; // 溢出不换行
+    &:hover {
+      transition: all 0.4s;
+      transform: scale(1.04);
+      color: #91c619 !important;
+      font-weight: bold;
     }
   }
-}
-.con1 {
-  width: 100%;
-  height: 400px;
-  margin-top: 40px;
-  .div1 {
-    width: 55%;
-    height: 100%;
-    margin-right: 30px;
+  .green {
+    color: #91c619;
   }
-  .div2 {
-    width: 42%;
-    height: 100%;
-    .list {
-      padding: 10px;
-      line-height: 30px;
-      li {
-        cursor: pointer;
-      }
-      span {
-        display: inline-block;
-        margin-right: 5px;
-        width: 2px;
-        height: 15px;
-        background: #904a0c;
-        vertical-align: middle;
-      }
-    }
+  .black {
+    color: #797979;
   }
-}
-.con2 {
-  width: 100%;
-  height: 440px;
-  margin-top: 40px;
-  .div1 {
-    width: 35%;
-    height: 100%;
-    margin-right: 30px;
-    .title {
-      margin-bottom: 10px;
-      span {
-        line-height: 45px;
-      }
+  .banner-box {
+    width: 1300px;
+    margin: 0 auto;
+    .con1 {
+      // font-size 0
     }
-    .list {
-      padding: 14px 30px;
-      text-align: center;
-      .in-block {
-        margin: 0 40px;
-        vertical-align: top;
-        text-align: center;
-        p {
-          line-height: 40px;
-        }
-      }
-    }
-  }
-  .div2 {
-    width: 62%;
-    height: 100%;
-    .zixun>div {
-      margin-bottom: 15px;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 14px;
-    }
-  }
-}
-.con3 {
-  width: 100%;
-  height: 2600px;
-  margin-top: 30px;
-  .div1 {
-    width: 67%;
-    height: 100%;
-    margin-right: 30px;
-    .overflow {
-      height: 94%;
-      margin-bottom: 15px;
-    }
-  }
-  .div2 {
-    width: 30%;
-    height: 100%;
-    .renqi {
+    img {
       width: 100%;
-      height: 515px;
-      .list {
+      height: 400px;
+    }
+  }
+  .con2 {
+    margin-top: 30px;
+    height: 400px;
+    overflow: hidden;
+    .qingbao {
+      width: 500px;
+      height: 400px;
+      background-color: #fff;
+      .qingbao-list {
         padding: 10px;
+        background-color: #F3F2F2;
+        background: url('../assets/jiaodian-back.png') no-repeat;
+        background-size: 100% 100%;
+      }
+      .qingbao-list1 {
+        color: #797979;
         text-align: center;
-        &>div {
-          border-bottom: 1px solid #ddd;
-          padding: 10px 0;
+        cursor: pointer;
+        span {
+          text-decoration: underline;
         }
-        p {
-          font-size: 12px;
+      }
+      ul {
+        height: 300px;
+        padding: 10px;
+        overflow: hidden;
+        li {
+          padding: 7px 0;
+          cursor: pointer;
         }
       }
     }
+    .imgs {
+      width: 700px;
+      margin-left: 20px;
+      img {
+        width: 100%;
+        height: 400px;
+      }
+      .div1 {
+        position: relative;
+      }
+    }
+  }
+  .desc {
+    height: 50px;
+    line-height: 50px;
+    width: 100%;
+    padding: 0 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    overflow: hidden; // 超出的文本隐藏
+    text-overflow: ellipsis; // 溢出用省略号显示
+    white-space: nowrap; // 溢出不换行
+  }
+  .title {
+    padding: 0 10px;
+    color: #000;
+    cursor: pointer;
+    .more {
+      color: #91c619;
+      text-decoration: underline;
+    }
+    img {
+      vertical-align: top;
+    }
+  }
+  .con3 {
+    margin-top: 50px;
+    .logo {
+      width: 50px;
+      height: 50px;
+    }
+    .jiaodian-box {
+      width: 29%;
+      margin: 10px;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 5px;
+      .jiaodian {
+        padding: 30px 0 10px;
+        .tuijian {
+          text-align: center;
+          .vs {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+  .con4 {
+    margin-top: 50px;
+    height: 720px;
     .jifen {
-      width: 100%;
-      height: 485px;
+      width: 390px;
+      height: 580px;
       margin-top: 30px;
+      .title {
+        text-align: center;
+        line-height: 40px;
+        border-bottom: 1px solid #91c619;
+      }
       .list-content {
         padding: 10px;
         text-align: center;
         li {
-          line-height: 33px;
+          line-height: 40px;
           span {
             display: inline-block;
             vertical-align: middle;
@@ -536,78 +602,178 @@ p {
         }
         .jifen-num {
           span {
-            color: #666;
+            color: #797979;
           }
         }
       }
     }
-    .avator {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background-color: #666;
-    }
-    .code {
-      width: 45px;
-      height: 45px;
-      margin-right: 15px;
-    }
-    .title {
-      line-height: 40px;
-      height: 40px;
-      box-sizing: border-box;
+    .renqi {
+      width: 800px;
+      .renqi-box {
+        width: 27%;
+        margin: 10px;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 5px;
+        text-align: center;
+        p {
+          line-height: 27px;
+        }
+        .box {
+          width: 160px;
+          margin: 5px auto 0;
+          .guanzhu-box {
+            p {
+              width: 80px;
+              height: 27px;
+              border-radius: 5px;
+              line-height: 27px;
+              font-size: 12px;
+              text-align: center;
+              cursor: pointer;
+            }
+            .more {
+              width: 83px;
+              margin-top: 10px;
+              background-color: #91c619;
+              color: #fff;
+            }
+            .guanzhu {
+              border: 1px solid #91c619;
+            }
+            img {
+              width: 15px;
+              height: 15px;
+              vertical-align: middle;
+            }
+          }
+        }
+        .avatar-box {
+          cursor: pointer;
+          .renqi-txt {
+            font-size: 12px;
+            img {
+              width: 10px;
+              height: 10px;
+            }
+          }
+        }
+      }
+      .avator {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #797979;
+      }
+      .code {
+        width: 70px;
+        height: 70px;
+      }
     }
   }
-}
-.div1 /deep/ .el-tabs__item {
-  width: 60%;
-  text-align: center;
-  font-size: 16px;
-}
-.div1 /deep/ .el-tabs {
-  line-height: 62px;
-}
-.div1 /deep/ .el-tabs__header {
-  background: url('../assets/nav1.png');
-  background-size: 100% 100%;
-}
-.div1 /deep/ .el-tabs__item.is-active, .div1 /deep/ .el-loading-text {
-  color: #904a0c;
-}
-.div1 /deep/ .el-tabs__item.is-active:hover {
-  color: #904a0c;
-}
-.div1 /deep/.el-tabs__active-bar {
-  background-color: #904a0c;
-}
-.el-pagination {
-  text-align: center;
-  font-size: 16px;
-}
-/deep/ .el-pager li {
-  font-size: 14px;
-}
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 150px;
-  margin: 0;
-}
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-.el-carousel__item:nth-child(2n+1) {
-  background-color: #d3dce6;
-}
-.el-tabs--border-card {
-  border: none;
-  box-shadow: none;
-}
-.jifen /deep/ .el-tabs__item {
-  padding: 0 13px;
-}
-.jifen /deep/ .el-tabs--border-card>.el-tabs__content {
-  padding: 0;
+  .con5 {
+    margin-top: 50px;
+    .gaoshou-title {
+      line-height: 40px;
+    }
+    .desc {
+      line-height: 40px;
+      height: 40px;
+      bottom: 20px;
+      font-size: 14px;
+    }
+    .gaoshou {
+      width: 385px;
+      padding: 65px 10px 30px;
+      background: #fff;
+      box-sizing: border-box;
+      border-radius: 5px;
+      position: relative;
+      color: #797979;
+      .more {
+        position: absolute;
+        right: 12px;
+        top: 20px;
+        color: #91c619;
+        cursor: pointer;
+        img {
+          vertical-align: top;
+        }
+      }
+      .gaoshou-logo {
+        width: 130px;
+        height: 40px;
+        line-height: 30px;
+        text-align: center;
+        position: absolute;
+        top: 15px;
+        left: -10px;
+        color: #fff;
+      }
+      .gaoshou-logo1 {
+        background: url('../assets/gaoshou1.png') no-repeat;
+      }
+      .gaoshou-logo2 {
+        background: url('../assets/gaoshou2.png') no-repeat;
+      }
+      .gaoshou-logo3 {
+        background: url('../assets/gaoshou3.png') no-repeat;
+      }
+      li {
+        line-height: 25px;
+        img {
+          vertical-align: top;
+        }
+      }
+      .imgs {
+        img {
+          width: 100%;
+          height: 180px;
+          border-radius: 5px;
+        }
+      }
+      .title {
+        display: inline-block;
+        width: 220px;
+        margin-right: 20px;
+        overflow: hidden; // 超出的文本隐藏
+        text-overflow: ellipsis; // 溢出用省略号显示
+        white-space: nowrap; // 溢出不换行
+        color: #797979;
+      }
+    }
+  }
+  .con6 {
+    box-sizing: border-box;
+    margin: 50px auto;
+    padding: 50px;
+    background-color: #fff;
+    text-align: center;
+    img {
+      width: 70px;
+      height: 70px;
+    }
+    p {
+    }
+  }
+  .con2 /deep/ .el-carousel__indicators--horizontal {
+    bottom: 0;
+    left: 590px;
+  }
+  .con2 /deep/ .el-carousel__button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .con4 /deep/ .el-tabs__item {
+    padding: 0 13px;
+  }
+  .con4 /deep/ .el-tabs--border-card>.el-tabs__content {
+    padding: 0;
+  }
+  .con4 /deep/.el-tabs--border-card {
+    border: 0;
+    box-shadow: none;
+  }
 }
 </style>
