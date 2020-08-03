@@ -15,7 +15,8 @@ export default new Vuex.Store({
     topList: [],
     allLen: '',
     isLogin: false,
-    userInfo: {}
+    userInfo: {},
+    showLogin: false
   },
   mutations: {
     choosePusher(state, pusher) {
@@ -63,6 +64,9 @@ export default new Vuex.Store({
     },
     setUserinfo(state, item) {
       state.userInfo = item;
+    },
+    setShowLogin(state, item) {
+      state.showLogin = item;
     }
   },
   actions: {

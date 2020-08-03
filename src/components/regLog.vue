@@ -68,7 +68,7 @@
             </el-input>
           </div>
           <div v-if="!show_user && show_phone" maxlength="11">
-            <el-input placeholder="请输入手机号" clearable v-model.trim="codelog.username" maxlength="11">
+            <el-input placeholder="请输入手机号" clearable v-model.trim="codelog.mobile" maxlength="11">
               <i slot="prefix" class="el-input__icon phone"></i>
             </el-input>
             <div class="codes" maxlength="6">
@@ -83,7 +83,7 @@
           </div>
 
           <div class="btn" v-if="show_reg" @click="register">注册</div>
-          <div class="btn" v-else @click="login">登录</div>
+          <div class="btn" v-else @click="login(false)">登录</div>
           <!-- <div class="btn">{{ show_reg ? '注册' : '登录' }}</div> -->
           <div class="tip" v-if="show_reg">
             已有账号？
@@ -122,7 +122,7 @@ export default {
         password: ''
       },
       codelog: {
-        username: '',
+        mobile: '',
         code: ''
       }
     };
@@ -137,9 +137,17 @@ export default {
       if (this.show_phone) {
         this.show_phone = false;
         this.user_reg('show_user', '');
+        this.codelog = {
+          mobile: '',
+          code: ''
+        };
       } else {
         this.show_phone = true;
         this.user_reg('', 'show_user');
+        this.pwdlog = {
+          username: '',
+          password: ''
+        };
       }
     },
     user_reg(param1, param2) {
@@ -169,15 +177,23 @@ export default {
       }
     },
     async getPhoneCode() {
-      if (!this.reg.phone && this.showCode) {
-        this.$message.error('请输入手机号');
-        return;
-      }
-      if (!this.checkPhone()) {
-        return;
+      //注册验证手机号是否重复
+      if (this.show_reg) {
+        if (!this.reg.phone && this.showCode) {
+          this.$message.error('请输入手机号');
+          return;
+        }
+        if (!this.checkPhone()) {
+          return;
+        }
+      } else {
+        if (!this.codelog.mobile && this.showCode) {
+          this.$message.error('请输入手机号');
+          return;
+        }
       }
 
-      let res = await this.$api.getCode({ phone: this.show_reg ? this.reg.phone : this.codelog.username });
+      let res = await this.$api.getCode({ phone: this.show_reg ? this.reg.phone : this.codelog.mobile });
       if (res.code == 1) {
         this.getCode();
       }
@@ -187,7 +203,7 @@ export default {
         this.$message.error('请输入手机号');
         return;
       }
-      let res = await this.$api.checkPhone({ phone: this.show_reg ? this.reg.phone : this.codelog.username });
+      let res = await this.$api.checkPhone({ phone: this.show_reg ? this.reg.phone : this.codelog.mobile });
       return res.code == 1 ? true : false;
     },
 
@@ -226,7 +242,7 @@ export default {
       return true;
     },
     validCodelog() {
-      if (!this.codelog.username) {
+      if (!this.codelog.mobile) {
         this.$message.error('请输入手机号');
         return false;
       }
@@ -260,7 +276,7 @@ export default {
           if (!this.validCodelog()) {
             return;
           }
-          res = await this.$api.codeLogin(this.codelog);
+          res = await this.$api.codeLogin({ username: this.codelog.mobile, code: this.codelog.code });
         }
       }
 
@@ -300,7 +316,7 @@ export default {
     border-radius: 2px;
     // box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     box-sizing: border-box;
-    width: 30%;
+    width: 450px;
     background: #fff;
     font-size: 14px;
     .dialog-head {
@@ -322,7 +338,7 @@ export default {
     }
   }
   .inputs {
-    width: 75%;
+    width: 70%;
     margin: 0 auto;
   }
   .user {
@@ -342,8 +358,10 @@ export default {
     height: 40px;
     margin-top: 15px;
     line-height: 40px;
-    background: url('../assets/login/btn.png') no-repeat;
-    background-size: 100% 100%;
+    // background: url('../assets/login/btn.png') no-repeat;
+    background-color: #9dc543;
+    border-radius: 20px;
+    // background-size: 100% 100%;
     color: #fff;
     text-align: center;
     cursor: pointer;
@@ -363,7 +381,7 @@ export default {
     line-height: 50px;
     text-align: center;
     span {
-      color: #D6AF7C;
+      color: #9dc543;
       cursor: pointer;
       text-decoration: underline;
     }

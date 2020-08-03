@@ -14,8 +14,8 @@ axios.interceptors.request.use(
     if (token) {
       config.headers['XX-token'] = token;
     }
-    token = 'b0f413626a59faf7d34f49ac6aa58a6cb0f413626a59faf7d34f49ac6aa58a6c';
-    config.headers['XX-token'] = token;
+    // token = 'b0f413626a59faf7d34f49ac6aa58a6cb0f413626a59faf7d34f49ac6aa58a6c';
+    // config.headers['XX-token'] = token;
     // 鉴权参数设置
     if (config.method === 'get') {
       //get请求下 参数在params中，其他请求在data中

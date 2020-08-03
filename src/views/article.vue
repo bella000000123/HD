@@ -141,6 +141,11 @@ export default {
   },
   computed: {
     ...mapState(['article'])
+  },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      alert(vm.num);
+    });
   }
 };
 </script>

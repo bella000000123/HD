@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     show(param) {
-      this.$store.commit('setLogin', true);
+      // this.$store.commit('setLogin', true);
 
       this.dialogVisible = true;
       this[param] = true;
@@ -97,9 +97,13 @@ export default {
       let res = await this.$api.getBanner();
       this.logo = res.logo[0];
     },
-    logout() {
-      this.$store.commit('setLogin', false);
-      this.$router.push('/home');
+    async logout() {
+      let res = await this.$api.logOut();
+      if (res.code == 1) {
+        this.$store.commit('setUserinfo', {});
+        this.$store.commit('setLogin', false);
+        this.$router.push('/home');
+      }
     }
   },
   computed: {

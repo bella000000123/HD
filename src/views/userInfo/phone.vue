@@ -9,8 +9,8 @@
       </el-steps>-->
       <div class="phone-box step1">
         <div>
-          输入手机号：
-          <el-input placeholder="请输入新手机号" clearable v-model.trim="codelog.username" maxlength="11">
+          新手机号：
+          <el-input placeholder="请输入新手机号" clearable v-model.trim="codelog.mobile" maxlength="11">
             <i slot="prefix" class="el-input__icon phone"></i>
           </el-input>
         </div>
@@ -22,7 +22,7 @@
           </el-input>
           <div class="get-code">
             <span v-show="showCode" @click="getPhoneCode()">获取验证码</span>
-            <span v-show="!showCode" class="count">{{count}}S</span>
+            <span v-show="!showCode" class="count">{{ count }}S</span>
           </div>
         </div>
       </div>
@@ -38,10 +38,8 @@ export default {
     return {
       // active: 0,
       codelog: {
-        username: '',
         code: '',
-        mobile: '',
-        remobile: ''
+        mobile: ''
       },
       timer: null,
       showCode: true,
@@ -50,12 +48,12 @@ export default {
   },
   methods: {
     async getPhoneCode() {
-      if (!this.codelog.username) {
+      if (!this.codelog.mobile) {
         this.$message.error('请输入手机号');
         return;
       }
 
-      let res = await this.$api.getCode({ phone: this.codelog.username });
+      let res = await this.$api.getCode({ phone: this.codelog.mobile });
       if (res.code == 1) {
         this.getCode();
       }
@@ -77,7 +75,7 @@ export default {
       }
     },
     async submit() {
-      if (!this.codelog.code || !this.codelog.password) {
+      if (!this.codelog.code || !this.codelog.mobile) {
         this.$message.error('请输入新的手机号和验证码');
         return;
       }
@@ -85,10 +83,8 @@ export default {
       let res = await this.$api.changeMobile({ code: this.codelog.code, mobile: this.codelog.mobile });
       if (res.code == 1) {
         this.codelog = {
-          username: '',
           code: '',
-          mobile: '',
-          remobile: ''
+          mobile: ''
         };
       }
     },
@@ -97,7 +93,7 @@ export default {
         this.$message.error('请输入手机号');
         return;
       }
-      let res = await this.$api.checkPhone({ phone: this.show_reg ? this.reg.phone : this.codelog.username });
+      let res = await this.$api.checkPhone({ phone: this.show_reg ? this.reg.phone : this.codelog.mobile });
       return res.code == 1 ? true : false;
     }
   },

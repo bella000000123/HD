@@ -10,7 +10,7 @@
       <div class="phone-box step1">
         <div>
           输入手机号：
-          <el-input placeholder="请输入手机号" clearable v-model.trim="codelog.username" maxlength="11">
+          <el-input placeholder="请输入手机号" clearable v-model.trim="codelog.mobile" maxlength="11">
             <i slot="prefix" class="el-input__icon phone"></i>
           </el-input>
         </div>
@@ -50,7 +50,7 @@ export default {
     return {
       // active: 0,
       codelog: {
-        username: '',
+        mobile: '',
         code: '',
         password: '',
         repwd: ''
@@ -62,12 +62,12 @@ export default {
   },
   methods: {
     async getPhoneCode() {
-      if (!this.codelog.username) {
+      if (!this.codelog.mobile) {
         this.$message.error('请输入手机号');
         return;
       }
 
-      let res = await this.$api.getCode({ phone: this.codelog.username });
+      let res = await this.$api.getCode({ phone: this.codelog.mobile });
       if (res.code == 1) {
         this.getCode();
       }
@@ -97,7 +97,7 @@ export default {
       let res = await this.$api.changePassword({ code: this.codelog.code, password: this.codelog.password });
       if (res.code == 1) {
         this.codelog = {
-          username: '',
+          mobile: '',
           code: '',
           password: '',
           repwd: ''

@@ -449,7 +449,7 @@ export default {
   color: #797979;
   .span1 {
     display: inline-block;
-    width: 380px;
+    width: 415px;
     margin-right: 20px;
     overflow: hidden; // 超出的文本隐藏
     text-overflow: ellipsis; // 溢出用省略号显示
@@ -483,7 +483,7 @@ export default {
     height: 400px;
     overflow: hidden;
     .qingbao {
-      width: 500px;
+      width: 550px;
       height: 400px;
       background-color: #fff;
       .qingbao-list {
@@ -511,7 +511,7 @@ export default {
       }
     }
     .imgs {
-      width: 700px;
+      width: 650px;
       margin-left: 20px;
       img {
         width: 100%;

@@ -118,6 +118,9 @@ const changeMobile = params => {
 const getFollowPushers = params => {
   return http.get(`/api/home/users/getFollowPushers`, params).then(res => res.data);
 };
+const logOut = params => {
+  return http.post(`/api/home/users/logOut`, params).then(res => res.data);
+};
 
 export default {
   getBanner: getBanner,
@@ -157,5 +160,6 @@ export default {
   getFollowPushers: getFollowPushers,
   changePassword: changePassword,
   changeMobile: changeMobile,
-  unFollowPusher: unFollowPusher
+  unFollowPusher: unFollowPusher,
+  logOut: logOut
 };
