@@ -8,37 +8,21 @@
         </el-breadcrumb>
       </div>
 
-      <div class="fl zixun">
-        <div v-for="(li, i) in zixun.data" :key="i">
-          <img :src="li.image" alt class="icon-img" />
-          <div class="pankou-list" @click="chooseArticle(li)">
-            <h2>{{ li.title }}</h2>
-            <p>{{ li.introduction }}</p>
-            <p>·{{ li.time }}</p>
-          </div>
-        </div>
-
-        <!-- 翻页 -->
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="pagenatiOnchange"
-          :current-page="page"
-          :page-size="15"
-          layout="prev, pager, next, jumper"
-          :total="zixun['total']"
-          background
-        ></el-pagination>
+      <div class="box">
+        <article-list :zixun="zixun" @articleList="articleList"></article-list>
+        <jifen></jifen>
       </div>
-      <jifen></jifen>
     </div>
   </div>
 </template>
 
 <script>
+import articleList from '@/components/articleList.vue';
 import jifen from '@/components/jifen.vue';
 export default {
   components: {
-    jifen
+    jifen,
+    articleList
   },
   data() {
     return {
@@ -48,24 +32,16 @@ export default {
     };
   },
   methods: {
-    async articleList() {
+    async articleList(page) {
       let params = {
         cate_id: 4,
-        per_page: this.per_page,
-        page: this.page
+        per_page: page.per_page ? page.per_page : 20,
+        page: page.page ? page.page : 1
       };
       let res = await this.$api.articleList(params);
       this.zixun = res;
     },
-    // 分页
-    pagenatiOnchange(page) {
-      this.page = page;
-      this.articleList();
-    },
-    handleSizeChange(size) {
-      this.per_page = size;
-      this.articleList();
-    },
+
     chooseArticle(article) {
       this.$store.commit('chooseArticle', article);
       let routeUrl = this.$router.resolve({
@@ -78,7 +54,7 @@ export default {
     }
   },
   mounted() {
-    this.articleList();
+    this.articleList(1, 20);
   },
   computed: {}
 };

@@ -16,15 +16,10 @@
       <div class="qingbao">
         <div class="qingbao-list title">
           <!-- <img :src="icons.qingbao" alt="icon" class="in-block" /> -->
-          <span>情报中心</span>
+          <span>盘口分析</span>
         </div>
         <ul class="list">
-          <li
-            v-for="(li, i) in articleType['qingbao']['data']"
-            :key="i"
-            :class="[{ '': li.is_red == 1 }, 'box']"
-            @click="chooseArticle(li)"
-          >
+          <li v-for="(li, i) in articleType['pankou']" :key="i" :class="[{ '': li.is_red == 1 }, 'box']" @click="chooseArticle(li)">
             <span class="span1">{{ li.title }}</span>
 
             <span class="black">{{ li.time }}</span>
@@ -32,12 +27,12 @@
         </ul>
         <div class="qingbao-list qingbao-list1">
           查看
-          <router-link to="/qingbao" tag="span" class="green">更多情报>></router-link>
+          <router-link to="/soccer" tag="span" class="green">更多分析>></router-link>
         </div>
       </div>
       <div class="imgs">
         <div class="div1">
-          <el-carousel height="400px">
+          <el-carousel height="420px" indicator-position="none">
             <el-carousel-item v-for="(li, i) in qingbaoImg" :key="i">
               <img :src="li.image" alt class="banner-img" />
               <div class="desc" @click="chooseArticle(li)">{{ li.title }}</div>
@@ -48,40 +43,56 @@
     </div>
 
     <div class="center con3">
-      <p class="title box">
-        <span>焦点赛事</span>
-        <span class="more">
-          <span>查看更多</span>
+      <div class="jiaodian-wrap">
+        <div class="jiaodian-cont in-block">
+          <p class="title box">
+            <span>焦点赛事</span>
+            <span class="more">
+              <router-link to="/bifen" class="unl" tag="span">查看更多</router-link>
 
-          <img :src="icons.more" alt />
-        </span>
-      </p>
-      <div>
-        <div class="jiaodian-box in-block" v-for="(li, i) in articleType['jiaodian']" :key="i">
-          <div class="box">
-            <span>{{ li.match_name }}</span>
-            <span>{{ li.match_time }}</span>
-          </div>
-          <div class="box jiaodian">
-            <div>
-              <img :src="li.zhudui_image" alt class="logo" />
-              <!-- <img src="https://imgs.oss.cn-south-1.jcloudcs.com/league/20160525/20160525151248998_280x280.png" alt="" class="logo" /> -->
-              <!-- <span>{{ li.zhudui_image }}</span> -->
+              <img :src="icons.more" alt />
+            </span>
+          </p>
+          <div class="jiaodian-box in-block" v-for="(li, i) in articleType['jiaodian']" :key="i">
+            <div class="box">
+              <span>{{ li.match_name }}</span>
+              <span>{{ li.match_time }}</span>
             </div>
-            <div class="tuijian">
-              <!-- <img :src="icons.vs" alt="" /> -->
-              <p class="vs">VS</p>
-              <p>
-                <span class="red">5</span>
-                <span class="green">篇推荐</span>
-              </p>
-            </div>
-            <div>
-              <img :src="li.kedui_image" alt class="logo" />
-              <!-- <img src="https://imgs.oss.cn-south-1.jcloudcs.com/league/20160525/20160525151248998_280x280.png" alt="" class="logo" /> -->
-              <!-- <span>{{ li.home_team_name }}</span> -->
+            <div class="box jiaodian">
+              <div>
+                <img :src="li.zhudui_image" alt class="logo" />
+                <p class="team-name">{{ li.home_name }}</p>
+              </div>
+              <div class="tuijian">
+                <p class="vs">VS</p>
+                <router-link class="tuijian" tag="p" to="/soccer">
+                  <span class="red">{{ Math.ceil(Math.random() * 5) }}</span>
+                  <span class="green">篇推荐</span>
+                </router-link>
+              </div>
+              <div>
+                <img :src="li.kedui_image" alt class="logo" />
+                <p class="team-name">{{ li.away_name }}</p>
+              </div>
             </div>
           </div>
+        </div>
+        <div class="pankou-box in-block">
+          <p class="title box">
+            <span>情报中心</span>
+            <span class="more">
+              <router-link to="/soccer" class="unl" tag="span">查看更多</router-link>
+
+              <img :src="icons.more" alt />
+            </span>
+          </p>
+          <ul class="list">
+            <li v-for="(li, i) in articleType['qingbao']['data']" :key="i" :class="[{ '': li.is_red == 1 }, 'box']" @click="chooseArticle(li)">
+              <span class="span1">{{ li.title }}</span>
+
+              <span class="black">{{ li.time }}</span>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -96,32 +107,24 @@
             </span>
           </p>
           <div class="in-block renqi-box" v-for="(li, i) in pusherList" :key="i">
-            <div class="avatar-box">
-              <img :src="li.avatar" alt class="avator" />
-              <p>
-                {{ li.name }}
-                <span class="renqi-txt">
-                  （
-                  <img :src="icons.hot" alt="icon" />
-                  {{ li.hot}}）
-                </span>
-              </p>
-            </div>
-            <div class="box">
-              <img :src="li.code_image" alt class="code" />
-              <div class="guanzhu-box">
-                <p class="guanzhu" @click="doFollowPusher(li.id)">
-                  <span v-if="li.is_follow">
-                    <img :src="icons.guanzhu2" alt /> 已关注
-                  </span>
-                  <span v-else>
-                    <img :src="icons.guanzhu1" alt />关注
-                  </span>
-                </p>
-                <p class="more" @click="goPush(li)">更多推荐</p>
+            <div class="">
+              <div class="hot">
+                <img :src="icons.huangguan" alt="" />
+                {{ li.hot + Math.ceil(Math.random() * 1000) }}
+              </div>
+              <div class="avatar-box">
+                <img :src="li.avatar" alt class="avator" @click="goPush(li)" />
+                <p>{{ li.name }}</p>
+                <div class="code-box">
+                  <img :src="li.code_image" alt class="code" />
+                </div>
+              </div>
+              <div class="guanzhu" @click="doFollowPusher(li.id)">
+                <span v-if="li.is_follow"> <img :src="icons.guanzhu2" alt /> 已关注 </span>
+                <span v-else> <img :src="icons.guanzhu1" alt />关注 </span>
               </div>
             </div>
-            <p class="green">立即扫码，专业推荐</p>
+            <div class="more" @click="goPush(li)">更多推荐</div>
           </div>
         </div>
 
@@ -148,7 +151,7 @@
                 <span>积分</span>
               </li>
               <li v-for="(li, i) in jifen" :key="i" class="jifen-num">
-                <span class="id">{{ i+1 }} {{ li.team_name }}</span>
+                <span class="id">{{ i + 1 }} {{ li.team_name }}</span>
                 <span>{{ li.winTotal }}</span>
                 <span>{{ li.drawTotal }}</span>
                 <span>{{ li.lossTotal }}</span>
@@ -233,22 +236,22 @@
     </div>
     <div class="con6 center box">
       <div>
-        <img :src="icons.quan" alt />
+        <img :src="icons.kuai" alt />
         <p>全球上千类体育</p>
         <p>赛事资料全网罗</p>
       </div>
       <div>
-        <img :src="icons.quan" alt />
+        <img :src="icons.qi" alt />
         <p>每日几百场比分</p>
         <p>比分信息瞬间掌握</p>
       </div>
       <div>
-        <img :src="icons.quan" alt />
+        <img :src="icons.wen" alt />
         <p>各类赔率数据</p>
         <p>变化时时更新</p>
       </div>
       <div>
-        <img :src="icons.quan" alt />
+        <img :src="icons.zhun" alt />
         <p>不间断提供</p>
         <p>各类数据</p>
       </div>
@@ -260,7 +263,7 @@
 // @ is an alias to /src
 // import HelloWorld from "@/components/HelloWorld.vue";
 // import jifen from "@/components/jifen.vue";
-
+import { mapState } from 'vuex';
 export default {
   name: 'Home',
   components: {
@@ -282,9 +285,13 @@ export default {
         gaoshou1: require('../assets/gaoshou1.png'),
         gaoshou2: require('../assets/gaoshou2.png'),
         gaoshou3: require('../assets/gaoshou3.png'),
-        quan: require('../assets/quan.png'),
+        kuai: require('../assets/kuai.png'),
+        qi: require('../assets/qi.png'),
+        wen: require('../assets/wen.png'),
+        zhun: require('../assets/zhun.png'),
         guanzhu1: require('../assets/guanzhu1.png'),
-        guanzhu2: require('../assets/guanzhu2.png')
+        guanzhu2: require('../assets/guanzhu2.png'),
+        huangguan: require('../assets/huangguan.png')
       },
       page: 1, // 初始页码
       per_page: 10,
@@ -310,11 +317,11 @@ export default {
   mounted() {
     this.getBanner();
     // 情报中心
-    this.articleList(3, 11, 'qingbao');
+    this.articleList(3, 10, 'qingbao');
     // 焦点赛事
     this.focusMatch();
     // 盘口分析
-    // this.analyseList();
+    this.analyseList();
     // 赔盘
     // this.articleList(4, 15, 'peipan');
     // 人气推手
@@ -378,8 +385,8 @@ export default {
     // 意甲：15
     // 英超：9
     // 西甲：3
-    // 德甲：
-    // 中超：
+    // 德甲：21
+    // 中超：227
     async rankingList(id) {
       let res = await this.$api.rankingList({ tournament_id: id });
       this.jifen = res;
@@ -394,13 +401,17 @@ export default {
       } else if (type.name == 'xijia') {
         this.rankingList(3);
       } else if (type.name == 'dejia') {
-        this.rankingList(9);
+        this.rankingList(21);
       } else if (type.name == 'zhongchao') {
-        this.rankingList(9);
+        this.rankingList(227);
       }
       this.jifenType = type.name;
     },
     chooseArticle(article) {
+      if (article.is_login_view == 1 && !this.isLogin) {
+        this.$store.commit('setShowLogin', true);
+        return;
+      }
       this.$store.commit('chooseArticle', article);
       let routeUrl = this.$router.resolve({
         path: '/article',
@@ -429,6 +440,10 @@ export default {
       });
     },
     async doFollowPusher(id) {
+      if (!this.isLogin) {
+        this.$store.commit('setShowLogin', true);
+        return;
+      }
       let res = await this.$api.doFollowPusher({ id: id });
       this.hotPushers();
     }
@@ -440,7 +455,8 @@ export default {
         list = this.articleType['qingbao']['data'].slice(0, 5);
       }
       return list;
-    }
+    },
+    ...mapState(['isLogin'])
   }
 };
 </script>
@@ -457,12 +473,12 @@ export default {
     &:hover {
       transition: all 0.4s;
       transform: scale(1.04);
-      color: #91c619 !important;
+      color: #8dc116 !important;
       font-weight: bold;
     }
   }
   .green {
-    color: #91c619;
+    // color: #8dc116;
   }
   .black {
     color: #797979;
@@ -479,8 +495,8 @@ export default {
     }
   }
   .con2 {
-    margin-top: 30px;
-    height: 400px;
+    margin-top: 40px;
+    height: 420px;
     overflow: hidden;
     .qingbao {
       width: 550px;
@@ -501,11 +517,11 @@ export default {
         }
       }
       ul {
-        height: 300px;
+        height: 320px;
         padding: 10px;
         overflow: hidden;
         li {
-          padding: 7px 0;
+          padding: 6px 0;
           cursor: pointer;
         }
       }
@@ -515,7 +531,7 @@ export default {
       margin-left: 20px;
       img {
         width: 100%;
-        height: 400px;
+        height: 420px;
       }
       .div1 {
         position: relative;
@@ -542,54 +558,103 @@ export default {
     padding: 0 10px;
     color: #000;
     cursor: pointer;
+        font-size:16px
+
     .more {
-      color: #91c619;
+      font-size:14px
+      color: #8dc116;
       text-decoration: underline;
+      cursor:pointer;
     }
     img {
       vertical-align: top;
     }
   }
   .con3 {
-    margin-top: 50px;
+    margin-top: 60px;
+    height:410px
+    .team-name{
+  text-align:center
+}
+     .jiaodian-wrap{
+       .title{
+         margin:10px 0
+       }
+      .jiaodian-cont{
+        width:800px;
+        height:410px;
+          margin-right:10px
+      }
+
+      .pankou-box{
+        .title{
+          padding-bottom:10px
+        }
+
+    .list{
+         width: 388px;
+         height:358px
+        padding: 20px;
+        box-sizing: border-box;
+        background: #fff;
+    }
+          li{
+            line-height 33px
+            cursor:pointer
+          }
+          .span1{
+            width:245px;
+            margin-right: 10px;
+          }
+      }
+    }
     .logo {
       width: 50px;
       height: 50px;
     }
+
     .jiaodian-box {
-      width: 29%;
+      width: 347px;
       margin: 10px;
-      padding: 15px;
+      padding: 17px 15px;
       background-color: #fff;
       border-radius: 5px;
       .jiaodian {
         padding: 30px 0 10px;
+        text-align:center
+        div{
+          width:33%
+        }
         .tuijian {
-          text-align: center;
+          cursor pointer
           .vs {
             font-weight: bold;
+   font-weight: bold;
+    font-size: 18px;
+    margin: 15px 0;
           }
         }
       }
     }
   }
   .con4 {
-    margin-top: 50px;
+    margin-top: 60px;
     height: 720px;
+
     .jifen {
       width: 390px;
-      height: 580px;
-      margin-top: 30px;
+      height: 683px;
+      margin-top: 40px;
       .title {
         text-align: center;
         line-height: 40px;
-        border-bottom: 1px solid #91c619;
+        border-bottom: 1px solid #8dc116;
       }
       .list-content {
         padding: 10px;
         text-align: center;
         li {
-          line-height: 40px;
+          line-height: 50px;
           span {
             display: inline-block;
             vertical-align: middle;
@@ -609,54 +674,77 @@ export default {
     }
     .renqi {
       width: 800px;
+      .title{
+        margin-bottom:10px
+
+      }
       .renqi-box {
+        position:relative;
         width: 27%;
-        margin: 10px;
-        padding: 15px;
+        margin: 5px 10px;
+        padding: 9px 15px;
         background-color: #fff;
-        border-radius: 5px;
+        // border-radius: 5px;
         text-align: center;
         p {
           line-height: 27px;
         }
-        .box {
-          width: 160px;
-          margin: 5px auto 0;
-          .guanzhu-box {
-            p {
-              width: 80px;
-              height: 27px;
-              border-radius: 5px;
-              line-height: 27px;
-              font-size: 12px;
-              text-align: center;
-              cursor: pointer;
+       .hot{
+         position:absolute;
+         top:0;
+         left:0;
+         height:25px;
+         padding:0 5px;
+         background:url(../assets/renqi.png);
+            background-size:100% 100%;
+            color:#fff
+            font-size:12px
+            img{
+              width:15px;
+              margin-top:5px;
             }
-            .more {
-              width: 83px;
-              margin-top: 10px;
-              background-color: #91c619;
-              color: #fff;
-            }
-            .guanzhu {
-              border: 1px solid #91c619;
-            }
-            img {
-              width: 15px;
-              height: 15px;
-              vertical-align: middle;
-            }
-          }
-        }
+       }
         .avatar-box {
-          cursor: pointer;
           .renqi-txt {
             font-size: 12px;
             img {
               width: 10px;
               height: 10px;
+              vertical-align middle
             }
           }
+          .code-box {
+            width:80px;
+            height:80px;
+            padding:1px;
+            margin :0 auto
+            background:url(../assets/code-boder.png)
+            background-size:100% 100%
+            img{
+              width:100%;
+               height:100%
+            }
+          }
+        }
+        .guanzhu {
+           position:absolute;
+         top:5px;
+         right:5px;
+         cursor pointer;
+          img{
+            width: 20px;
+            vertical-align middle
+          }
+        }
+        .more{
+          margin-top:10px
+          width:100%;
+          height:30px;
+          line-height:30px
+          background-color: #8dc116;
+          color: #fff;
+          border-radius:5px;
+          cursor pointer
         }
       }
       .avator {
@@ -665,14 +753,11 @@ export default {
         border-radius: 50%;
         background-color: #797979;
       }
-      .code {
-        width: 70px;
-        height: 70px;
-      }
+
     }
   }
   .con5 {
-    margin-top: 50px;
+    margin-top: 60px;
     .gaoshou-title {
       line-height: 40px;
     }
@@ -690,11 +775,14 @@ export default {
       border-radius: 5px;
       position: relative;
       color: #797979;
+      .title{
+        font-size 14px;
+      }
       .more {
         position: absolute;
         right: 12px;
         top: 20px;
-        color: #91c619;
+        color: #8dc116;
         cursor: pointer;
         img {
           vertical-align: top;

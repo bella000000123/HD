@@ -10,7 +10,7 @@
             <span class="renqi-txt">
               （
               <img :src="icons.hot" alt="icon" />
-              {{ li.hot}}）
+              {{ li.hot }}）
             </span>
           </p>
         </div>
@@ -18,12 +18,8 @@
           <img :src="li.code_image" alt class="code" />
           <div class="guanzhu-box">
             <p class="guanzhu" @click="cancelFollow(li.id)">
-              <span v-if="li.is_follow">
-                <img :src="icons.guanzhu2" alt /> 已关注
-              </span>
-              <span v-else>
-                <img :src="icons.guanzhu1" alt />关注
-              </span>
+              <span v-if="li.is_follow"> <img :src="icons.guanzhu2" alt /> 已关注 </span>
+              <span v-else> <img :src="icons.guanzhu1" alt />关注 </span>
             </p>
             <p class="more" @click="goPush(li)">更多推荐</p>
           </div>
@@ -151,11 +147,11 @@ export default {
           .more {
             width: 83px;
             margin-top: 10px;
-            background-color: #91c619;
+            background-color: #8dc116;
             color: #fff;
           }
           .guanzhu {
-            border: 1px solid #91c619;
+            border: 1px solid #8dc116;
           }
           img {
             width: 15px;

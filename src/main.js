@@ -27,7 +27,10 @@ import {
   CheckboxButton,
   CheckboxGroup,
   Upload,
-  MessageBox
+  MessageBox,
+  Radio,
+  RadioGroup,
+  RadioButton
 } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import './common/reset.css';
@@ -54,7 +57,10 @@ Vue.use(Option);
 Vue.use(Checkbox);
 Vue.use(CheckboxButton);
 Vue.use(CheckboxGroup);
+Vue.use(Radio);
 Vue.use(Upload);
+Vue.use(RadioGroup);
+Vue.use(RadioButton);
 Vue.prototype.$message = Message;
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$confirm = MessageBox.confirm;

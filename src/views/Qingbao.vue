@@ -4,7 +4,7 @@
       <div class="bread">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>足球推荐</el-breadcrumb-item>
+          <el-breadcrumb-item>情报中心</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="box">
@@ -31,17 +31,21 @@ export default {
     };
   },
   methods: {
-    async articleList(page, per_page) {
+    async articleList(page) {
       let params = {
         cate_id: 3,
-        per_page: per_page,
-        page: page
+        per_page: page.per_page ? page.per_page : 20,
+        page: page.page ? page.page : 1
       };
       let res = await this.$api.articleList(params);
       this.zixun = res;
     },
 
     chooseArticle(article) {
+      if (article.is_login_view == 1) {
+        this.$store.commit('setShowLogin', true);
+        return;
+      }
       this.$store.commit('chooseArticle', article);
       let routeUrl = this.$router.resolve({
         path: '/article',

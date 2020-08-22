@@ -8,7 +8,7 @@
         <div class="box">
           <div>
             <img :src="li.pusher_avatar" alt class="avatar" />
-            <span class="name">{{li.pusher_name}}</span>
+            <span class="name">{{ li.pusher_name }}</span>
             <span class="time">
               <!-- <span class="point">.</span> -->
               {{ li.time }}
@@ -27,7 +27,7 @@
       @size-change="handleSizeChange"
       @current-change="pagenatiOnchange"
       :current-page="page"
-      :page-size="15"
+      :page-size="20"
       layout="prev, pager, next, jumper"
       :total="zixun['total']"
       background
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   props: ['zixun'],
   data() {
@@ -59,6 +60,10 @@ export default {
       //   this.articleList();
     },
     chooseArticle(article) {
+      if (article.is_login_view == 1 && !this.isLogin) {
+        this.$store.commit('setShowLogin', true);
+        return;
+      }
       this.$store.commit('chooseArticle', article);
       let routeUrl = this.$router.resolve({
         path: '/article',
@@ -68,6 +73,9 @@ export default {
       });
       window.open(routeUrl.href, '_blank');
     }
+  },
+  computed: {
+    ...mapState(['isLogin'])
   }
 };
 </script>

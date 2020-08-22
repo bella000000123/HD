@@ -1,4 +1,6 @@
 import axios from 'axios';
+import store from '@/store';
+import router from '@/router';
 // 使用element-ui Message做消息提醒
 import { Message, Loading } from 'element-ui';
 
@@ -9,7 +11,8 @@ axios.timeout = 10 * 1000;
 axios.interceptors.request.use(
   config => {
     // 获取token
-    let token = localStorage.getItem('token');
+    // let token = localStorage.getItem('token');
+    let token = store.state.token;
     // 添加token到headers
     if (token) {
       config.headers['XX-token'] = token;
@@ -40,8 +43,10 @@ axios.interceptors.request.use(
 //http response 拦截器
 axios.interceptors.response.use(
   response => {
-    //一些统一code的返回处理
-    if (response.data.code === 501) {
+    //一token过期
+    if (response.data.code === 1001) {
+      store.commit('setLogin', false);
+      store.commit('setToken', '');
       // 登录验证
       //做了个示例跳转项目中登录，并记录下相对路径
       // router.push({

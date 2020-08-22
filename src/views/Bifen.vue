@@ -20,7 +20,7 @@
           </span>
           <span>
             隐藏
-            <span class="green">{{allLen-total}}</span> 场
+            <span class="green">{{ allLen - total }}</span> 场
           </span>
           <span class="green show" @click="showAll">[显示]</span>
         </div>
@@ -28,10 +28,7 @@
           <p @click="toggleDate">
             <img :src="icons.date" alt="日期" />
             {{ checkedDate ? checkedDate : dateList[0] }}
-            <img
-              :src="icons.down"
-              alt="日期"
-            />
+            <img :src="icons.down" alt="日期" />
           </p>
           <div v-show="showDate">
             <p v-for="(li, i) in dateList" :key="i" @click="checkDate(li)">{{ li }}</p>
@@ -46,17 +43,13 @@
             <div v-if="showMatch">
               <div v-for="(li, i) in countMatchName" :key="i" class="in-block check-item">
                 <el-checkbox-group v-model="checkedMatchs" @change="checkedChangeMatch">
-                  <el-checkbox :label="li.id">{{li.name}}[{{li.num}}]</el-checkbox>
+                  <el-checkbox :label="li.id">{{ li.name }}[{{ li.num }}]</el-checkbox>
                 </el-checkbox-group>
               </div>
               <div class="btns">
-                <el-checkbox
-                  :indeterminate="isIndeterminate1"
-                  v-model="checkAll1"
-                  @change="checkAllMatch"
-                >全选</el-checkbox>
+                <el-checkbox :indeterminate="isIndeterminate1" v-model="checkAll1" @change="checkAllMatch">全选</el-checkbox>
                 <span class="span1" @click="nowUp = ''">取消</span>
-                <span class="span2" @click="getBeginMatch('',search1)">确定</span>
+                <span class="span2" @click="getBeginMatch('', search1)">确定</span>
               </div>
             </div>
             <div v-else>
@@ -65,18 +58,14 @@
                   <div class="in-block">
                     <div v-for="(li, i) in countMatchName2" :key="i" class="in-block check-item">
                       <el-checkbox-group v-model="checkedMatchs2" @change="checkedChangeMatch2">
-                        <el-checkbox :label="li.yapan">{{li.name}}[{{li.num}}]</el-checkbox>
+                        <el-checkbox :label="li.yapan">{{ li.name }}[{{ li.num }}]</el-checkbox>
                       </el-checkbox-group>
                     </div>
 
                     <div class="btns">
-                      <el-checkbox
-                        :indeterminate="isIndeterminate2"
-                        v-model="checkAll2"
-                        @change="checkAllMatch2"
-                      >全选</el-checkbox>
+                      <el-checkbox :indeterminate="isIndeterminate2" v-model="checkAll2" @change="checkAllMatch2">全选</el-checkbox>
                       <span class="span1" @click="nowUp = ''">取消</span>
-                      <span class="span2" @click="getBeginMatch('','',search2)">确定</span>
+                      <span class="span2" @click="getBeginMatch('', '', search2)">确定</span>
                     </div>
                   </div>
                 </el-tab-pane>
@@ -84,17 +73,13 @@
                   <div class="in-block">
                     <div v-for="(li, i) in countMatchName3" :key="i" class="in-block check-item">
                       <el-checkbox-group v-model="checkedMatchs3" @change="checkedChangeMatch3">
-                        <el-checkbox :label="li.daxiao">{{li.daxiao}}[{{li.num}}]</el-checkbox>
+                        <el-checkbox :label="li.daxiao">{{ li.daxiao }}[{{ li.num }}]</el-checkbox>
                       </el-checkbox-group>
                     </div>
                     <div class="btns">
-                      <el-checkbox
-                        :indeterminate="isIndeterminate3"
-                        v-model="checkAll3"
-                        @change="checkAllMatch3"
-                      >全选</el-checkbox>
+                      <el-checkbox :indeterminate="isIndeterminate3" v-model="checkAll3" @change="checkAllMatch3">全选</el-checkbox>
                       <span class="span1" @click="nowUp = ''">取消</span>
-                      <span class="span2" @click="getBeginMatch('','','',search3)">确定</span>
+                      <span class="span2" @click="getBeginMatch('', '', '', search3)">确定</span>
                     </div>
                   </div>
                 </el-tab-pane>
@@ -109,13 +94,7 @@
       </div>
 
       <div class="table">
-        <el-table
-          ref="multipleTable"
-          :data="show_matches"
-          tooltip-effect="dark"
-          style="width: 100%"
-          @selection-change="tableSelectChange"
-        >
+        <el-table ref="multipleTable" :data="show_matches" tooltip-effect="dark" style="width: 100%" @selection-change="tableSelectChange">
           <el-table-column type="selection" width="50"></el-table-column>
           <el-table-column label="赛事" width="120">
             <template slot-scope="scope">
@@ -125,16 +104,16 @@
           </el-table-column>
           <el-table-column label="时间" width="110">
             <template slot-scope="scope">
-              <p>{{scope.row.match_time.split(' ')[0]}}</p>
-              <p>{{scope.row.match_time.split(' ')[1]}}</p>
+              <p>{{ scope.row.match_time.split(' ')[0] }}</p>
+              <p>{{ scope.row.match_time.split(' ')[1] }}</p>
             </template>
           </el-table-column>
           <el-table-column label="状态" width="80">
             <template slot-scope="scope">
-              <span
-                :class="[scope.row.status == 3 ||scope.row.status_code==1||scope.row.status_code==2? 'red' : '']"
-              >{{scope.row.status_code==1||scope.row.status_code==2?scope.row.time_play.time:scope.row.status_name }}</span>
-              <span class="flash red" v-if="scope.row.status_code==1||scope.row.status_code==2">'</span>
+              <span :class="[scope.row.status == 3 || scope.row.status_code == 1 || scope.row.status_code == 2 ? 'red' : '']">{{
+                scope.row.status_code == 1 || scope.row.status_code == 2 ? scope.row.time_play.time : scope.row.status_name
+              }}</span>
+              <span class="flash red" v-if="scope.row.status_code == 1 || scope.row.status_code == 2">'</span>
             </template>
           </el-table-column>
           <el-table-column label="主队" width>
@@ -142,23 +121,20 @@
               <div class="align-right">
                 <span class="red-card" v-show="scope.row.red1">{{ scope.row.red1 }}</span>
                 <span class="yellow-card" v-show="scope.row.yellow1">{{ scope.row.yellow1 }}</span>
-                <span>{{scope.row.home_team_name}}</span>
+                <span>{{ scope.row.home_team_name }}</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column abel="比分" width="60">
             <template slot-scope="scope">
-              <span
-                v-if="scope.row.status != 1"
-                class="green"
-              >{{ scope.row.home_team_score + '-' + scope.row.away_team_score }}</span>
+              <span v-if="scope.row.status != 1" class="green">{{ scope.row.home_team_score + '-' + scope.row.away_team_score }}</span>
               <img :src="icons.vs" v-else class="vs-icon" />
             </template>
           </el-table-column>
           <el-table-column prop="away_team_name" label="客队" width>
             <template slot-scope="scope">
               <div class="align-left">
-                <span>{{scope.row.away_team_name}}</span>
+                <span>{{ scope.row.away_team_name }}</span>
                 <span class="yellow-card" v-show="scope.row.yellow2">{{ scope.row.yellow2 }}</span>
                 <span class="red-card" v-show="scope.row.red2">{{ scope.row.red2 }}</span>
               </div>
@@ -178,7 +154,7 @@
           <el-table-column label="指数" width="250">
             <template slot-scope="scope">
               <p class="zhishu">
-                <span v-for="(li, i) in scope.row.yapan.slice(0,3)" :key="i">{{ li }}</span>
+                <span v-for="(li, i) in scope.row.yapan.slice(0, 3)" :key="i">{{ li }}</span>
               </p>
               <p class="zhishu">
                 <span v-for="(li, i) in scope.row.daxiao" :key="i">{{ li }}</span>
@@ -197,13 +173,7 @@
           </el-table-column>-->
           <el-table-column prop="name" label="置顶" width="60">
             <template slot-scope="scope">
-              <img
-                :src="icons.top2"
-                alt
-                @click="setTop(scope)"
-                class="set-top"
-                v-if="scope.row.top"
-              />
+              <img :src="icons.top2" alt @click="setTop(scope)" class="set-top" v-if="scope.row.top" />
               <img v-else :src="icons.top" alt @click="setTop(scope)" class="set-top" />
             </template>
           </el-table-column>
@@ -774,8 +744,9 @@ export default {
   // width: 85%;
 }
 .bifen {
+  position:relative;
   .green {
-    color: #91c619;
+    color: #8dc116;
   }
   .banner {
     width: 100%;
@@ -848,9 +819,9 @@ export default {
       }
     }
     .sidebar {
-      position: fixed;
-      left: 100px;
-      top: 230px;
+      position: absolute;
+      left: -90px;
+      top: 180px;
       li {
         margin: 15px 0;
         padding: 5px 10px;
@@ -947,7 +918,7 @@ export default {
             margin: 5px 5px;
             padding: 5px 0;
             &:hover {
-              background-color: #91c619;
+              background-color: #8dc116;
               color: #fff;
             }
           }
@@ -980,11 +951,11 @@ export default {
           margin: 0 15px;
           padding: 5px 25px;
           border-radius: 20px;
-          border: 1px solid #91c619;
+          border: 1px solid #8dc116;
           cursor: pointer;
         }
         .btn1 {
-          background: #91c619;
+          background: #8dc116;
           color: #fff;
           border: none;
         }
@@ -1031,7 +1002,7 @@ export default {
               margin: 0 5px;
             }
             .span2 {
-              background: #91c619;
+              background: #8dc116;
               color: #fff;
             }
             .span1 {
@@ -1075,13 +1046,13 @@ export default {
   background-size: 100% 100%;
 }
 .bifen .tabs /deep/ .el-tabs__item.is-active, .bifen /deep/ .el-loading-text {
-  color: #91c619;
+  color: #8dc116;
 }
 .bifen .tabs /deep/ .el-tabs__item.is-active:hover {
-  color: #91c619;
+  color: #8dc116;
 }
 .bifen .tabs /deep/.el-tabs__active-bar {
-  background-color: #91c619;
+  background-color: #8dc116;
 }
 .bifen /deep/ .el-input__inner {
   margin: 5px 0;

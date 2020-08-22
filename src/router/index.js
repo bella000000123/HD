@@ -98,18 +98,18 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requireAuth) {
-    // 判断是否需要登录权限
-    if (!store.state.isLogin) {
-      return next({
-        path: '/home'
-      });
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
+  // if (to.meta.requireAuth) {
+  //   // 判断是否需要登录权限
+  //   if (!store.state.isLogin) {
+  //     return next({
+  //       path: '/home'
+  //     });
+  //   } else {
+  //     next();
+  //   }
+  // } else {
+  next();
+  // }
 });
 
 export default router;

@@ -18,9 +18,16 @@
             <span>热度： {{ zixun.data[0].hot }}</span>
           </div>
         </div>
+        <img :src="zixun.data[0].pusher_code_image" alt="二维码" class="code-img" />
       </div>
-
-      <article-list :zixun="zixun" @articleList="articleList"></article-list>
+      <div class="box">
+        <div class="article-box">
+          <article-list :zixun="zixun" @articleList="articleList"></article-list>
+        </div>
+        <div class="jifen-box">
+          <jifen></jifen>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -28,8 +35,9 @@
 <script>
 import { mapState } from 'vuex';
 import articleList from '@/components/articleList.vue';
+import jifen from '@/components/jifen.vue';
 export default {
-  components: { articleList },
+  components: { articleList, jifen },
   data() {
     return {
       icons: {
@@ -43,10 +51,10 @@ export default {
     };
   },
   methods: {
-    async articleList(page, per_page) {
+    async articleList(page) {
       let params = {
-        per_page: this.per_page,
-        page: this.page,
+        per_page: page.per_page ? page.per_page : 20,
+        page: page.page ? page.page : 1,
         pusher_id: this.$route.query.pusher_id
       };
       let res = await this.$api.articleList(params);
@@ -54,6 +62,10 @@ export default {
     },
 
     chooseArticle(article) {
+      if (article.is_login_view == 0) {
+        this.$store.commit('setShowLogin', true);
+        return;
+      }
       this.$store.commit('chooseArticle', article);
       let routeUrl = this.$router.resolve({
         path: '/article',
@@ -80,11 +92,11 @@ export default {
     width: 100%;
   }
   .center {
-    width: 70%;
+    // width: 70%;
     position: relative; /* 脱离文档流 */
     top: -200px; /* 偏移 */
     // height: 800px;
-    background-color: rgba(255, 255, 255, 0.85);
+    // background-color: rgba(255, 255, 255, 0.85);
     .title {
       font-size: 16px;
       padding: 0 10px;
@@ -101,7 +113,9 @@ export default {
       }
     }
     .div1 {
-      padding: 50px;
+      padding: 50px 50px 7px 50px;
+      margin-bottom 50px
+      background-color: rgba(255, 255, 255, 0.85);
       .left {
         width: 110px;
         h2 {
@@ -111,12 +125,16 @@ export default {
           width: 100px;
           height: 100px;
           border-radius: 50%;
-          border: 2px solid #91c619;
+          border: 2px solid #8dc116;
         }
+      }
+      .code-img{
+        width:120px;
+        height:120px
       }
       .right {
         width: 1000px;
-        margin: 20px 0 0 50px;
+        margin: 20px 20px 0 50px;
         p {
           height: 80px;
         }
@@ -125,7 +143,7 @@ export default {
   }
   .zixun {
     height: 100%;
-    padding: 10px 20px;
+    padding: 40px 20px 0;
     img {
       width: 20%;
       height: 100px;

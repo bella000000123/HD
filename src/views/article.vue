@@ -27,8 +27,8 @@
               </div>
             </div>
           </div>
-          <div>
-            <img :src="icons.back" alt />
+          <div class="article-body">
+            <img :src="icons.back" alt class="gif" />
             <div class="text" style="white-space: pre-wrap;" v-html="detail"></div>
           </div>
         </div>
@@ -37,7 +37,7 @@
       <div class="comments">
         <div class="comment">
           <h2>您的评论...</h2>
-          <el-input type="textarea" :rows="4" placeholder="请输入评论内容" v-model="comment"></el-input>
+          <el-input type="textarea" :rows="4" placeholder="请输入评论内容" v-model="comment" maxlength="100"></el-input>
           <div class="submit">
             <p class="fr" @click="addArticleComment">发布</p>
           </div>
@@ -47,22 +47,18 @@
           <h2>最新评论</h2>
         </div>
         <div class="list">
-          <div class="box" v-for="(li,i) in commentList" :key="i">
-            <img :src="icons.hot" alt class="avatar" />
-            <div class="detail">
-              <div class="box">
-                <p>eee</p>
-                <p>ddd</p>
-              </div>
+          <div class="box" v-for="(li, i) in commentList" :key="i">
+            <img :src="li.avatar" alt class="avatar" />
+            <div class="detail box">
               <div>
-                <p>{{li.content}}</p>
+                <p class="gree">{{ li.nickname != '忠实用户' ? li.nickname : li.username }}</p>
+                <p>{{ li.content }}</p>
               </div>
               <div class="time">
-                <p class="in-block dianzan">
-                  <img :src="icons.zan1" alt />点赞
-                </p>
-                <p class="in-block">
-                  <img :src="icons.comment" alt />评论
+                <p class="gree">{{ li.create_time }}</p>
+                <p class="in-block dianzan gree">
+                  <img :src="li.is_like ? icons.zan1 : icons.zan2" alt />
+                  {{ li.like_num }}
                 </p>
               </div>
             </div>
@@ -117,22 +113,34 @@ export default {
         }
       });
       window.open(routeUrl.href, '_blank');
-      // this.$router.push({
-      //   path: `/tuijianDetail`
-      // });
     },
-    async addArticleComment(pid) {
+    async addArticleComment() {
+      if (!this.isLogin) {
+        this.$store.commit('setShowLogin', true);
+        return;
+      }
+      if (!this.comment) {
+        this.$message.error('输入评论内容');
+        return;
+      }
       let params = {
         content: this.comment,
         article_id: this.$route.query.id
         // pid: pid ? pid : ''
       };
       let res = await this.$api.addArticleComment(params);
+      this.comment = '';
       this.getArticleCommentList();
     },
     async getArticleCommentList(id) {
       let res = await this.$api.getArticleCommentList({ id: this.$route.query.id });
       this.commentList = res;
+    },
+    async likeArticleComment(id) {
+      let res = await this.$api.likeArticleComment({ id: id });
+      if (res.code == 1) {
+        this.getArticleCommentList();
+      }
     }
   },
   mounted() {
@@ -140,12 +148,7 @@ export default {
     this.getArticleCommentList();
   },
   computed: {
-    ...mapState(['article'])
-  },
-  beforeRouteEnter: (to, from, next) => {
-    next(vm => {
-      alert(vm.num);
-    });
+    ...mapState(['article', 'isLogin'])
   }
 };
 </script>
@@ -164,6 +167,10 @@ export default {
     margin-right: 30px;
     width: 62%;
     background: #fff;
+    .gif{
+      width:100%
+      margin-bottom 10px
+    }
     // box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
     .head {
       margin: 30px 0;
@@ -239,7 +246,8 @@ export default {
       border-bottom: 1px solid #ccc;
       border-top: 1px solid #ccc;
       &>.box {
-        padding: 20px;
+        padding: 15px 20px;
+        border-bottom: 1px solid #ccc;
       }
       .avatar {
         width: 50px;
@@ -265,5 +273,15 @@ export default {
       }
     }
   }
+  .gree{
+    color:#797979
+    }
+    /deep/ .article-body img{
+      display block
+      margin:0 auto
+    }
+    /deep/ .article-body p{
+      line-height 25px
+    }
 }
 </style>

@@ -10,14 +10,21 @@
           </router-link>
         </div>
         <div class="list">
-          <div v-for="(li, i) in jiaodian" :key="i">
-            <img :src="li.zhudui_image" alt class="icon-img" />
-            <div class="in-block">
+          <div v-for="(li, i) in jiaodian" :key="i" class="box">
+            <div>
+              <img :src="li.zhudui_image" alt class="icon-img" />
+              <p>{{ li.home_name }}</p>
+            </div>
+
+            <div>
               <p>{{ li.match_name }}</p>
               <img :src="icons.vs" alt class="vs" />
               <p>{{ li.match_time }}</p>
             </div>
-            <img :src="li.kedui_image" alt class="icon-img" />
+            <div>
+              <img :src="li.kedui_image" alt class="icon-img" />
+              <p>{{ li.away_name }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -87,7 +94,7 @@ export default {
   methods: {
     async focusMatch() {
       let res = await this.$api.focusMatch();
-      this.jiaodian = res.data.slice(0, 3);
+      this.jiaodian = res.data.slice(0, 4);
     },
     // 人气推手
     async hotPushers() {
@@ -140,45 +147,55 @@ export default {
   height: 100%;
   .jiaodian {
     width: 340px;
-    height: 380px;
+    height: 420px;
     .icon-img {
-      width: 80px;
-      height: 80px;
+      width: 40px;
+      height: 40px;
     }
     .vs {
       width: 15px;
       height: 10px;
     }
     .title {
-      margin-bottom: 10px;
+      // margin-bottom: 10px;
       span {
         line-height: 45px;
       }
     }
     .list {
-      padding: 14px 30px;
+      padding: 14px ;
       text-align: center;
+      .box{
+        margin:20px 0
+        div{
+          width 33%
+          p{
+            font-size:12px
+          }
+        }
+      }
       .in-block {
         margin: 0 20px;
         vertical-align: top;
         text-align: center;
         p {
           line-height: 40px;
+
         }
       }
     }
   }
   .renqi {
     width: 100%;
-    height: 485px;
-    margin-top: 30px;
+    height: 510px;
+    margin-top: 40px;
     // text-align: center;
     h2 {
       color: #000;
-      font-size: 14px;
+      font-size: 12px;
     }
     .list {
-      padding: 10px;
+      padding: 14px 20px;
       text-align: center;
       color: #797979;
       &>div {
@@ -193,7 +210,7 @@ export default {
         text-decoration: underline;
         cursor: pointer;
         &:hover {
-          color: #91c619;
+          color: #8dc116;
         }
       }
     }

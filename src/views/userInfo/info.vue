@@ -2,48 +2,58 @@
   <div class="info">
     <h2>基本资料</h2>
     <div class="inputs">
-      <div>
+      <div class="avatar-box">
         <span>我的头像：</span>
         <el-upload
+          name="image"
           class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="/api/manage/upload/UploadOneImg"
           :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
+          :on-success="uploadSuccess"
+          :before-upload="beforeUpload"
         >
           <img v-if="info.avatar" :src="info.avatar" class="avatar" />
-          <i v-else class="el-icon-plus avatar-uploader-icon">点击添加</i>
+          <i class="el-icon-plus avatar-uploader-icon">{{ info.avatar ? '点击更换' : '点击添加' }}</i>
         </el-upload>
       </div>
       <div>
         <span>我的昵称：</span>
-        <el-input
-          :placeholder="userInfo.nickname?userInfo.nickname:'请输入昵称'"
-          v-model="info.nickname"
-        ></el-input>
+        <el-input placeholder="请输入昵称" :disabled="info.nickname ? true : false" v-model="info.nickname" v-if="!modis[0]"></el-input>
+        <el-input v-else placeholder="请输入昵称" v-model="info.nickname"></el-input>
+        <span class="modify" @click="modify(0)">{{ info.nickname ? '修改' : '' }}</span>
       </div>
       <div>
         <span>性 别：</span>
-        <el-input :placeholder="userInfo.sex?userInfo.sex:'请输入性别'" v-model="info.sex"></el-input>
+        <div class="sex-wrap">
+          <el-radio v-model="info.sex" label="0">男</el-radio>
+          <el-radio v-model="info.sex" label="1">女</el-radio>
+        </div>
+
+        <!-- <el-input :placeholder="userInfo.sex?userInfo.sex:'请输入性别'" v-model="info.sex"></el-input> -->
       </div>
       <div>
         <span>出生日期：</span>
-        <el-input
-          :placeholder="userInfo.birthday?userInfo.birthday:'请输入出生日期'"
-          v-model="info.birthday"
-        ></el-input>
+        <el-input placeholder="请输入出生日期" :disabled="info.birthday ? true : false" v-model="info.birthday" v-if="!modis[1]"></el-input>
+        <el-input v-else placeholder="请输入出生日期" v-model="info.birthday"></el-input>
+        <span class="modify" @click="modify(1)">{{ info.birthday ? '修改' : '' }}</span>
       </div>
       <div>
         <span>所在地：</span>
-        <el-input :placeholder="userInfo.address?userInfo.address:'请输入所在地'" v-model="info.address"></el-input>
+        <el-input placeholder="请输入所在地" v-model="info.address" :disabled="info.address ? true : false" v-if="!modis[2]"></el-input>
+        <el-input v-else placeholder="请输入昵称" v-model="info.address"></el-input>
+        <span class="modify" @click="modify(2)">{{ info.address ? '修改' : '' }}</span>
       </div>
       <div>
         <span>微 信：</span>
-        <el-input :placeholder="userInfo.wechat?userInfo.wechat:'请输入微信'" v-model="info.wechat"></el-input>
+        <el-input placeholder="请输入昵称" v-model="info.wechat" :disabled="info.wechat ? true : false" v-if="!modis[3]"></el-input>
+        <el-input v-else placeholder="请输入昵称" v-model="info.wechat"></el-input>
+        <span class="modify" @click="modify(3)">{{ info.wechat ? '修改' : '' }}</span>
       </div>
       <div>
         <span>Q Q：</span>
-        <el-input :placeholder="userInfo.qq?userInfo.qq:'请输入qq'" v-model="info.qq"></el-input>
+        <el-input placeholder="请输入昵称" v-model="info.qq" :disabled="info.qq ? true : false" v-if="!modis[4]"></el-input>
+        <el-input v-else placeholder="请输入昵称" v-model="info.qq"></el-input>
+        <span class="modify" @click="modify(4)">{{ info.qq ? '修改' : '' }}</span>
       </div>
     </div>
     <div class="submit" @click="updateUserInfo">确定</div>
@@ -65,42 +75,46 @@ export default {
         qq: '',
         avatar: ''
       },
-      disableds: [false, false, false, false, false, false]
+      modis: [false, false, false, false, false, false]
     };
   },
   methods: {
     async updateUserInfo() {
-      if (!this.info.nickname || !this.info.sex || !this.info.birthday || !this.info.address || !this.info.wechat || !this.info.qq || !this.info.avatar) {
-        this.$message.error('请输入修改内容');
-        return;
-      }
       let res = await this.$api.updateUserInfo(this.info);
+      this.getUserInfo();
+    },
+    async getUserInfo() {
+      let res = await this.$api.getUserInfo();
+      this.$store.commit('setUserinfo', res);
+    },
+    modify(id) {
+      this.$set(this.modis, id, true);
     },
 
-    handleAvatarSuccess(res, file) {
-      this.info.avatar = URL.createObjectURL(file.raw);
+    uploadSuccess(res, img) {
+      this.$message({ type: 'success', message: '图片选择成功,请点击确定' });
+      this.info.avatar = res.data ? res.data.image : '';
     },
-    beforeAvatarUpload(file) {
-      let testmsg = file.name.substring(file.name.lastIndexOf('.') + 1);
-      const extension = testmsg === 'jpg' || testmsg === 'JPG' || testmsg === 'png' || testmsg === 'PNG';
-      if (!extension) {
-        this.$message.error('上传文件只能是jpg或者png格式');
-
-        return false; //必须加上return false; 才能阻止
-      }
-
+    beforeUpload(file) {
       const isLt1M = file.size / 1024 / 1024 < 1;
-
       if (!isLt1M) {
-        this.$message.error('上传头像图片大小不能超过1M');
-        return false;
+        this.$message.error('二维码图片大小不能超过 1MB!');
       }
-      return extension && isLt1M;
+      return isLt1M;
     }
   },
-  mounted() {},
+  mounted() {
+    this.$nextTick(() => {
+      this.info = JSON.parse(JSON.stringify(this.userInfo));
+    });
+  },
   computed: {
     ...mapState(['userInfo'])
+  },
+  watch: {
+    userInfo(newMatchItem) {
+      this.info = JSON.parse(JSON.stringify(newMatchItem));
+    }
   }
 };
 </script>
@@ -120,14 +134,19 @@ export default {
       margin: 5px;
     }
     .avatar-uploader {
-      width: 275px;
+      width: 355px;
       display: inline-block;
+      text-align: left;
+    }
+    .sex-wrap {
+      display: inline-block;
+      width: 39%;
       text-align: left;
     }
     span {
       display: inline-block;
       width: 80px;
-      text-align: center;
+      text-align: right;
       &:first-child::before {
         content: '';
         display: inline-block;
@@ -135,6 +154,12 @@ export default {
         margin-right: 5px;
         border-left: 2px solid #9dc543;
       }
+    }
+    .modify {
+      color: blue;
+      text-decoration: underline;
+      cursor: pointer;
+      text-align: left;
     }
   }
   .submit {

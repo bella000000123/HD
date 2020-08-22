@@ -16,7 +16,10 @@ export default new Vuex.Store({
     allLen: '',
     isLogin: false,
     userInfo: {},
-    showLogin: false
+    showLogin: false,
+    showReg: false,
+    banners: [],
+    token: ''
   },
   mutations: {
     choosePusher(state, pusher) {
@@ -67,6 +70,15 @@ export default new Vuex.Store({
     },
     setShowLogin(state, item) {
       state.showLogin = item;
+    },
+    setShowReg(state, item) {
+      state.showReg = item;
+    },
+    setToken(state, item) {
+      state.token = item;
+    },
+    getBanner(state, banners) {
+      state.banners = banners;
     }
   },
   actions: {

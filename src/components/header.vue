@@ -4,36 +4,40 @@
       <img :src="logo.image" alt="LOGO" />
       <ul>
         <router-link v-for="(li, i) in nav" :key="i" tag="li" :to="li.link" exact>{{ li.title }}</router-link>
-        <li class="login" @click="show('show_user')" v-if="!isLogin">登录</li>
-        <li class="reg" @click="show('show_reg')" v-if="!isLogin">注册</li>
+        <li class="login" @click="show1" v-if="!isLogin">登录</li>
+        <li class="reg" @click="show2" v-if="!isLogin">注册</li>
         <li class="login-box" v-if="isLogin">
-          <img :src="userInfo.avatar?userInfo.avatar:icons.avatar" alt />
+          <img :src="userInfo.avatar ? userInfo.avatar : icons.avatar" alt />
           <div>
-            <p>{{userInfo.username}}</p>
+            <p>{{ userInfo.username }}</p>
             <router-link class="green" tag="p" to="/user">用户中心</router-link>
           </div>
           <span class="logout" v-if="isLogin" @click="logout">退出</span>
         </li>
       </ul>
     </div>
-    <login
+    <reg v-if="showReg"></reg>
+    <login v-if="showLogin"></login>
+    <!-- <login
       :show_reg="show_reg"
       :show_user="show_user"
       :dialogVisible="dialogVisible"
       @close="close"
       @user_reg="user_reg"
-    ></login>
+    ></login>-->
   </header>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 
-import login from '@/components/regLog.vue';
+import reg from '@/components/reg.vue';
+import login from '@/components/login.vue';
 export default {
   name: 'Header',
   components: {
-    login
+    login,
+    reg
   },
   data() {
     return {
@@ -66,35 +70,38 @@ export default {
           link: '/gaoshou'
         }
       ],
-      dialogVisible: false,
       show_reg: false,
-      show_user: false,
-      logo: ''
+
+      dialogVisible: false,
+      show_user: false
+      // logo: ''
     };
   },
 
   mounted() {
-    this.getBanner();
+    // this.getBanner();
   },
   methods: {
-    show(param) {
-      // this.$store.commit('setLogin', true);
-
-      this.dialogVisible = true;
-      this[param] = true;
+    show1() {
+      this.$store.commit('setShowLogin', true);
     },
+    show2() {
+      this.$store.commit('setShowReg', true);
+    },
+
     user_reg(param1, param2) {
       this[param1] = true;
       this[param2] = false;
     },
-    close() {
-      this.dialogVisible = false;
-      this.show_reg = false;
-      this.show_user = false;
-    },
+    // close() {
+    //   // this.dialogVisible = false;
+    //   this.show_reg = false;
+    //   this.$store.commit('showLogin', false);
+    // },
     //banner
     async getBanner() {
       let res = await this.$api.getBanner();
+      this.$store.commit('getBanner', res);
       this.logo = res.logo[0];
     },
     async logout() {
@@ -102,18 +109,23 @@ export default {
       if (res.code == 1) {
         this.$store.commit('setUserinfo', {});
         this.$store.commit('setLogin', false);
+        this.$store.commit('setToken', '');
         this.$router.push('/home');
       }
     }
   },
   computed: {
-    ...mapState(['isLogin', 'userInfo'])
+    ...mapState(['isLogin', 'userInfo', 'showLogin', 'showReg', 'banners']),
+    logo() {
+      return this.banners.logo[0];
+    }
   }
 };
 </script>
 <style lang="stylus" scoped>
 header {
-  background: url('../assets/nav.png');
+  // background: url('../assets/nav.png');
+  background #1d2029
   background-size: 100% 100%;
   height: 90px;
 }
@@ -125,7 +137,7 @@ header {
   img {
     display: inline-block;
     width: 11%;
-    height: 100%;
+    // height: 100%;
     vertical-align: middle;
   }
   ul {
@@ -163,8 +175,8 @@ header {
       height: 30px;
       line-height: 30px;
       text-align: center;
-      color: #9DC543;
-      border: 1px solid #9DC543;
+      color: #8dc116;
+      border: 1px solid #8dc116;
       border-radius: 5px;
       font-size: 14px;
     }
@@ -204,7 +216,7 @@ header {
     }
   }
   .router-link-active {
-    color: #9DC543;
+    color: #8dc116;
   }
   .router-link-active:after {
     transform: scaleX(0.5);

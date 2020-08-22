@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path');
 module.exports = {
   configureWebpack: () => ({
     resolve: {
@@ -9,9 +9,13 @@ module.exports = {
   }),
   chainWebpack: config => {
     config.plugin('define').tap(args => {
-      args[0]['process.env'].BASE_URL = JSON.stringify(process.env.BASE_URL)
-      return args
-    })
+      args[0]['process.env'].BASE_URL = JSON.stringify(process.env.BASE_URL);
+      return args;
+    });
+    config.plugin('html').tap(args => {
+      args[0].title = '七月体育';
+      return args;
+    });
   },
   devServer: {
     overlay: {
@@ -25,4 +29,4 @@ module.exports = {
     }
     // before: require("./mock/mock-server.js")
   }
-}
+};

@@ -9,32 +9,24 @@
     <img :src="yingli.image" alt="盈利" class="banner-img" />
     <div class="content">
       <div class="in-block renqi-box" v-for="(li, i) in pusherList" :key="i">
-        <div class="avatar-box">
-          <img :src="li.avatar" alt class="avator" />
-          <p>
-            {{ li.name }}
-            <span class="renqi-txt">
-              （
-              <img :src="icons.hot" alt="icon" />
-              {{ li.hot}}）
-            </span>
-          </p>
-        </div>
-        <div class="box">
-          <img :src="li.code_image" alt class="code" />
-          <div class="guanzhu-box">
-            <p class="guanzhu" @click="doFollowPusher(li.id)">
-              <span v-if="li.is_follow">
-                <img :src="icons.guanzhu2" alt /> 已关注
-              </span>
-              <span v-else>
-                <img :src="icons.guanzhu1" alt />关注
-              </span>
-            </p>
-            <p class="more" @click="goPush(li)">更多推荐</p>
+        <div class="">
+          <div class="hot">
+            <img :src="icons.huangguan" alt="" />
+            {{ li.hot + Math.ceil(Math.random() * 1000) }}
+          </div>
+          <div class="avatar-box">
+            <img :src="li.avatar" alt class="avator" />
+            <p>{{ li.name }}</p>
+            <div class="code-box">
+              <img :src="li.code_image" alt class="code" />
+            </div>
+          </div>
+          <div class="guanzhu" @click="doFollowPusher(li.id)">
+            <span v-if="li.is_follow"> <img :src="icons.guanzhu2" alt /> 已关注 </span>
+            <span v-else> <img :src="icons.guanzhu1" alt />关注 </span>
           </div>
         </div>
-        <p class="green">立即扫码，专业推荐</p>
+        <div class="more" @click="goPush(li)">更多推荐</div>
       </div>
       <!-- <div class="fl right">
         <jifen></jifen>
@@ -54,7 +46,7 @@
 </template>
 
 <script>
-// import jifen from "@/components/jifen.vue";
+import { mapState } from 'vuex';
 export default {
   components: {
     //  jifen
@@ -69,7 +61,8 @@ export default {
       icons: {
         hot: require('../assets/hot.png'),
         guanzhu1: require('../assets/guanzhu1.png'),
-        guanzhu2: require('../assets/guanzhu2.png')
+        guanzhu2: require('../assets/guanzhu2.png'),
+        huangguan: require('../assets/huangguan.png')
       }
     };
   },
@@ -108,6 +101,10 @@ export default {
       window.open(routeUrl.href, '_blank');
     },
     async doFollowPusher(id) {
+      if (!this.isLogin) {
+        this.$store.commit('setShowLogin', true);
+        return;
+      }
       let res = await this.$api.doFollowPusher({ id: id });
       this.hotPushers();
     }
@@ -116,7 +113,9 @@ export default {
     this.getBanner();
     this.hotPushers();
   },
-  computed: {}
+  computed: {
+    ...mapState(['isLogin'])
+  }
 };
 </script>
 <style scoped lang="stylus">
@@ -135,56 +134,76 @@ export default {
   margin: 0 auto;
 }
 .content {
-  .renqi-box {
-    width: 20%;
-    margin: 10px;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 5px;
-    text-align: center;
-    p {
-      line-height: 27px;
-    }
-    .box {
-      width: 160px;
-      margin: 10px auto;
-      .guanzhu-box {
+   .renqi-box {
+        position:relative;
+        width: 19%;
+        margin: 20px;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 5px;
+        text-align: center;
         p {
-          width: 80px;
-          height: 27px;
-          border-radius: 5px;
           line-height: 27px;
-          font-size: 12px;
-          text-align: center;
-          cursor: pointer;
         }
-        .more {
-          width: 83px;
-          margin-top: 10px;
-          background-color: #91c619;
-          color: #fff;
+       .hot{
+         position:absolute;
+         top:0;
+         left:0;
+         height:25px;
+         padding:0 5px;
+         background:url(../assets/renqi.png);
+            background-size:100% 100%;
+            color:#fff
+            font-size:12px
+            img{
+              width:15px;
+              margin-top:5px;
+            }
+       }
+        .avatar-box {
+          cursor: pointer;
+          .renqi-txt {
+            font-size: 12px;
+            img {
+              width: 10px;
+              height: 10px;
+              vertical-align middle
+            }
+          }
+          .code-box {
+            width:80px;
+            height:80px;
+            padding:1px;
+            margin :0 auto
+            background:url(../assets/code-boder.png)
+            background-size:100% 100%
+            img{
+              width:100%;
+               height:100%
+            }
+          }
         }
         .guanzhu {
-          border: 1px solid #91c619;
+           position:absolute;
+         top:5px;
+         right:5px;
+          cursor pointer;
+          img{
+            width: 20px;
+            vertical-align middle
+          }
         }
-        img {
-          width: 15px;
-          height: 15px;
-          vertical-align: middle;
+        .more{
+          margin-top:10px
+          width:100%;
+          height:35px;
+          line-height:35px
+          background-color: #8dc116;
+          color: #fff;
+          border-radius:5px;
+          cursor pointer
         }
       }
-    }
-    .avatar-box {
-      cursor: pointer;
-      .renqi-txt {
-        font-size: 12px;
-        img {
-          width: 10px;
-          height: 10px;
-        }
-      }
-    }
-  }
   .avator {
     width: 50px;
     height: 50px;

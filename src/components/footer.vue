@@ -6,6 +6,9 @@
           <img :src="icons.link" alt />
           <span class="green">友情链接</span>
         </div>
+        <ul class="ul1 box">
+          <a href="http://sports.sina.com.cn/"><li>新浪体育</li></a>
+        </ul>
       </div>
       <div class="div2">
         <div>
@@ -23,7 +26,7 @@
           <span class="green">联系方式</span>
         </div>
         <ul class="ul2">
-          <li>客服qq：333333</li>
+          <li>客服qq：2221132990</li>
           <li>客服电话：333333</li>
         </ul>
       </div>
@@ -58,7 +61,7 @@ export default {
   color: #fff;
   box-sizing: border-box;
   .green {
-    color: #91c619;
+    color: #8dc116;
   }
   img {
     margin-right: 10px;
@@ -66,11 +69,12 @@ export default {
     width: 30px;
     height: 30px;
   }
-  .div2 {
+  .div2,.div1 {
     .ul1 {
       padding-left: 30px;
       li {
         border: 1px solid #fff;
+        color:#fff
       }
     }
     .ul2 {
