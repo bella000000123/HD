@@ -81,7 +81,7 @@
           <p class="title box">
             <span>情报中心</span>
             <span class="more">
-              <router-link to="/soccer" class="unl" tag="span">查看更多</router-link>
+              <router-link to="/qingbao" class="unl" tag="span">查看更多</router-link>
 
               <img :src="icons.more" alt />
             </span>
@@ -135,8 +135,8 @@
           </div>
           <div class="list">
             <el-tabs type="border-card" v-model="jifenType" @tab-click="jifenTab">
-              <el-tab-pane name="yingchao" label="英超"></el-tab-pane>
               <el-tab-pane name="aochao" label="澳超"></el-tab-pane>
+              <el-tab-pane name="yingchao" label="英超"></el-tab-pane>
               <el-tab-pane name="xijia" label="西甲"></el-tab-pane>
               <el-tab-pane name="dejia" label="德甲"></el-tab-pane>
               <el-tab-pane name="yijia" label="意甲"></el-tab-pane>
@@ -308,7 +308,7 @@ export default {
       gaoshouType: 'gaoshouAll',
 
       pusherList: [],
-      jifenType: 'yingchao',
+      jifenType: 'aochao',
       jifen: [],
       activeName: 'all',
       type: 0
@@ -327,7 +327,7 @@ export default {
     // 人气推手
     this.hotPushers();
     // 积分榜
-    this.rankingList(9);
+    this.rankingList(49);
     // 高手全部
     // this.gaoshouAllList(15);
     //赔pan
